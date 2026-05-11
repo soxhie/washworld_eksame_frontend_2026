@@ -2,16 +2,23 @@
 import OnboardingStep1 from './components/onboading'
 import OnboardingStep2 from './components/onboarding_2'
 import OnboardingStep3 from './components/onboarding_3';
+import OnboardingStep4 from './components/onboarding_4';
+import OnboardingStep5 from './components/onboarding_5';
+import OnboardingStep6 from './onboarding_6';
 import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import Link from 'next/link';
 import '../../globals.css'
 import { useState } from 'react';
 
+
 const steps = [
   OnboardingStep1,
   OnboardingStep2,
-  OnboardingStep3
+  OnboardingStep3,
+  OnboardingStep4,
+  OnboardingStep5,
+  OnboardingStep6
 ]
 
 export default function Onboarding() {
@@ -24,18 +31,23 @@ export default function Onboarding() {
 
       
 
-      <a className='tilbageLink'
+      <button className='tilbageLink'
         disabled={step === 0}
-        onClick={() => setStep(step - 1)}
+        onClick={() => {
+          if (step > 0) setStep(step - 1);
+        }}
       >
        <FaChevronLeft /> Tilbage
-      </a>
+      </button>
         <StepComponent />
-      <a  className='nextButton'
-        onClick={() => setStep(step + 1)}
+      <button className='nextButton'
+        disabled={step === steps.length - 1}
+        onClick={() => {
+          if (step < steps.length - 1) setStep(step + 1);
+        }}
       >
        <FaArrowRight />
-      </a>
+      </button>
        
         
         

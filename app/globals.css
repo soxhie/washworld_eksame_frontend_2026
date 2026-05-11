@@ -23,28 +23,33 @@
     --foreground: #ededed;
   }
 }
-*{
-  font-family: 'Inter';
-}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter';
 }
 h1{
   font-size: 32px;
   font-weight: 800;
   text-align: center;
   margin: 40px 0 60px 0;
+  font-family: Inter;
 
 }
 .Start{
-
   height: 100vh;
   padding: 25px;
   display: grid;
+  button{
+  padding: 14px 0;
+  width: 100%;
+  border: none;
+  font-weight: 800;
+  font-size: 16px;
+  font-family: 'inter', sans-serif;
 }
-
+}
 .buttons{
   flex-direction: column;
   gap: 20px;
@@ -62,14 +67,7 @@ h1{
   color: black;
   cursor: pointer;
 }
-button{
-  padding: 14px 0;
-  width: 100%;
-  border: none;
-  font-weight: 800;
-  font-size: 16px;
-  font-family: 'inter', sans-serif;
-}
+
 img {
   width: 100%;
   height: auto;
@@ -96,7 +94,7 @@ img {
 }
 .Onboarding{
  padding: 20px 25px 0 25px;
- height: 100vh;
+ height: max-content;
 }
 .Onboarding-1{
   display: flex;
@@ -111,10 +109,123 @@ img {
 .Onboarding-3{
   display: flex;
   flex-direction: column;
-  align-items: center;
-  p{
-    width: 311px;
+  a{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #06C167;
   }
+}
+.Onboarding-4{
+  display: flex;
+  flex-direction: column;
+  input{
+    border: 1px solid#06C167;
+    margin-bottom: 17px;
+    padding: 8px;
+  }
+  p{
+    text-align: center;
+    font-family: Inter;
+  }
+  label{
+    font-weight: 800;
+    font-family: Inter;
+  }
+  button{
+    display: flex;
+    justify-content: center;
+    gap:6px;
+    padding: 8px;
+    font-family: Inter;
+    border: 1px solid var(--secondary-dark-mode-80-gr-text-secondary, rgba(156, 163, 175, 0.80));
+  }
+  a{
+    text-align: center;
+    color: var(--secondary-colors-60-gr, rgba(102, 102, 102, 0.60));
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+
+  }
+}
+.Onboarding-5{
+  
+  button{
+    background: #0ce57847;
+    border: 1px solid #0ce578;
+    align-items: center;
+    width: -webkit-fill-available;
+    padding: 16px 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom:24px;
+  }
+  p{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .icon{
+    color: #06C167;
+  }
+  h3{
+    color: var(--primary-colors-brand-grn-sort-baggrund, #0CE578);
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 29px; /* 120.833% */
+  }
+  h4{
+    color: #FFF;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 24px; /* 120% */
+  }
+}
+.Onboarding-6{
+  display: flex;
+  flex-direction: column;
+
+  button{
+    border: 1px solid var(--primary-colors-brand-grn-sort-baggrund, #0CE578);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  h3{
+    color: #FFF;
+  
+/* mobil/h4 */
+font-family: Inter;
+text-align: justify;
+font-size: 20px;
+font-style: normal;
+font-weight: 800;
+line-height: 24px; /* 120% */
+  }
+  h4{
+    
+    font-family: Inter;
+    text-align: justify;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 29px; /* 120.833% */
+}
 }
 .tilbageLink{
   display: flex;
@@ -124,7 +235,7 @@ img {
 .nextButton{
   border-radius: 100%;
   position: absolute;
-  top: 90vh;
+  top: 90%;
   right: 25px;
   width: fit-content;
   background-color: var(--primary-colors-brand-grn-hvid-baggrund, #06C167);
@@ -198,5 +309,24 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 40%;
+}
+/* PinInput */
+.pinInputContainer{
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+  input{
+    width: 53px;
+    height: 53px;
+    border-bottom: 2px solid white;
+    text-align: center;
+  }
+  p{
+    color: var(--secondary-dark-mode-80-gr-text-secondary, rgba(156, 163, 175, 0.80));
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+  }
 }
 
