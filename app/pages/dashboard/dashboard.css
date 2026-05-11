@@ -1,0 +1,87 @@
+.DashboardPage {
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #f7f7f7;
+  padding: 20px 20px 88px;
+}
+
+.dashboardSection {
+  margin-bottom: 18px;
+}
+
+.dashboardSection h2 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+
+.dashboardCard {
+  background: #121212;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-weight: 700;
+}
+
+.cardMeta {
+  margin: 4px 0 0;
+  color: #b5b5b5;
+  font-size: 13px;
+}
+
+.cardStatus {
+  margin: 8px 0 0;
+  color: #06c167;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.quickActionsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.actionCard {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 12px;
+  text-decoration: none;
+  color: #f7f7f7;
+}
+
+.actionIcon {
+  margin: 0 0 6px;
+}
+
+.activityList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.activityItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.activityRight {
+  text-align: right;
+}
+
+.stateText {
+  margin: 0;
+  color: #b5b5b5;
+  font-size: 14px;
+}

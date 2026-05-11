@@ -1,0 +1,56 @@
+.ProfilePage {
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+  padding-bottom: 100px;
+}
+
+.profileMenu {
+  margin-top: 90px;
+  padding: 0 18px;
+  display: grid;
+  gap: 22px;
+}
+
+.profileMenuItem {
+  width: 100%;
+  height: 58px;
+  border: 1px solid #00d881;
+  border-radius: 0;
+  background: #066632;
+  color: #eaf3ef;
+  display: grid;
+  grid-template-columns: 30px 1fr 24px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  font-size: 34px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.menuIcon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.menuLabel {
+  justify-self: center;
+}
+
+.menuChevron {
+  justify-self: end;
+  color: #00e592;
+  font-size: 36px;
+  line-height: 1;
+}
+
+@media (min-width: 540px) {
+  .ProfilePage {
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+}

@@ -5,10 +5,10 @@ export default function Home() {
   return (
    <div className="Start">
         <Image
-          src="/logo-primary-light (white bg).png"
+          src="/logo.svg"
           width={100}
           height={400}
-          alt="Next.js logo"
+          alt="WashWorld"
           priority
         />
         <div className="buttons">
