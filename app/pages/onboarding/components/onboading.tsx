@@ -14,7 +14,7 @@ export default function OnboardingStep1() {
         <input type="text" name="user_name" required />
     </div>
     <div className="inputContainer">
-        <label htmlFor="Efternavn">Efternavn</label>
+        <label htmlFor="Efternavn">Efternavn</label>2
         <input type="text" name="user_last_name" required/>
     </div>
     

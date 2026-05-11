@@ -3,16 +3,22 @@ import OnboardingStep1 from './components/onboading'
 import OnboardingStep2 from './components/onboarding_2'
 import OnboardingStep3 from './components/onboarding_3';
 import OnboardingStep4 from './components/onboarding_4';
+import OnboardingStep5 from './components/onboarding_5';
+import OnboardingStep6 from './onboarding_6';
 import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import Link from 'next/link';
 import '../../globals.css'
 import { useState } from 'react';
+
+
 const steps = [
   OnboardingStep1,
   OnboardingStep2,
   OnboardingStep3,
-  OnboardingStep4
+  OnboardingStep4,
+  OnboardingStep5,
+  OnboardingStep6
 ]
 
 export default function Onboarding() {
