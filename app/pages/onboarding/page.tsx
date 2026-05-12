@@ -1,19 +1,12 @@
 "use client";
-import OnboardingStep1 from './components/onboading'
-import OnboardingStep2 from './components/onboarding_2'
-import OnboardingStep3 from './components/onboarding_3';
-import OnboardingStep4 from './components/onboarding_4';
-import OnboardingStep5 from './components/onboarding_5';
-import OnboardingStep7 from './components/onboarding_7';
-import OnboardingStep6 from './components/onboarding_6';
-import OnboadingStep8 from './components/onboarding_8';
+
 import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import Link from 'next/link';
 import "./onboarding.css";
 
-import { useState } from 'react';
-import { Form } from 'react-router';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 
 
@@ -27,64 +20,81 @@ const steps = [
   OnboardingStep6,
   OnboardingStep7,
   OnboadingStep8
-]
+];
    
-export default function Onboarding({ params, searchParams }: { params?: any, searchParams?: any }) {
- const [step, setStep] = useState(0)
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
-    const StepComponent = steps[step]
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        console.log(e)
-        console.log(e.target)
-        const form = e.target as HTMLFormElement;
-        e.preventDefault();
-        setError("");
-        setSuccess("");
-        try {
-            const res = await fetch("http://localhost:80/api-signup", {
-                method: "POST",
-                body : new FormData(form)
-            });
-            if (!res.ok) {
-                const data = await res.json();
-                setError(data || {"status":"error", "message":"Signup failed"});
-                return;
-            }
-            setSuccess("Signup successful!");
-            setTimeout(() => { 
-                window.location.href = "http://127.0.0.1:5500/backend/templates/email_welcome.html";
-            }, 1500);
-        } catch (err) {
-            setError("Network error. Please try again.");
-        }
-    };
+export default function Onboarding() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  // Get step from search params, default to 0
+  const stepParam = searchParams.get('step');
+  const step = stepParam ? Math.max(0, Math.min(steps.length - 1, parseInt(stepParam))) : 0;
+  const StepComponent = steps[step];
+
+  // Navigation helpers
+  const goToStep = (newStep: number) => {
+    router.push(`?step=${newStep}`);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    try {
+      const form = e.target as HTMLFormElement;
+      const res = await fetch("http://localhost:80/signup", {
+        method: "POST",
+        body: new FormData(form)
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data || { status: "error", message: "Signup failed" });
+        return;
+      }
+      setSuccess("Signup successful!");
+      setTimeout(() => {
+        // Optionally redirect or reset
+      }, 1500);
+    } catch (err) {
+      setError("Network error. Please try again.");
+    }
+  };
 
   return (
     <div className='Onboarding'>
-      <button className='tilbageLink'
+      <button
+        className='tilbageLink'
         disabled={step === 0}
         onClick={() => {
-          if (step > 0) setStep(step - 1);
+          if (step > 0) goToStep(step - 1);
         }}
       >
-       <FaChevronLeft /> Tilbage
+        <FaChevronLeft /> Tilbage
       </button>
       <form onSubmit={handleSubmit}>
         <StepComponent />
       </form>
-      <button className='nextButton'
-        disabled={step === steps.length - 1}
-        onClick={() => {
-          if (step < steps.length - 1) setStep(step + 1);
-        }}
-      >
-       <FaArrowRight />
-      </button>
-       
-        
-        
-     
+      {error && <div style={{ color: "red", marginTop: "10px" }}>{typeof error === 'string' ? error : error.message || JSON.stringify(error)}</div>}
+      {success && <div style={{ color: "green", marginTop: "10px" }}>{success}</div>}
+      {step < steps.length - 1 ? (
+        <Link href={`?step=${step + 1}`} passHref legacyBehavior>
+          <button
+            className='nextButton'
+            type="button"
+          >
+            <FaArrowRight />
+          </button>
+        </Link>
+      ) : (
+        <button
+          className='nextButton'
+          type="button"
+          disabled
+        >
+          <FaArrowRight />
+        </button>
+      )}
     </div>
   );
 }
