@@ -2,33 +2,23 @@
 
 import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
-import Link from 'next/link';
+import Link from "next/link";
 import "./onboarding.css";
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 
 
+const steps = [OnboardingStep1, OnboardingStep2, OnboardingStep3, OnboardingStep4, OnboardingStep5, OnboardingStep6, OnboardingStep7, OnboadingStep8];
 
-const steps = [
-  OnboardingStep1,
-  OnboardingStep2,
-  OnboardingStep3,
-  OnboardingStep4,
-  OnboardingStep5,
-  OnboardingStep6,
-  OnboardingStep7,
-  OnboadingStep8
-];
-   
 export default function Onboarding() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   // Get step from search params, default to 0
-  const stepParam = searchParams.get('step');
+  const stepParam = searchParams.get("step");
   const step = stepParam ? Math.max(0, Math.min(steps.length - 1, parseInt(stepParam))) : 0;
   const StepComponent = steps[step];
 
@@ -45,7 +35,7 @@ export default function Onboarding() {
       const form = e.target as HTMLFormElement;
       const res = await fetch("http://localhost:80/signup", {
         method: "POST",
-        body: new FormData(form)
+        body: new FormData(form),
       });
       if (!res.ok) {
         const data = await res.json();
@@ -62,9 +52,9 @@ export default function Onboarding() {
   };
 
   return (
-    <div className='Onboarding'>
+    <div className="Onboarding">
       <button
-        className='tilbageLink'
+        className="tilbageLink"
         disabled={step === 0}
         onClick={() => {
           if (step > 0) goToStep(step - 1);
@@ -75,23 +65,16 @@ export default function Onboarding() {
       <form onSubmit={handleSubmit}>
         <StepComponent />
       </form>
-      {error && <div style={{ color: "red", marginTop: "10px" }}>{typeof error === 'string' ? error : error.message || JSON.stringify(error)}</div>}
+      {error && <div style={{ color: "red", marginTop: "10px" }}>{typeof error === "string" ? error : error.message || JSON.stringify(error)}</div>}
       {success && <div style={{ color: "green", marginTop: "10px" }}>{success}</div>}
       {step < steps.length - 1 ? (
         <Link href={`?step=${step + 1}`} passHref legacyBehavior>
-          <button
-            className='nextButton'
-            type="button"
-          >
+          <button className="nextButton" type="button">
             <FaArrowRight />
           </button>
         </Link>
       ) : (
-        <button
-          className='nextButton'
-          type="button"
-          disabled
-        >
+        <button className="nextButton" type="button" disabled>
           <FaArrowRight />
         </button>
       )}

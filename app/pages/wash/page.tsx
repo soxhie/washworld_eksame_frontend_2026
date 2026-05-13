@@ -5,6 +5,8 @@ import { PiCarProfileBold } from "react-icons/pi";
 import AppHeader from "../../components/layout/AppHeader";
 import BottomNav from "../../components/layout/BottomNav";
 import "./wash.css";
+import SwipeButton from "../../components/layout/swipeBtn"; //CK
+
 
 const singleWashOffers = [
   {
@@ -64,12 +66,13 @@ export default function WashPage() {
             <span className="queueText">Ca. 10 min ventetid</span>
           </div>
 
-          <button className="startWashButton" type="button">
+<SwipeButton variant="vask" onActivate={() => console.log("vask!")} />
+          {/* <button className="startWashButton" type="button">
             <span className="startWashIconWrap" aria-hidden="true">
               <LuChevronRight className="startWashIcon" />
             </span>
             <span className="startWashLabel">Start din vask</span>
-          </button>
+          </button> */}
         </section>
 
         <section className="purchaseSection" aria-label="Tilkob af enkelt vask">
@@ -115,3 +118,6 @@ export default function WashPage() {
     </main>
   );
 }
+
+
+

@@ -9,6 +9,7 @@ import BottomNav from "../../components/layout/BottomNav";
 import profileData from "./data/mockProfileData";
 import "./profile.css";
 
+
 const iconMap: Record<string, IconType> = {
   membership: IoPeopleOutline,
   history: LuClock3,
