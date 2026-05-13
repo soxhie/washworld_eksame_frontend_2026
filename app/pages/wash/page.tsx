@@ -4,6 +4,7 @@ import { LuChevronRight } from "react-icons/lu";
 import { PiCarProfileBold } from "react-icons/pi";
 import AppHeader from "../../components/layout/AppHeader";
 import BottomNav from "../../components/layout/BottomNav";
+import SwipeToStart from "../../components/SwipeToStart/SwipeToStart";
 import "./wash.css";
 
 const singleWashOffers = [
@@ -64,12 +65,7 @@ export default function WashPage() {
             <span className="queueText">Ca. 10 min ventetid</span>
           </div>
 
-          <button className="startWashButton" type="button">
-            <span className="startWashIconWrap" aria-hidden="true">
-              <LuChevronRight className="startWashIcon" />
-            </span>
-            <span className="startWashLabel">Start din vask</span>
-          </button>
+          <SwipeToStart />
         </section>
 
         <section className="purchaseSection" aria-label="Tilkob af enkelt vask">

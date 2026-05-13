@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
@@ -35,24 +35,21 @@ function MapViewportController({
   locateRequestCount: number;
 }) {
   const map = useMap();
+  const lastLocateRequestCountRef = useRef(0);
 
   useEffect(() => {
     const selectedLocation = locations.find((location) => location.id === selectedLocationId);
 
     if (selectedLocation) {
       map.flyTo(selectedLocation.position, 13, { duration: 0.8 });
-      return;
     }
-
-    if (currentPosition) {
-      map.flyTo(currentPosition, 13, { duration: 0.8 });
-    }
-  }, [currentPosition, locations, map, selectedLocationId]);
+  }, [locations, map, selectedLocationId]);
 
   useEffect(() => {
-    if (locateRequestCount < 1) {
+    if (locateRequestCount <= lastLocateRequestCountRef.current) {
       return;
     }
+    lastLocateRequestCountRef.current = locateRequestCount;
 
     if (currentPosition) {
       map.flyTo(currentPosition, 14, { duration: 0.8 });

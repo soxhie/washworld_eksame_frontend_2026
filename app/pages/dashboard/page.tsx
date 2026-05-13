@@ -3,10 +3,12 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useMemo, useState, useEffect } from "react";
-import { LuClock3, LuLocateFixed, LuSearch, LuSlidersHorizontal } from "react-icons/lu";
+import { LuClock3, LuLocateFixed, LuSearch, LuSlidersHorizontal, LuX } from "react-icons/lu";
+import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import "./dashboard.css";
 import AppHeader from "../../components/layout/AppHeader";
 import BottomNav from "../../components/layout/BottomNav";
+import SwipeToStart from "../../components/SwipeToStart/SwipeToStart";
 
 const LiveWashMap = dynamic(() => import("./components/LiveWashMap"), {
   ssr: false,
@@ -30,13 +32,51 @@ type WashLocation = {
   imageUrl?: string;
 };
 
+type TrafficDay = {
+  time: string;
+  level: number;
+  active?: boolean;
+};
+
+function normalizeSearchText(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/ae/g, "æ")
+    .replace(/oe/g, "ø")
+    .replace(/aa/g, "å")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function buildTrafficData(selectedLocation: WashLocation | undefined): TrafficDay[] {
+  if (!selectedLocation) {
+    return [];
+  }
+
+  const busyBoost = selectedLocation.message ? 12 : 0;
+  const regionBoost = selectedLocation.regionName?.toLowerCase().includes("hoved") ? 6 : 0;
+  const currentHour = new Date().getHours();
+  const timeSlots = ["08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"];
+  const levels = [28, 40, 52, 63, 71, 69, 60, 66, 77, 78, 57, 48, 33, 37].map((base) => Math.min(94, base + busyBoost + regionBoost));
+
+  return timeSlots.map((time, index) => ({
+    time,
+    level: levels[index],
+    active: Number.parseInt(time, 10) === currentHour,
+  }));
+}
+
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [locations, setLocations] = useState<WashLocation[]>([]);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
+  const [isLocationSheetOpen, setIsLocationSheetOpen] = useState(false);
   const [locateRequestCount, setLocateRequestCount] = useState(0);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [busyView, setBusyView] = useState<"open" | "busy">("open");
 
   useEffect(() => {
     fetch("/api/washworld-locations")
@@ -53,6 +93,7 @@ export default function DashboardPage() {
         const parsed: WashLocation[] = data;
         setLocations(parsed);
         setSelectedLocationId(null);
+        setIsLocationSheetOpen(false);
         setLoadError(parsed.length === 0 ? "Ingen Wash World lokationer fundet." : null);
       })
       .catch((error: unknown) => {
@@ -61,21 +102,38 @@ export default function DashboardPage() {
   }, []);
 
   const filteredLocations = useMemo(() => {
-    const normalizedQuery = searchQuery.trim().toLowerCase();
+    const normalizedQuery = normalizeSearchText(searchQuery);
     if (!normalizedQuery) return locations;
+
     return locations.filter((location) => {
-      const haystack = `${location.name} ${location.address}`.toLowerCase();
+      const haystack = normalizeSearchText(`${location.name} ${location.address}`);
       return haystack.includes(normalizedQuery);
     });
   }, [searchQuery, locations]);
 
+  const hasVaryingOpenHours = useMemo(() => {
+    const uniqueHours = new Set(
+      locations
+        .map((location) => location.openHours?.trim())
+        .filter((hours): hours is string => Boolean(hours)),
+    );
+
+    return uniqueHours.size > 1;
+  }, [locations]);
+
   const selectedLocation = filteredLocations.find((location) => location.id === selectedLocationId);
+  const trafficData = useMemo(() => buildTrafficData(selectedLocation), [selectedLocation]);
+  const openingHoursLabel = selectedLocation?.openHours ?? "7-22";
+
+  const resetDetailInteractions = () => {
+    setBusyView("open");
+  };
 
   return (
-    <main className="DashboardPage">
+    <main className={isLocationSheetOpen ? "DashboardPage DashboardPageSheetOpen" : "DashboardPage"}>
       <AppHeader variant="brand" />
 
-      <section className={selectedLocation ? "mapSection" : "mapSection mapSectionFullscreen"} aria-label="Wash World kort">
+      <section className={isLocationSheetOpen ? "mapSection" : "mapSection mapSectionFullscreen"} aria-label="Wash World kort">
         <div className="mapSearchBar">
           <LuSearch aria-hidden="true" className="mapSearchIcon" />
           <input
@@ -91,11 +149,16 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        <div className={selectedLocation ? "mapCanvasWrap" : "mapCanvasWrap mapCanvasWrapFullscreen"}>
+        <div className={isLocationSheetOpen ? "mapCanvasWrap" : "mapCanvasWrap mapCanvasWrapFullscreen"}>
           <LiveWashMap
             locations={filteredLocations}
-            selectedLocationId={selectedLocation?.id}
-            onSelectLocation={setSelectedLocationId}
+            selectedLocationId={selectedLocationId ?? undefined}
+            onSelectLocation={(locationId) => {
+              setSelectedLocationId(locationId);
+              setIsLocationSheetOpen(true);
+              setIsFavorite(false);
+              resetDetailInteractions();
+            }}
             locateRequestCount={locateRequestCount}
           />
 
@@ -111,34 +174,147 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {selectedLocation ? (
+        {selectedLocation && isLocationSheetOpen ? (
           <section className="locationSheet" aria-label="Valgt vaskehal">
+            <button
+              type="button"
+              className="sheetSecondaryButton sheetIconButton sheetTopCloseButton"
+              aria-label="Luk detaljer"
+              onClick={() => {
+                setIsLocationSheetOpen(false);
+                resetDetailInteractions();
+              }}
+            >
+              <LuX aria-hidden="true" />
+            </button>
+
             <div className="locationSheetTop">
-              <div>
+              <div className="locationSheetMain">
                 <p className="locationSheetEyebrow">Valgt vaskehal</p>
                 <h1>{selectedLocation.name}</h1>
                 <p className="locationSheetAddress">{selectedLocation.address}</p>
+
+                {selectedLocation.message ? (
+                  <p className="locationAlert locationAlertTop" role="status">
+                    {selectedLocation.message}
+                  </p>
+                ) : null}
               </div>
 
-              {selectedLocation.imageUrl ? (
-                <Image
-                  src={selectedLocation.imageUrl}
-                  alt={selectedLocation.name}
-                  className="locationThumb"
-                  width={84}
-                  height={84}
-                  sizes="84px"
-                />
-              ) : null}
+              <div className="locationSheetSide">
+                <button
+                  type="button"
+                  className={isFavorite ? "favoriteButton favoriteButtonActive" : "favoriteButton"}
+                  onClick={() => setIsFavorite((prev) => !prev)}
+                  aria-label={isFavorite ? "Fjern fra favoritter" : "Tilfoej til favoritter"}
+                  aria-pressed={isFavorite}
+                >
+                  {isFavorite ? <IoHeart aria-hidden="true" /> : <IoHeartOutline aria-hidden="true" />}
+                </button>
+
+                {selectedLocation.imageUrl ? (
+                  <Image
+                    src={selectedLocation.imageUrl}
+                    alt={selectedLocation.name}
+                    className="locationThumb"
+                    width={84}
+                    height={84}
+                    sizes="84px"
+                  />
+                ) : null}
+              </div>
             </div>
 
-            <div className="locationMetaRow locationMetaRowDense">
-              {selectedLocation.openHours ? (
-                <span className="metaChip">
-                  <LuClock3 aria-hidden="true" /> Aabent {selectedLocation.openHours}
-                </span>
-              ) : null}
-              {selectedLocation.regionName ? <span className="metaChip">Region: {selectedLocation.regionName}</span> : null}
+            <div className="sheetActions sheetActionsPrimary">
+              <div className="sheetSwipeAction">
+                <SwipeToStart label="Swipe for at starte din vask" flush />
+              </div>
+            </div>
+
+            {hasVaryingOpenHours ? (
+              <div className="metaToggleBar" role="tablist" aria-label="Aabning og travlhed">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={busyView === "open"}
+                  className={busyView === "open" ? "metaToggleButton isActive" : "metaToggleButton"}
+                  onClick={() => setBusyView("open")}
+                >
+                  <LuClock3 aria-hidden="true" />
+                  Aabent {openingHoursLabel}
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={busyView === "busy"}
+                  className={busyView === "busy" ? "metaToggleButton isActive" : "metaToggleButton"}
+                  onClick={() => setBusyView("busy")}
+                >
+                  Travlhed {selectedLocation.message ? "Hoj" : "Moderat"}
+                </button>
+              </div>
+            ) : null}
+
+            <div className="popularTimesPanel" aria-label="Aabningstider og travlhed">
+              {!hasVaryingOpenHours ? (
+                <>
+                  <div className="popularTimesHeader popularTimesHeaderStacked">
+                    <div>
+                      <span className="popularTimesTitle">Travlhed</span>
+                      <span className="popularTimesNote popularTimesNoteBlock">
+                        {trafficData.find((item) => item.active)?.time ?? "14"}:00: {selectedLocation.message ? "Normalt lidt travlt" : "Normalt moderat"}
+                      </span>
+                    </div>
+                    <div className="openingHoursInline">
+                      <LuClock3 aria-hidden="true" />
+                      <span>Aabent {openingHoursLabel}</span>
+                    </div>
+                  </div>
+                  <div className="popularTimesChart" aria-label="Travlhed fordelt paa timer">
+                    {trafficData.map((item) => (
+                      <div key={item.time} className="popularTimesColumnWrap">
+                        <div className="popularTimesColumnTrack" aria-hidden="true">
+                          <span
+                            className={item.active ? "popularTimesColumn popularTimesColumnActive" : "popularTimesColumn"}
+                            style={{ height: `${item.level}%` }}
+                          />
+                        </div>
+                        <span className="popularTimesHour">{Number.parseInt(item.time, 10) % 3 === 0 ? `${item.time}` : ""}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : busyView === "open" ? (
+                <>
+                  <div className="openingTimesSummary">
+                    <span className="openingTimesLabel">Aabningstider</span>
+                    <strong>{openingHoursLabel}</strong>
+                  </div>
+                  <p className="openingTimesDescription">Alle Wash World lokationer i feedet viser samme aabningstid, saa vi viser den samlet her.</p>
+                </>
+              ) : (
+                <>
+                  <div className="popularTimesHeader">
+                    <span className="popularTimesTitle">Popular times</span>
+                    <span className="popularTimesNote">
+                      {trafficData.find((item) => item.active)?.time ?? "14"}:00: {selectedLocation.message ? "Normalt lidt travlt" : "Normalt moderat"}
+                    </span>
+                  </div>
+                  <div className="popularTimesChart" aria-label="Travlhed fordelt paa timer">
+                    {trafficData.map((item) => (
+                      <div key={item.time} className="popularTimesColumnWrap">
+                        <div className="popularTimesColumnTrack" aria-hidden="true">
+                          <span
+                            className={item.active ? "popularTimesColumn popularTimesColumnActive" : "popularTimesColumn"}
+                            style={{ height: `${item.level}%` }}
+                          />
+                        </div>
+                        <span className="popularTimesHour">{Number.parseInt(item.time, 10) % 3 === 0 ? `${item.time}` : ""}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="locationFacts" aria-label="Detaljer for valgt vaskehal">
@@ -147,18 +323,6 @@ export default function DashboardPage() {
               <p className="factItem">Stoevsugere: {selectedLocation.vacuumCount ?? 0}</p>
               <p className="factItem">Forvask: {selectedLocation.preWashCount ?? 0}</p>
               {selectedLocation.maxHeight ? <p className="factItem">Maks. hoejde: {selectedLocation.maxHeight} m</p> : null}
-            </div>
-
-            {selectedLocation.message ? (
-              <p className="locationAlert" role="status">
-                {selectedLocation.message}
-              </p>
-            ) : null}
-
-            <div className="sheetActions">
-              <button type="button" className="sheetSecondaryButton" onClick={() => setSelectedLocationId(null)}>
-                Luk detaljer
-              </button>
             </div>
           </section>
         ) : null}
