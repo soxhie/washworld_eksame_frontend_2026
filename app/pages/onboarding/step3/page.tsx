@@ -6,7 +6,7 @@ import { FaChevronLeft } from "react-icons/fa";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { IoReload } from "react-icons/io5";
 import { useState } from "react";
-import PinInput from "./pinInput";
+import PinInput from "../components/pinInput";
 
 export default function OnboardingStep3() {
 

@@ -335,7 +335,7 @@ p{
   gap: 6px;
   align-items: center;
 }
-.nextButton{
+ .nextButton{
   border-radius: 100%;
   position: absolute;
   top: 90%;
@@ -343,6 +343,15 @@ p{
   width: fit-content;
   background-color: var(--primary-colors-brand-grn-hvid-baggrund, #06C167);
   padding: 16px;
+  color: white;
+  opacity: 1;
+  transition: background 0.2s, opacity 0.2s;
+}
+.nextButton--disabled,
+.nextButton:disabled {
+  background-color: #333 !important;
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
 }
 /* toggle */
 .toggleContainer{

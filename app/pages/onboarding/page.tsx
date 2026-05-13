@@ -1,9 +1,17 @@
 "use client";
-
+import OnboardingStep1 from "./step1/page";
+import OnboardingStep2 from "./step2/page";
+import OnboardingStep3 from "./step3/page";
+import OnboardingStep4 from "./step4/page";
+import OnboardingStep5 from "./step5/page";
+import OnboardingStep6 from "./step6/page";
+import OnboardingStep7 from "./step7/page";
+import OnboardingStep8 from "./step8/page";
 import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import Link from 'next/link';
 import "./onboarding.css";
+
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -19,82 +27,112 @@ const steps = [
   OnboardingStep5,
   OnboardingStep6,
   OnboardingStep7,
-  OnboadingStep8
+  OnboardingStep8
 ];
-   
+
+const stepLinks =[
+  <Link href="/onboarding/step1"></Link>,
+ <Link href="/onboarding/step2"></Link>,
+ <Link href="/onboarding/step3"></Link>,
+<Link href="/onboarding/step4"></Link>,
+<Link href="/onboarding/step5"></Link>,
+<Link href="/onboarding/step6"></Link>,
+<Link href="/onboarding/step7"></Link>,
+<Link href="/onboarding/step8"></Link>
+]
+ 
+function StepComponent({ stepIndex, formData, updateFormData, onNext, onBack }) {
+  const Step = steps[stepIndex];
+  return (
+    <div>
+      <button
+          className='tilbageLink'
+          type="button"
+          onClick={onBack}
+          disabled={stepIndex === 0}
+        >
+          <FaChevronLeft /> Tilbage
+        </button>
+      <Step formData={formData} updateFormData={updateFormData} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}>
+        
+        <button
+          className='nextButton'
+          type="button"
+          onClick={onNext}
+          disabled={stepIndex === steps.length - 1}
+        >
+          <FaArrowRight />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function Onboarding() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  // Get step from search params, default to 0
-  const stepParam = searchParams.get('step');
-  const step = stepParam ? Math.max(0, Math.min(steps.length - 1, parseInt(stepParam))) : 0;
-  const StepComponent = steps[step];
+  const [formData, setFormData] = useState({});
+  const [currentStep, setCurrentStep] = useState(0);
 
-  // Navigation helpers
-  const goToStep = (newStep: number) => {
-    router.push(`?step=${newStep}`);
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  // Fetch call to backend signup route
+  const handleSignup = async () => {
     setError("");
     setSuccess("");
     try {
-      const form = e.target as HTMLFormElement;
-      const res = await fetch("http://localhost:80/signup", {
+      const response = await fetch("http://127.0.0.1:8080/signup", {
         method: "POST",
-        body: new FormData(form)
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data || { status: "error", message: "Signup failed" });
-        return;
+      if (!response.ok) {
+        // Try to parse error message from backend
+        let errorMsg = "Signup failed.";
+        try {
+          const data = await response.json();
+          errorMsg = data.error || data.message || errorMsg;
+        } catch {}
+        throw new Error(errorMsg);
       }
       setSuccess("Signup successful!");
-      setTimeout(() => {
-        // Optionally redirect or reset
-      }, 1500);
-    } catch (err) {
-      setError("Network error. Please try again.");
+    } catch (error) {
+      setError(error.message || "An error occurred during signup.");
     }
   };
 
   return (
     <div className='Onboarding'>
-      <button
-        className='tilbageLink'
-        disabled={step === 0}
-        onClick={() => {
-          if (step > 0) goToStep(step - 1);
-        }}
-      >
-        <FaChevronLeft /> Tilbage
-      </button>
-      <form onSubmit={handleSubmit}>
-        <StepComponent />
-      </form>
-      {error && <div style={{ color: "red", marginTop: "10px" }}>{typeof error === 'string' ? error : error.message || JSON.stringify(error)}</div>}
-      {success && <div style={{ color: "green", marginTop: "10px" }}>{success}</div>}
-      {step < steps.length - 1 ? (
-        <Link href={`?step=${step + 1}`} passHref legacyBehavior>
-          <button
-            className='nextButton'
-            type="button"
-          >
-            <FaArrowRight />
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
+      <form onSubmit={e => e.preventDefault()}>
+        <StepComponent
+          stepIndex={currentStep}
+          formData={formData}
+          updateFormData={setFormData}
+          onNext={handleNext}
+          onBack={handleBack}
+        />
+        {/* Show signup button only on last step */}
+        {currentStep === steps.length - 1 && (
+          <button type="button" className="signupButton" onClick={handleSignup} style={{marginTop: 24}}>
+            Sign Up
           </button>
-        </Link>
-      ) : (
-        <button
-          className='nextButton'
-          type="button"
-          disabled
-        >
-          <FaArrowRight />
-        </button>
-      )}
+        )}
+      </form>
     </div>
   );
 }
