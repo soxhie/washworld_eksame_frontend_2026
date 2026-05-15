@@ -319,20 +319,36 @@
 }
 
 .locationFacts {
-  margin-top: 14px;
+  margin-top: 12px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 7px;
 }
 
 .factItem {
   margin: 0;
-  padding: 10px 11px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.07);
-  color: #ededed;
-  font-size: 18px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #e8e8e8;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.factLabel {
+  color: rgba(232, 232, 232, 0.72);
+  font-size: 12px;
   font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.factValue {
+  color: #f5f7f8;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .locationAlert {
@@ -760,6 +776,18 @@
 
   .factItem,
   .locationAlert {
+    font-size: 13px;
+  }
+
+  .factItem {
+    padding: 8px 10px;
+  }
+
+  .factLabel {
+    font-size: 11px;
+  }
+
+  .factValue {
     font-size: 13px;
   }
 

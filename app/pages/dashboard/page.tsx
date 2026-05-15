@@ -346,11 +346,28 @@ export default function DashboardPage() {
             </div>
 
             <div className="locationFacts" aria-label="Detaljer for valgt vaskehal">
-              <p className="factItem">Vaskehaller: {selectedLocation.hallsCount ?? 0}</p>
-              <p className="factItem">Vask selv baase: {selectedLocation.selfWashCount ?? 0}</p>
-              <p className="factItem">Stoevsugere: {selectedLocation.vacuumCount ?? 0}</p>
-              <p className="factItem">Forvask: {selectedLocation.preWashCount ?? 0}</p>
-              {selectedLocation.maxHeight ? <p className="factItem">Maks. hoejde: {selectedLocation.maxHeight} m</p> : null}
+              <p className="factItem">
+                <span className="factLabel">Vaskehaller</span>
+                <span className="factValue">{selectedLocation.hallsCount ?? 0}</span>
+              </p>
+              <p className="factItem">
+                <span className="factLabel">Vask selv baase</span>
+                <span className="factValue">{selectedLocation.selfWashCount ?? 0}</span>
+              </p>
+              <p className="factItem">
+                <span className="factLabel">Stoevsugere</span>
+                <span className="factValue">{selectedLocation.vacuumCount ?? 0}</span>
+              </p>
+              <p className="factItem">
+                <span className="factLabel">Forvask</span>
+                <span className="factValue">{selectedLocation.preWashCount ?? 0}</span>
+              </p>
+              {selectedLocation.maxHeight ? (
+                <p className="factItem">
+                  <span className="factLabel">Maks. hoejde</span>
+                  <span className="factValue">{selectedLocation.maxHeight} m</span>
+                </p>
+              ) : null}
             </div>
           </section>
         ) : null}
