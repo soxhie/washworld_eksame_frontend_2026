@@ -73,7 +73,7 @@ export default function DashboardPage() {
   const [locations, setLocations] = useState<WashLocation[]>([]);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
   const [isLocationSheetOpen, setIsLocationSheetOpen] = useState(false);
-  const [locateRequestCount, setLocateRequestCount] = useState(0);
+  const [locateRequestCount, setLocateRequestCount] = useState(1);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [busyView, setBusyView] = useState<"open" | "busy">("open");

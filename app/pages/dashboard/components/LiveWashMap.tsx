@@ -49,10 +49,10 @@ function MapViewportController({
     if (locateRequestCount <= lastLocateRequestCountRef.current) {
       return;
     }
-    lastLocateRequestCountRef.current = locateRequestCount;
 
     if (currentPosition) {
       map.flyTo(currentPosition, 14, { duration: 0.8 });
+      lastLocateRequestCountRef.current = locateRequestCount;
       return;
     }
 
@@ -60,6 +60,7 @@ function MapViewportController({
 
     if (selectedLocation) {
       map.flyTo(selectedLocation.position, 14, { duration: 0.8 });
+      lastLocateRequestCountRef.current = locateRequestCount;
     }
   }, [currentPosition, locateRequestCount, locations, map, selectedLocationId]);
 
