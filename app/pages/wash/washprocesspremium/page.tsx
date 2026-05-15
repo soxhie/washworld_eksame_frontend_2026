@@ -8,7 +8,7 @@ export default function ActiveWashPage() {
   return (
     <main style={{ minHeight: "100vh", overflowY: "auto", paddingBottom: 80 }}>
       <AppHeader variant="brand" />
-      <WashProgram package="brilliant" />
+      <WashProgram package="premium" />
       <BottomNav activeTab="wash" variant="angled" />
     </main>
   );

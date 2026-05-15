@@ -44,8 +44,8 @@ export default function SwipeButton({ variant, onActivate }: Props) {
       onTouchMove={(e) => move(e.touches[0].clientX)}
       style={{
         position: "relative",
-        width: 280,
-        height: 64,
+        width: 256,
+        height: 44,
         borderRadius: 999,
         background: done ? "#22c55e" : "#f3f4f6",
         cursor: done ? "default" : "grab",
@@ -58,8 +58,8 @@ export default function SwipeButton({ variant, onActivate }: Props) {
       <div style={{
         position: "absolute",
         [done ? "right" : "left"]: 6,
-        width: 52,
-        height: 52,
+        width: 34,
+        height: 34,
         borderRadius: "50%",
         background: done ? "#fff" : "#22c55e",
         display: "flex",
