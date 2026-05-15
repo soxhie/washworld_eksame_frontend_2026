@@ -1,3 +1,59 @@
+/* WashHistory styles moved from WashHistory.css */
+.washHistory {
+  margin-top: 2rem;
+  padding: 0 18px; /* Match side margins with other flows */
+}
+.washHistoryTitle {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.washHistoryList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.washHistoryItem {
+  display: flex;
+  align-items: center;
+  background: #111;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #222;
+}
+.washHistoryIconWrap {
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+}
+.washHistoryIcon {
+  color: #00ff99;
+  font-size: 2rem;
+}
+.washHistoryInfo {
+  flex: 1;
+}
+.washHistoryLocation {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.washHistoryDateTime {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+.washHistoryLabel {
+  background: #00ff99;
+  color: #111;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 0.25rem 0.75rem;
+  margin-left: 1rem;
+  align-self: flex-start;
+}
 .ProfilePage {
   min-height: 100vh;
   width: 100%;
@@ -98,5 +154,191 @@
 
 .logoutCancel {
   background: #066632;
+}
+
+.profileDetails {
+  margin-top: 74px;
+  padding: 0 18px;
+}
+
+.profileBackButton {
+  border: none;
+  background: transparent;
+  color: #e8e8e8;
+  font-size: 30px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  margin-bottom: 14px;
+}
+
+.profileBackButton span {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.detailsForm {
+  display: grid;
+  gap: 16px;
+  padding-bottom: 130px;
+}
+
+.detailsFormTitle {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: #f2f2f2;
+}
+
+.detailsFormHint {
+  margin: -8px 0 2px;
+  color: #9cecc7;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.detailsField {
+  border: 1px solid #00d881;
+  background: #066632;
+  min-height: 64px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  align-items: center;
+  padding: 10px 12px;
+}
+
+.detailsFieldLabelWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.detailsFieldIcon {
+  width: 22px;
+  height: 22px;
+  color: #f6f6f6;
+  flex-shrink: 0;
+}
+
+.detailsFieldLabel {
+  color: #f0f6f3;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.detailsFieldInput {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #d8f8e8;
+  font-size: 17px;
+  font-weight: 500;
+  padding: 0;
+}
+
+.detailsFieldValueRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 32px;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px dashed rgba(194, 255, 222, 0.42);
+}
+
+.detailsFieldEditableTag {
+  flex-shrink: 0;
+  color: #b6f6d7;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.95;
+}
+
+.detailsField:focus-within .detailsFieldValueRow {
+  border-color: #ebfff4;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.detailsFieldInput::placeholder {
+  color: #c5e8d7;
+}
+
+.detailsSaveButton {
+  margin-top: 6px;
+  height: 54px;
+  border: 1px solid #00d881;
+  background: linear-gradient(135deg, #0bcc73 0%, #099e5a 100%);
+  color: #031e12;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.detailsSaveMessage {
+  margin: 0;
+  color: #8ef5c4;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .profileDetails {
+    margin-top: 60px;
+  }
+
+  .profileBackButton {
+    font-size: 28px;
+  }
+
+  .detailsForm {
+    gap: 14px;
+  }
+
+  .detailsFormTitle {
+    font-size: 22px;
+  }
+
+  .detailsFormHint {
+    font-size: 12px;
+  }
+
+  .detailsField {
+    min-height: 58px;
+    padding: 9px 10px;
+  }
+
+  .detailsFieldLabel {
+    font-size: 20px;
+  }
+
+  .detailsFieldInput {
+    font-size: 14px;
+  }
+
+  .detailsFieldValueRow {
+    margin-left: 30px;
+    padding: 7px 8px;
+  }
+
+  .detailsFieldEditableTag {
+    font-size: 9px;
+  }
+
+  .detailsSaveButton {
+    font-size: 16px;
+    height: 50px;
+  }
+
+  .detailsSaveMessage {
+    font-size: 13px;
+  }
 }
 
