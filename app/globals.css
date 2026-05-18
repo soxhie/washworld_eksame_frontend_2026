@@ -48,10 +48,20 @@
   font-display: swap;
 }
 
+body {
+  background: #111;
+  color: #fff;
+  font-family: var(--font-primary);
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
   --font-primary: "Gilroy", var(--font-inter), sans-serif;
+
+  --color-primary: #22c55e;
+  --color-active-bg: #06c167;
+  --color-active-bg-transparent: #0ce57847;
 
   /* Mobile typography scale */
   --display-h1-size: 36px;
@@ -72,8 +82,10 @@
   --body-md-line: 24px;
   --body-sm-size: 14px;
   --body-sm-line: 21px;
+  --body-xs-size: 12px;
   --price-light-size: 10px;
   --price-light-line: 38px;
+  --price-light-line-small: 16px;
   --label-extra-bold-size: 12px;
   --link-medium-size: 16px;
 }

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
@@ -21,11 +21,17 @@ export const metadata: Metadata = {
 
 
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
-  children, 
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+<<<<<<< HEAD
   return (
     <html
       lang="en"
@@ -35,4 +41,11 @@ export default function RootLayout({
       
     </html>
   );
+=======
+return (
+  <html lang="en" className={`${inter.variable} ${geistMono.variable} h-full antialiased`}>
+    <body className="min-h-full flex flex-col bg-[#111] text-white">{children}</body>
+  </html>
+);
+>>>>>>> 5130675ef763f1e5f4cce1a96e9395eac126d77f
 }

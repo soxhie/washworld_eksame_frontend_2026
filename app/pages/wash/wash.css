@@ -122,8 +122,7 @@
   margin-top: 14px;
 }
 
-.purchaseSection h2,
-.recentSection h2 {
+.purchaseSection h2 {
   margin: 0 0 10px;
   font-size: 30px;
   font-weight: 800;
@@ -180,57 +179,69 @@
   line-height: 1.25;
 }
 
-.recentSection {
+.washHistory {
   margin-top: 8px;
-}
-
-.recentList {
-  list-style: none;
-  margin: 0;
   padding: 0;
-  display: grid;
 }
 
-.recentItem {
-  display: grid;
-  grid-template-columns: 50px 1fr auto;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid #08d17a;
-}
-
-.carIconBox {
-  width: 50px;
-  height: 50px;
-  background: #041f14;
-  display: grid;
-  place-items: center;
-}
-
-.carIcon {
-  width: 31px;
-  height: 31px;
-  color: #10db82;
-}
-
-.recentLocation {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.recentTime {
-  margin: 3px 0 0;
-  font-size: 12px;
-  color: #d8d8d8;
-}
-
-.planBadge {
-  background: #18de84;
+.washHistoryTitle {
+  margin: 0 0 10px;
   color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 3px 8px;
+  font-size: 30px;
+  font-weight: 800;
+  text-align: left;
+}
+
+.washHistoryList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.washHistoryItem {
+  display: flex;
+  align-items: center;
+  background: #111;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #222;
+}
+
+.washHistoryIconWrap {
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.washHistoryIcon {
+  color: #00ff99;
+  font-size: 2rem;
+}
+
+.washHistoryInfo {
+  flex: 1;
+}
+
+.washHistoryLocation {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.washHistoryDateTime {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.washHistoryLabel {
+  background: #00ff99;
+  color: #111;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 0.25rem 0.75rem;
+  margin-left: 1rem;
+  align-self: flex-start;
 }
 

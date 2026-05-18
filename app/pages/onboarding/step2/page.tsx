@@ -7,20 +7,33 @@ import { StepComponent } from "../components/stepsComponent";
 export default function OnboardingStep2() {
    
     return (
-        <>
-            <StepComponent currentStep={2} totalSteps={7} />
-            <div className="Onboarding-2">
-                <h1>Opret bruger</h1>
-                <div className="inputContainer">
-                    <label>Email</label>
-                    <input
-                        name="user_email"
-                        type="text"
-                    />
-                </div>
-                <PasswordRequirements />
-                <Toggle/>
+        <div className="Onboarding-2">
+            <h1>Opret bruger</h1>
+            <div className="inputContainer">
+                <label>Email</label>
+                <input
+                    name="user_email"
+                    type="text"
+                   
+                    required
+                />
             </div>
-        </>
+            <PasswordRequirements />
+          
+            <div className="toggleContainer">
+                <p>Jeg acceptere <a href="">Terms & Condtions</a></p>
+                <label className="switch">
+                    <input type="checkbox" required />
+                    <span className="slider round"></span>
+                </label>
+            </div>
+            <div className="toggleContainer">
+                <p>Jeg acceptere <a href="">Privacy guidelines</a></p>
+                <label className="switch">
+                    <input type="checkbox" required />
+                    <span className="slider round"></span>
+                </label>
+            </div>
+        </div>
     );
 }
