@@ -5,6 +5,7 @@ import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { useState } from "react";
+import PasswordRequirements from "../components/passwordRequirements";
 export default function OnboardingStep2({ formData, updateFormData }: { formData: any, updateFormData: (data: any) => void }) {
     const [showPassword, setShowPassword] = useState(false);
     return (
@@ -15,47 +16,13 @@ export default function OnboardingStep2({ formData, updateFormData }: { formData
                 <input
                     name="user_email"
                     type="text"
-                    value={formData.user_email}
+                    value={formData.user_email || ""}
                     onChange={e => updateFormData({ user_email: e.target.value })}
                     required
                 />
             </div>
-            <div className="inputContainer">
-                <label>Adgangskode</label>
-                <div style={{ display: "flex" }}>
-                    <input
-                        name="user_password"
-                        type={showPassword ? "text" : "password"}
-                        value={formData.user_password}
-                        onChange={e => updateFormData({ user_password: e.target.value })}
-                        required
-                    />
-                    <div
-                        style={{ position: "absolute", right: "35px", marginTop: "8px", fontSize: "18px" }}
-                        onClick={() => setShowPassword(!showPassword)}
-                    >
-                        {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
-                    </div>
-                </div>
-            </div>
-            <div className="inputContainer">
-                <label htmlFor="">Gentag adgangskode</label>
-                <div style={{ display: "flex" }}>
-                    <input
-                        name="confirm_password"
-                        type={showPassword ? "text" : "password"}
-                        value={formData.confirm_password}
-                        onChange={e => updateFormData({ confirm_password: e.target.value })}
-                        required
-                    />
-                    <div
-                        style={{ position: "absolute", right: "35px", marginTop: "8px", fontSize: "18px" }}
-                        onClick={() => setShowPassword(!showPassword)}
-                    >
-                        {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
-                    </div>
-                </div>
-            </div>
+            <PasswordRequirements />
+          
             <div className="toggleContainer">
                 <p>Jeg acceptere <a href="">Terms & Condtions</a></p>
                 <label className="switch">

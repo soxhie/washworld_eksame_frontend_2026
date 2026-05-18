@@ -1,10 +1,11 @@
-"use client"
+"use client";
 import "./login.css"
 import "../../globals.css"
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import { useState } from "react";
+import { Link } from "react-router";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -42,13 +43,13 @@ export default function Login() {
     
     return(
         <div className="login">
-            <button
+            <Link href="/pages/onboarding/page_onboarding"
           className='tilbageLink'
           type="button"
-
+           
         >
           <FaChevronLeft /> Tilbage
-        </button>
+        </Link>
             <h1>Login</h1>
             <div className="inputContainer">
                            <label>Email</label>

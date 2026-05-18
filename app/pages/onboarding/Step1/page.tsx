@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import "../onboarding.css"
-export default function OnboardingStep1({ formData, updateFormData }) {
+export default function OnboardingStep1({ formData, updateFormData }: { formData: any, updateFormData: (data: any) => void }) {
     
     
     return (
@@ -14,7 +14,7 @@ export default function OnboardingStep1({ formData, updateFormData }) {
                 <input
                     type="text"
                     name="user_name"
-                    
+                    value={formData.user_name || ""}
                     onChange={e => updateFormData({ user_name: e.target.value })}
                     required
                 />
@@ -24,7 +24,7 @@ export default function OnboardingStep1({ formData, updateFormData }) {
                 <input
                     type="text"
                     name="user_last_name"
-                   
+                    value={formData.user_last_name || ""}
                     onChange={e => updateFormData({ user_last_name: e.target.value })}
                     required
                 />

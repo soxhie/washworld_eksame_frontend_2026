@@ -31,32 +31,22 @@ const steps = [
   OnboardingStep8
 ];
 
-const stepLinks =[
-  <Link href="/onboarding/step1"></Link>,
- <Link href="/onboarding/step2"></Link>,
- <Link href="/onboarding/step3"></Link>,
-<Link href="/onboarding/step4"></Link>,
-<Link href="/onboarding/step5"></Link>,
-<Link href="/onboarding/step6"></Link>,
-<Link href="/onboarding/step7"></Link>,
-<Link href="/onboarding/step8"></Link>
-]
- 
+
+
 function StepComponent({ stepIndex, formData, updateFormData, onNext, onBack }) {
   const Step = steps[stepIndex];
   return (
     <div>
       <button
-          className='tilbageLink'
-          type="button"
-          onClick={onBack}
-          disabled={stepIndex === 0}
-        >
-          <FaChevronLeft /> Tilbage
-        </button>
+        className='tilbageLink'
+        type="button"
+        onClick={onBack}
+        disabled={stepIndex === 0}
+      >
+        <FaChevronLeft /> Tilbage
+      </button>
       <Step formData={formData} updateFormData={updateFormData} />
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}>
-        
         <button
           className='nextButton'
           type="button"
@@ -76,9 +66,37 @@ export default function Onboarding() {
   const [formData, setFormData] = useState({});
   const [currentStep, setCurrentStep] = useState(0);
 
-  const handleNext = () => {
+
+
+  // Save formData to localStorage on every change
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("onboardingFormData", JSON.stringify(formData));
+      // Debug: log the saved data for each step
+      const saved = localStorage.getItem("onboardingFormData");
+      console.log("[Onboarding] Saved to localStorage:", saved);
+    }
+  }, [formData]);
+
+  // Load formData from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("onboardingFormData");
+      if (saved) {
+        try {
+          setFormData(JSON.parse(saved));
+        } catch {}
+      }
+    }
+  }, []);
+
+  const handleNext = async () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
+    }
+    // If moving to step 8 (index 7), trigger signup
+    if (currentStep === steps.length - 2) {
+      await handleSignup();
     }
   };
 
@@ -88,20 +106,29 @@ export default function Onboarding() {
     }
   };
 
-  // Fetch call to backend signup route
+
+  // Signup handler: posts data to backend and clears localStorage on success
   const handleSignup = async () => {
     setError("");
     setSuccess("");
     try {
+      let dataToSend = formData;
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem("onboardingFormData");
+        if (saved) {
+          try {
+            dataToSend = JSON.parse(saved);
+          } catch {}
+        }
+      }
       const response = await fetch("http://127.0.0.1:8080/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
       if (!response.ok) {
-        // Try to parse error message from backend
         let errorMsg = "Signup failed.";
         try {
           const data = await response.json();
@@ -110,6 +137,9 @@ export default function Onboarding() {
         throw new Error(errorMsg);
       }
       setSuccess("Signup successful!");
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("onboardingFormData");
+      }
     } catch (error) {
       setError(error.message || "An error occurred during signup.");
     }
@@ -127,7 +157,7 @@ export default function Onboarding() {
           onNext={handleNext}
           onBack={handleBack}
         />
-        {/* Show signup button only on last step */}
+        {/* Show signup button only on last step (optional, but signup is triggered on step 8 automatically) */}
         {currentStep === steps.length - 1 && (
           <button type="button" className="signupButton" onClick={handleSignup} style={{marginTop: 24}}>
             Sign Up
