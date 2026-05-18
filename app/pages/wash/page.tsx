@@ -30,10 +30,11 @@ export default function WashPage() {
       <AppHeader variant="brand" />
       <div style={{ padding: "0 18px" }}>
         <button
-                  onClick={() => router.back()}
-                  style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "#fff", cursor: "pointer", fontSize: "var(--body-sm-size)", marginBottom: 16 }}>
-                  <FaChevronLeft /> Tilbage
-                </button>
+          onClick={() => router.back()}
+          style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "#fff", cursor: "pointer", fontSize: "var(--body-sm-size)", marginBottom: 16 }}
+        >
+          <FaChevronLeft /> Tilbage
+        </button>
         <MembershipCard
           package="brilliant"
           location={selectedHall.name}
