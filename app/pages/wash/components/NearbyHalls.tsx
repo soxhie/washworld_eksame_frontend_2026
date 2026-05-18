@@ -5,7 +5,7 @@ type Hall = {
   id: string;
   name: string;
   address: string;
-  status: "Travlt" | "Ledig" | "Fyldt" | "Åbent" | "Info";
+  status: "Travlt" | "Ledig" | "Fyldt";
   waitTime: string;
   distance: string;
 };
@@ -14,8 +14,6 @@ const statusColors: Record<Hall["status"], string> = {
   Travlt: "#ffbf24",
   Ledig: "#22c55e",
   Fyldt: "#ef4444",
-  Åbent: "#22c55e",
-  Info: "#9ca3af",
 };
 
 type Props = {

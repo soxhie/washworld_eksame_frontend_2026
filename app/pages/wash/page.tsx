@@ -19,7 +19,7 @@ type WashWorldLocation = {
 };
 
 type NearbyHall = WashWorldLocation & {
-  status: "Åbent" | "Info";
+  status: "Travlt" | "Ledig" | "Fyldt";
   waitTime: string;
   distance: string;
   distanceKm: number;
@@ -55,12 +55,18 @@ function formatDistance(distanceKm: number) {
   return distanceKm < 1 ? `${Math.round(distanceKm * 1000)} m` : `${distanceKm.toFixed(1)} km`;
 }
 
-function getLocationStatus(location: WashWorldLocation): NearbyHall["status"] {
-  return location.message ? "Info" : "Åbent";
-}
+const MOCK_STATUSES: NearbyHall["status"][] = ["Travlt", "Ledig", "Fyldt"];
+const MOCK_WAIT_TIMES: Record<NearbyHall["status"], string> = {
+  Travlt: "Ca. 10 min ventetid",
+  Ledig: "Klar nu",
+  Fyldt: "Ca. 25 min ventetid",
+};
 
-function getLocationWaitText(location: WashWorldLocation) {
-  return location.message?.trim() || location.openHours?.trim() || "Åbningstider ikke angivet";
+function getMockQueueData(location: WashWorldLocation): Pick<NearbyHall, "status" | "waitTime"> {
+  // Derive a stable index from the location id so the same hall always shows the same mock status
+  const seed = [...location.id].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const status = MOCK_STATUSES[seed % MOCK_STATUSES.length]!;
+  return { status, waitTime: MOCK_WAIT_TIMES[status] };
 }
 
 function getBrowserPosition(): Promise<[number, number]> {
@@ -109,11 +115,11 @@ export default function WashPage() {
           .filter((location) => location.id && location.name && location.address && Array.isArray(location.position) && location.position.length === 2)
           .map((location) => {
             const distanceKm = getDistanceKm(currentPosition, location.position);
+            const queueData = getMockQueueData(location);
 
             return {
               ...location,
-              status: getLocationStatus(location),
-              waitTime: getLocationWaitText(location),
+              ...queueData,
               distanceKm,
               distance: formatDistance(distanceKm),
             };
