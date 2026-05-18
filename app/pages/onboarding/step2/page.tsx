@@ -7,6 +7,8 @@ import { StepComponent } from "../components/stepsComponent";
 export default function OnboardingStep2() {
    
     return (
+         <>
+            <StepComponent currentStep={2} totalSteps={7}  />
         <div className="Onboarding-2">
             <h1>Opret bruger</h1>
             <div className="inputContainer">
@@ -35,5 +37,5 @@ export default function OnboardingStep2() {
                 </label>
             </div>
         </div>
-    );
+        </>);
 }
