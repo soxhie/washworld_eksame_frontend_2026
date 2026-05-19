@@ -2,6 +2,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import { saveOnboardingData } from "../utils/onboardingStorage";
+import Toggle from "../components/toggle";
+import PasswordRequirements from "../components/passwordRequirements";
 import "../onboarding.css";
 import { StepComponent } from "../components/stepsComponent";
 export default function OnboardingStep1() {
@@ -34,6 +36,17 @@ export default function OnboardingStep1() {
                         onChange={e => setLastName(e.target.value)}
                     />
                 </div>
+                <h1>Opret bruger</h1>
+            <div className="inputContainer">
+                <label>Email</label>
+                <input
+                    name="user_email"
+                    type="text"
+                    required
+                />
+            </div>
+            <PasswordRequirements/>
+            <Toggle />
             </div>
         </>
     );
