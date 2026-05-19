@@ -45,8 +45,7 @@ export default function OnboardingStep2() {
             <div className="Onboarding-2">
             <button
                       className='tilbageLink'
-                      type="button"
-                     
+                      type="button"                  
                     >
                       <FaChevronLeft /> Tilbage
                     </button>

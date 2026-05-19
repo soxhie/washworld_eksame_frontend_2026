@@ -3,6 +3,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { saveOnboardingData } from "../utils/onboardingStorage";
 import Toggle from "../components/toggle";
+import { FaArrowRight } from "react-icons/fa";
+import { FaChevronLeft } from "react-icons/fa";
 import PasswordRequirements from "../components/passwordRequirements";
 import "../onboarding.css";
 import { StepComponent } from "../components/stepsComponent";
@@ -12,9 +14,21 @@ export default function OnboardingStep1() {
 
 
     return (
-        <>
-            <StepComponent currentStep={1} totalSteps={7}  />
+        
             <div className="Onboarding-1">
+                 <button
+                  className='tilbageLink'
+                  type="button"
+                 
+                >
+                  <FaChevronLeft /> Tilbage
+                </button> <button
+                  className='tilbageLink'
+                  type="button"
+                 
+                >
+                  <FaChevronLeft /> Tilbage
+                </button>
                 <h1 className="title">Indtast navn</h1>
                 <div className="inputContainer">
                     <label>Navn</label>
@@ -47,7 +61,18 @@ export default function OnboardingStep1() {
             </div>
             <PasswordRequirements/>
             <Toggle />
+             <button
+                        className='nextButton'
+                        type="button"
+                        onClick={() => {
+                          validateEmail();
+                          handleNext();
+                        }}
+                      >
+                        <FaArrowRight />
+                      </button>
+
             </div>
-        </>
+       
     );
 }
