@@ -4,18 +4,26 @@ import { useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { FaInfinity } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
+import { FaChevronLeft } from "react-icons/fa";
 import { StepComponent } from "../components/stepsComponent";
-export default function OnboardingStep5() {
-    const plans = [
-        { name: "guld", price: 139, description: "God og effectiv" },
-        { name: "premium", price: 169, description: "Extra Grundig" },
-        { name: "brilliant", price: 200, description: "Bedste vask året rundt" }
-    ];
-    const [clickedPlan, setClickedPlan] = useState<string | null>(null);
+import CardInput from "../components/cardInput";
+
+
+export default function OnboardingStep6() {
+    const [paymentMethod, setPaymentMethod] = useState("card");
+
     return (
-        <>
-            <StepComponent currentStep={4} totalSteps={7} />
+       
+            
             <div className="Onboarding-5">
+                <button
+                          className='tilbageLink'
+                          type="button"
+                        
+                        >
+                          <FaChevronLeft /> Tilbage
+                        </button>
                 <h1>Vælg Abonnement</h1>
                 <p>Få ubegrænset bilvask til en fast lav pris og vask, hvor og hvornår det passer dig.</p>
                 {plans.map(plan => (
@@ -36,8 +44,16 @@ export default function OnboardingStep5() {
                         <FaChevronRight />
                     </button>
                 ))}
-                {/* isFilled can be used for validation UI if needed */}
+                 <button
+                          className='nextButton'
+                          type="button"
+
+                        >
+                          <FaArrowRight />
+                        </button>
             </div>
-        </>
+    
     );
 }
+
+

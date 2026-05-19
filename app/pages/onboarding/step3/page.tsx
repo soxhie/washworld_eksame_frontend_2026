@@ -1,44 +1,43 @@
-import { FaPlus } from "react-icons/fa6";
-
-import Image from "next/image";
-import { FaArrowRight } from "react-icons/fa";
-import { FaChevronLeft } from "react-icons/fa";
-import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
-import { IoReload } from "react-icons/io5";
+"use client";
 
 import { useState } from "react";
-import PinInput from "../components/pinInput";
+import { FaPlus } from "react-icons/fa6";
+import { FaInfinity } from "react-icons/fa6";
+import { FaChevronRight } from "react-icons/fa";
 import { StepComponent } from "../components/stepsComponent";
-import "../onboarding.css"
-export default function OnboardingStep3() {
-
-
-  return (
-    
-      <div className="Onboarding-3">
-        <button
-                  className='tilbageLink'
-                  type="button"
-                 
-                >
-                  <FaChevronLeft /> Tilbage
-                </button>
-        <h1>Indtast kode</h1>
-        <p>Indtast den kode, der er sendt til din e-mail. (Tjek også din spam-mappe)</p>
-        <PinInput />
-        <p>Det kan tage op til 1 minut at modtage koden.</p>
-        <a href=""><IoReload /> Gensend kode</a>
-         <button
-            className='nextButton'
-            type="button"
-            onClick={() => {
-              validateEmail();
-              handleNext();
-            }}
-          >
-            <FaArrowRight />
-          </button>
-      </div>
-      
-  );
+export default function OnboardingStep5() {
+    const plans = [
+        { name: "guld", price: 139, description: "God og effectiv" },
+        { name: "premium", price: 169, description: "Extra Grundig" },
+        { name: "brilliant", price: 200, description: "Bedste vask året rundt" }
+    ];
+    const [clickedPlan, setClickedPlan] = useState<string | null>(null);
+    return (
+        <>
+            <StepComponent currentStep={4} totalSteps={7} />
+            <div className="Onboarding-5">
+                <h1>Vælg Abonnement</h1>
+                <p>Få ubegrænset bilvask til en fast lav pris og vask, hvor og hvornår det passer dig.</p>
+                {plans.map(plan => (
+                    <button
+                        type="button"
+                        key={plan.name}
+                        className={clickedPlan === plan.name ? "plan-btn clicked" : "plan-btn"}
+                    >
+                        <input
+                            type="radio"
+                            value={plan.name}
+                            readOnly
+                        />
+                        <div>
+                            <h3>{plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}- {plan.price}kr./md.</h3>
+                            <h4>{plan.description}</h4>
+                        </div>
+                        <FaChevronRight />
+                    </button>
+                ))}
+                {/* isFilled can be used for validation UI if needed */}
+            </div>
+        </>
+    );
 }

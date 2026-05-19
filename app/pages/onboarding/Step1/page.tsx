@@ -7,12 +7,38 @@ import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import PasswordRequirements from "../components/passwordRequirements";
 import "../onboarding.css";
-import { StepComponent } from "../components/stepsComponent";
+
 export default function OnboardingStep1() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-
-
+    const [error, setError] = useState("")
+    const [succes, setSuccess] = useState("")
+      
+    
+        // Email validation handler
+        const validateEmail = async () => {
+            setError("");
+            const email = emailRef.current?.value || "";
+            if (!email) return;
+            try {
+                const res = await fetch("http://localhost:8080/email-validation", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ user_email: email })
+                });
+                if (!res.ok) {
+                    const data = await res.json();
+                    setError(data.message || "Bruger allerede oprettet");
+                } else {
+                    setError("");
+                }
+            } catch (err) {
+                setError("Serverfejl ved validering af email");
+            }
+        };
+        
     return (
         
             <div className="Onboarding-1">
@@ -22,13 +48,7 @@ export default function OnboardingStep1() {
                  
                 >
                   <FaChevronLeft /> Tilbage
-                </button> <button
-                  className='tilbageLink'
-                  type="button"
-                 
-                >
-                  <FaChevronLeft /> Tilbage
-                </button>
+                </button> 
                 <h1 className="title">Indtast navn</h1>
                 <div className="inputContainer">
                     <label>Navn</label>
@@ -50,7 +70,7 @@ export default function OnboardingStep1() {
                         onChange={e => setLastName(e.target.value)}
                     />
                 </div>
-                <h1>Opret bruger</h1>
+               
             <div className="inputContainer">
                 <label>Email</label>
                 <input
@@ -66,8 +86,8 @@ export default function OnboardingStep1() {
                         type="button"
                         onClick={() => {
                           validateEmail();
-                          handleNext();
                         }}
+                        
                       >
                         <FaArrowRight />
                       </button>
