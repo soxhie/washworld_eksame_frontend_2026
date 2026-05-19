@@ -9,7 +9,7 @@ export default function OnboardingStep2() {
 
     return (
         <>
-            <StepComponent currentStep={2} totalSteps={7} />
+            <StepComponent currentStep={2} totalSteps={6} />
             <div className="Onboarding-2">
                 <h1>Opret bruger</h1>
                 <div className="inputContainer">
