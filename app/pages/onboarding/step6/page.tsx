@@ -1,7 +1,7 @@
 
 import { StepComponent } from "../components/stepsComponent";
 
-export default function OnboardingStep7() {
+export default function OnboardingStep6() {
     return (
         <>
             <StepComponent currentStep={6} totalSteps={6} />

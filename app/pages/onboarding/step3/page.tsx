@@ -1,10 +1,10 @@
 import { FaPlus } from "react-icons/fa6";
 
 import { StepComponent } from "../components/stepsComponent";
-export default function OnboardingStep4() {
+export default function OnboardingStep3() {
      return (
           <>
-               <StepComponent currentStep={3} totalSteps={7} />
+               <StepComponent currentStep={3} totalSteps={6} />
                <div className="Onboarding-4">
                     <h1>Tilføj nummerplade</h1>
                     <p>Vi bruger nummerpladen til automatisk genkendelse</p>

@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa6";
 import { FaInfinity } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa";
 import { StepComponent } from "../components/stepsComponent";
-export default function OnboardingStep5() {
+export default function OnboardingStep4() {
     const plans = [
         { name: "guld", price: 139, description: "God og effectiv" },
         { name: "premium", price: 169, description: "Extra Grundig" },
@@ -14,7 +14,7 @@ export default function OnboardingStep5() {
     const [clickedPlan, setClickedPlan] = useState<string | null>(null);
     return (
         <>
-            <StepComponent currentStep={4} totalSteps={7} />
+            <StepComponent currentStep={4} totalSteps={6} />
             <div className="Onboarding-5">
                 <h1>Vælg Abonnement</h1>
                 <p>Få ubegrænset bilvask til en fast lav pris og vask, hvor og hvornår det passer dig.</p>

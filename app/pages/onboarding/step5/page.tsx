@@ -5,12 +5,12 @@ import { StepComponent } from "../components/stepsComponent";
 import CardInput from "../components/cardInput";
 import { useState } from "react";
 
-export default function OnboardingStep6() {
+export default function OnboardingStep5() {
     const [paymentMethod, setPaymentMethod] = useState("card");
 
     return (
         <>
-            <StepComponent currentStep={5} totalSteps={7} />
+            <StepComponent currentStep={5} totalSteps={6} />
             <div className="Onboarding-6">
                 <h1>Betalingsmetode</h1>
                 <div className="button">
