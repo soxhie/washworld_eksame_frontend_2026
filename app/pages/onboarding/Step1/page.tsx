@@ -86,6 +86,7 @@ export default function OnboardingStep1() {
                         type="button"
                         onClick={() => {
                           validateEmail();
+                          void saveOnboardingData({ firstName, lastName });
                         }}
                         
                       >
