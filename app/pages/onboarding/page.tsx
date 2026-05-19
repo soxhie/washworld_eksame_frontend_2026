@@ -10,7 +10,7 @@ import OnboardingStep5 from "./step3/page";
 import OnboardingStep6 from "./step4/page";
 import OnboardingStep7 from "./step5/page";
 
-import { StepComponent } from "./components/stepsComponent";
+
 import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import Link from "next/link";
@@ -51,9 +51,14 @@ export default function Onboarding() {
         let errorMsg = "Signup failed.";
         try {
           const data = await response.json();
+          // Show backend error message if available
           errorMsg = data.error || data.message || errorMsg;
-        } catch { }
-        throw new Error(errorMsg);
+        } catch (e) {
+          // If response is not JSON
+          errorMsg = await response.text();
+        }
+        setError(errorMsg);
+        return;
       }
       setSuccess("Signup successful!");
       if (typeof window !== "undefined") {
@@ -66,9 +71,9 @@ export default function Onboarding() {
 
   return (
     <div className='Onboarding'>
-
-
-
+      {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}
+      {success && <div style={{ color: 'green', marginBottom: 8 }}>{success}</div>}
+      {/* ...rest of your onboarding UI... */}
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { IoReload } from "react-icons/io5";
 
 import { useState } from "react";
 import PinInput from "../components/pinInput";
-import { StepComponent } from "../components/stepsComponent";
+
 import "../onboarding.css"
 export default function OnboardingStep3() {
 
