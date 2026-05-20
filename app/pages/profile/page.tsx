@@ -23,9 +23,16 @@ export default function ProfilePage() {
     router.push(`/pages/profile/${id}`);
   }
 
-  function handleConfirmLogout() {
-    // TODO: wire up real logout logic
+  async function handleConfirmLogout() {
+    try {
+      await fetch("http://127.0.0.1:80/logout", {
+        method: "GET",
+      });
+    } catch {}
+    localStorage.removeItem("authUser");
+    localStorage.removeItem("access_token");
     setShowLogoutModal(false);
+    router.push("/pages/login");
   }
 
   return (

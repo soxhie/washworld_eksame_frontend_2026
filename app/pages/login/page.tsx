@@ -6,8 +6,10 @@ import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+    const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -32,8 +34,13 @@ export default function Login() {
                 setError(data.message || "Login mislykkedes. Tjek dine oplysninger.");
                 return;
             }
-            // Handle successful login (e.g., save token, redirect, etc.)
-            alert("Login successful!");
+            if (data?.user) {
+                localStorage.setItem("authUser", JSON.stringify(data.user));
+            }
+            if (data?.access_token) {
+                localStorage.setItem("access_token", data.access_token);
+            }
+            router.push("/pages/dashboard");
         } catch {
             setError("Systemfejl. Prøv igen senere.");
         }
