@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "app/pages/onboarding/step2/page.tsx", "app/pages/onboarding/step1/page.tsx", "app/page_onboarding.jsx"  ],
+, "app/pages/onboarding/step2/page.tsx", "app/pages/onboarding/Step1/page.tsx", "app/page_onboarding.jsx"  ],
   "exclude": ["node_modules"]
 }

@@ -148,25 +148,20 @@ h1{
 
   }
 }
-.Onboarding-5{
-  /* Plan button for step5 */
+.Onboarding-2{
+
 .plan-btn {
   border: 1px solid #06C167;
   transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
+
 .plan-btn.clicked {
   border: 4px solid #0CE578;
 }
-  button{
-    background: #0ce57847;
-    
-    align-items: center;
-    width: -webkit-fill-available;
-    padding: 16px 10px;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom:24px;
-  }
+  
   input[type="radio"]{
     appearance: none;
   }

@@ -3,7 +3,7 @@
 
 import React from "react";
 
-import OnboardingStep1 from "./step1/page";
+import OnboardingStep1 from "./Step1/page";
 import OnboardingStep2 from "./step2/page";
 import OnboardingStep4 from "./step2/page";
 import OnboardingStep5 from "./step2/page";
