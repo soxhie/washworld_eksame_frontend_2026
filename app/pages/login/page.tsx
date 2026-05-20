@@ -5,7 +5,7 @@ import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import { useState } from "react";
-import { Link } from "react-router";
+import Link from "next/link";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -34,7 +34,7 @@ export default function Login() {
             }
             // Handle successful login (e.g., save token, redirect, etc.)
             alert("Login successful!");
-        } catch (err) {
+        } catch {
             setError("Systemfejl. Prøv igen senere.");
         }
     };
@@ -43,9 +43,8 @@ export default function Login() {
     
     return(
         <div className="login">
-            <Link href="/pages/onboarding/page_onboarding"
+                        <Link href="/"
           className='tilbageLink'
-          type="button"
            
         >
           <FaChevronLeft /> Tilbage

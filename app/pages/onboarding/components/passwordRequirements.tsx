@@ -10,8 +10,8 @@ export default function PasswordRequirements() {
     const [repeatPassword, setRepeatPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
    
-    const [error, setError] = useState<string>("");
-    const [success, setSuccess] = useState("");
+    const [error] = useState<string>("");
+    const [success] = useState("");
 
     // Function to check if password and repeat password match
     function doPasswordsMatch(pwd: string, repeatPwd: string) {

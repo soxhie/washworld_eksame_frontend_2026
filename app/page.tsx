@@ -13,10 +13,10 @@ export default function Home() {
         priority
       />
       <div className="buttons">
-        <Link href="/pages/onboarding/page_onboarding" >
+        <Link href="/pages/login" >
           <button className="brandGrøn">Login</button>
         </Link>
-        <Link href="/pages/onboarding/step1">
+        <Link href="/pages/onboarding/Step1">
           <button className="primaryWhite">Opret bruger</button>
         </Link>
       </div>
