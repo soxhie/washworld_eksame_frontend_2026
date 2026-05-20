@@ -16,6 +16,10 @@ export default function ProfilePage() {
       setShowLogoutModal(true);
       return;
     }
+    if (id === "membership") {
+      router.push("/pages/profile/membership/details");
+      return;
+    }
     router.push(`/pages/profile/${id}`);
   }
 

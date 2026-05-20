@@ -1,3 +1,4 @@
+import Link from "next/link";
 const includedFeatures = [
   "Hojtryksskyl",
   "Shampoo",
@@ -44,10 +45,10 @@ export default function MembershipDetails({ onBack, onCancel }: MembershipDetail
         ))}
       </ul>
 
-      <button type="button" className="membershipManageButton">
+      <Link href="/pages/profile/membership/change" className="membershipManageButton">
         <span>Ændre medlemskab</span>
         <span className="membershipManageArrow" aria-hidden="true">›</span>
-      </button>
+      </Link>
 
       <button type="button" className="membershipCancelButton" onClick={onCancel}>
         Annuller medlemskab

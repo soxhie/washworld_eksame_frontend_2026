@@ -15,20 +15,19 @@ export default function MembershipCreate({
   isLoading,
   error,
 }: MembershipCreateProps) {
+  const currentPlanName = "premium";
+
   return (
-    <section className="membershipCreate" aria-label="Opret medlemskab">
+    <section className="membershipCreate" aria-label="Ændre medlemskab">
       <button type="button" className="profileBackButton" onClick={onBack}>
         <span aria-hidden="true">‹</span>
         Tilbage
       </button>
 
-      <h1 className="membershipCreateTitle">Medlemskab</h1>
-      <p className="membershipCreateSubtitle">Vælg dit medlemskab</p>
-
-      <h2 className="membershipCreateSectionTitle">
-        <span aria-hidden="true">∞</span>
-        Ubegrænset bilvask
-      </h2>
+      <h1 className="membershipCreateTitle">Ændre medlemskab</h1>
+      <p className="membershipCreateSubtitle membershipCreateIntro">
+        Få ubegrænset bilvask til en fast lav pris og vask, hvor og hvornår det passer dig.
+      </p>
 
       <div className="membershipCreateCards">
         {isLoading && (
@@ -57,38 +56,31 @@ export default function MembershipCreate({
         )}
 
         {plans.map((plan) => (
-          <article key={plan.name} className="membershipCreateCard">
+          <article
+            key={plan.name}
+            className={`membershipCreateCard${plan.name.toLowerCase() === currentPlanName ? " isCurrent" : ""}`}
+          >
             <button
               type="button"
               className="membershipCreateCardAction"
               aria-label={`Vaelg ${plan.name}`}
               onClick={() => onPlanClick(plan)}
             >
-              <span className="membershipCreateCardTopLine">
-                <strong>{plan.name}</strong> - {plan.price}kr./md.
-              </span>
-              <span className="membershipCreateCardDescription">{plan.shortDescription || "Læs mere om planen"}</span>
-              <span className="membershipCreateReadMore">Læs mere</span>
+              <span className="membershipCreatePlanName">{plan.name}</span>
+              <span className="membershipCreatePlanPrice">{plan.price}kr./md</span>
+              <span className="membershipCreatePlanDescription">{plan.shortDescription || "Læs mere om planen"}</span>
               <span className="membershipCreateChevron" aria-hidden="true">›</span>
+              {plan.name.toLowerCase() === currentPlanName && (
+                <span className="membershipCreateCurrentBadge">Nuværende</span>
+              )}
             </button>
           </article>
         ))}
       </div>
 
-      <h2 className="membershipCreateSectionTitle">
-        <span aria-hidden="true">✧</span>
-        Betal pr. vask
-      </h2>
-
-      <article className="membershipCreateCard membershipCreatePayAsYouGoCard">
-        <button type="button" className="membershipCreateCardAction" aria-label="Vælg betal pr. vask">
-          <span className="membershipCreateCardDescription membershipCreatePayAsYouGoText">
-            Du betaler automatisk hver gang du vasker.
-          </span>
-          <span className="membershipCreateReadMore">Læs mere</span>
-          <span className="membershipCreateChevron" aria-hidden="true">›</span>
-        </button>
-      </article>
+      <button type="button" className="membershipCreateCompareLink">
+        Sammenlign pakker
+      </button>
     </section>
   );
 }

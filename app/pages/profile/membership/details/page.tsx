@@ -13,7 +13,7 @@ export default function MembershipDetailsPage() {
     <main className="ProfilePage">
       <AppHeader variant="brand" />
       <MembershipDetails
-        onBack={() => router.push("/pages/profile/membership")}
+        onBack={() => router.push("/pages/profile")}
         onCancel={() => router.push("/pages/profile/membership/cancel")}
       />
       <BottomNav activeTab="profile" variant="angled" />

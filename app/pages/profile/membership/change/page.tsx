@@ -8,7 +8,7 @@ import MembershipCreate from "../../components/MembershipCreate";
 import { SubscriptionPlan } from "../../data/membershipTypes";
 import "../../profile.css";
 
-export default function MembershipCreatePage() {
+export default function MembershipChangePage() {
   const router = useRouter();
   const [subscriptions, setSubscriptions] = useState<SubscriptionPlan[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,12 +49,12 @@ export default function MembershipCreatePage() {
     <main className="ProfilePage">
       <AppHeader variant="brand" />
       <MembershipCreate
-        onBack={() => router.push("/pages/profile/membership")}
+        onBack={() => router.push("/pages/profile/membership/details")}
         plans={subscriptions}
         isLoading={isLoading}
         error={error}
         onPlanClick={(plan) =>
-          router.push(`/pages/profile/membership/create/${plan.id}`)
+          router.push(`/pages/profile/membership/change/${plan.id}`)
         }
       />
       <BottomNav activeTab="profile" variant="angled" />

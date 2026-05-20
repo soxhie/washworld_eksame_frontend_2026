@@ -61,7 +61,7 @@ export default function PlanDetailsPage() {
       <AppHeader variant="brand" />
       <MembershipPlanDetails
         plan={plan}
-        onBack={() => router.push("/pages/profile/membership/create")}
+        onBack={() => router.push("/pages/profile/membership/change")}
       />
       <BottomNav activeTab="profile" variant="angled" />
     </main>
