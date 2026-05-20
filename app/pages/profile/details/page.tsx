@@ -78,6 +78,44 @@ export default function ProfileDetailsPage() {
       });
   }, []);
 
+  async function handleSave(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSaveMessage(null);
+
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setSaveMessage("Du skal være logget ind.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://127.0.0.1:80/api-update-my-info", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          user_phone: detailsForm.phone,
+          user_email: detailsForm.email,
+          user_address: detailsForm.address,
+          car_plate: detailsForm.plateNumber,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setSaveMessage(data.message || "Kunne ikke gemme oplysninger.");
+        return;
+      }
+
+      setSaveMessage("Dine oplysninger er opdateret.");
+    } catch {
+      setSaveMessage("Systemfejl. Prøv igen senere.");
+    }
+  }
+
   return (
     <main className="ProfilePage">
       <AppHeader variant="brand" />
@@ -86,10 +124,7 @@ export default function ProfileDetailsPage() {
         onChange={(field, value) =>
           setDetailsForm((prev) => ({ ...prev, [field]: value }))
         }
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSaveMessage("Dine oplysninger er opdateret.");
-        }}
+        onSubmit={handleSave}
         onBack={() => router.push("/pages/profile")}
         saveMessage={saveMessage}
       />
