@@ -164,7 +164,7 @@ export default function WashPage() {
   }, [nearbyHalls, selectedHallId]);
 
   return (
-    <main style={{ minHeight: "100vh", paddingBottom: 100 }}>
+    <main style={{ minHeight: "100vh", paddingBottom: 100, background: "#000" }}>
       <AppHeader variant="brand" />
       <div style={{ padding: "0 18px" }}>
         <button

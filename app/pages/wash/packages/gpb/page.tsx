@@ -15,7 +15,7 @@ export default function PackagesPage() {
   const router = useRouter();
 
   return (
-    <div style={{ minHeight: "100vh", overflowY: "auto", paddingBottom: 80 }}>
+    <div style={{ minHeight: "100vh", overflowY: "auto", paddingBottom: 80, background: "#000" }}>
       <AppHeader variant="brand" />
       <div style={{ padding: "24px 20px 0" }}>
         <button

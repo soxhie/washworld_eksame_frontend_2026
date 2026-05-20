@@ -59,7 +59,7 @@ function BrilliantBtn({ active, onClick }: { active: boolean; onClick: () => voi
       <div
         onClick={onClick}
         style={{
-          background: active ? "var(--color-active-bg-transparent)" : "#000",
+          background: active ? "var(--color-active-bg-transparent)" : "#000000",
           height: "100%",
           display: "flex",
           flexDirection: "column",

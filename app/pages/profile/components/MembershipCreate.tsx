@@ -1,4 +1,5 @@
 import { SubscriptionPlan } from "../data/membershipTypes";
+import Link from "next/link";
 
 interface MembershipCreateProps {
   onBack: () => void;
@@ -78,9 +79,9 @@ export default function MembershipCreate({
         ))}
       </div>
 
-      <button type="button" className="membershipCreateCompareLink">
+      <Link href="/pages/wash/packages/gpb" className="membershipCreateCompareLink">
         Sammenlign pakker
-      </button>
+      </Link>
     </section>
   );
 }
