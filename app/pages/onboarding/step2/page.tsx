@@ -1,79 +1,54 @@
 "use client";
-import { use, useState } from "react"
-import { useRef } from "react"
-import "../onboarding.css"
-import PasswordRequirements from "../components/passwordRequirements";
-import { StepComponent } from "../components/stepsComponent";
-import Toggle from "../components/toggle";
+
+import { useState } from "react";
+
+import { FaChevronRight,FaChevronLeft } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa";
-import { FaChevronLeft } from "react-icons/fa";
 
-export default function OnboardingStep2() {
-    const [error, setError] = useState("")
-    const [succes, setSuccess] = useState("")
-    const emailRef = useRef<HTMLInputElement>(null);
-
-    // Email validation handler
-    const validateEmail = async () => {
-        setError("");
-        const email = emailRef.current?.value || "";
-        if (!email) return;
-        try {
-            const res = await fetch("http://localhost:8080/email-validation", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ user_email: email })
-            });
-            if (!res.ok) {
-                const data = await res.json();
-                setError(data.message || "Bruger allerede oprettet");
-            } else {
-                setError("");
-            }
-        } catch (err) {
-            setError("Serverfejl ved validering af email");
-        }
-    };
-    
-    
-   
-   
+import "../onboarding.css"
+export default function OnboardingStep5() {
+    const plans = [
+        { name: "guld", price: 139, description: "God og effectiv" },
+        { name: "premium", price: 169, description: "Extra Grundig" },
+        { name: "brilliant", price: 200, description: "Bedste vask året rundt" }
+    ];
+    const [clickedPlan, setClickedPlan] = useState<string | null>(null);
     return (
-       
-            <div className="Onboarding-2">
-            <button
-                      className='tilbageLink'
-                      type="button"                  
-                    >
-                      <FaChevronLeft /> Tilbage
-                    </button>
-            <h1>Opret bruger</h1>
-            <div className="inputContainer">
-                <label>Email</label>
-                <input
-                    name="user_email"
-                    type="text"
-                    required
-                    ref={emailRef}
-                    
-                />
-                {error && <div style={{ color: 'red', marginTop: 4 }}>{error}</div>}
-            </div>
-            <PasswordRequirements />
-          
-            <Toggle />
-             <button
-                className='nextButton'
-                type="button"
-                onClick={() => {
-                  validateEmail();
-                }}
-            >
-                <FaArrowRight />
-            </button>
-        </div>
         
-        );
+            <div className="Onboarding-5">
+                 <button
+                        className='tilbageLink'
+                        type="button"
+                      >
+                        <FaChevronLeft /> Tilbage
+                      </button>
+                <h1>Vælg Abonnement</h1>
+                <p>Få ubegrænset bilvask til en fast lav pris og vask, hvor og hvornår det passer dig.</p>
+                {plans.map(plan => (
+                    <button
+                        type="button"
+                        key={plan.name}
+                        className={clickedPlan === plan.name ? "plan-btn clicked" : "plan-btn"}
+                    >
+                        <input
+                            type="radio"
+                            value={plan.name}
+                            readOnly
+                        />
+                        <div>
+                            <h3>{plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}- {plan.price}kr./md.</h3>
+                            <h4>{plan.description}</h4>
+                        </div>
+                        <FaChevronRight />
+                    </button>
+                ))}
+              <button
+                      className='nextButton'
+                      type="submit"
+                    >
+                      <FaArrowRight />
+                    </button>
+            </div>
+        
+    );
 }

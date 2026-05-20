@@ -34,9 +34,6 @@ export default function PasswordRequirements() {
                             style={{position: 'absolute'}}
                             type={showPassword ? "text" : "password"}
                             name="user_password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
                             required
                         />
                         <div
@@ -61,7 +58,7 @@ export default function PasswordRequirements() {
                             style={{position: 'absolute'}}
                             type={showPassword ? "text" : "password"}
                             name="repeat_user_password"
-                            onChange={e => setRepeatPassword(e.target.value)}
+                           
                             required
                         />
                         <div
