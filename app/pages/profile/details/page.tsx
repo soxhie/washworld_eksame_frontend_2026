@@ -16,7 +16,7 @@ type AuthUser = {
 
 const DEFAULT_DETAILS_FORM = {
   phone: "+45 11 22 33 44",
-  email: "filip@email.dk",
+  email: "test@email.dk",
   password: "********",
   paymentMethod: "**** 4242",
   address: "Jagtvej 123, 2200 Kobenhavn N",
