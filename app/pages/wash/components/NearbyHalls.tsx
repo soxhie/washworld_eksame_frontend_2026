@@ -24,7 +24,7 @@ type Props = {
 export default function NearbyHalls({ halls, onSwitch }: Props) {
   return (
     <section style={{ marginTop: 30 }}>
-      <h3 style={{ fontSize: "var(--h3-size)", fontWeight: 800, margin: "px 0 0px" }}>Vaskehaller i nærheden</h3>
+      <h3 style={{ fontSize: "var(--h3-size)", fontWeight: 800, margin: 0 }}>Vaskehaller i nærheden</h3>
       {halls.map((hall, i) => (
         <div key={hall.id} style={{ borderBottom: i < halls.length - 1 ? "1px solid #08d17a" : "none", padding: "12px 0" }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>

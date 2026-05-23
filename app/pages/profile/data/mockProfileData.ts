@@ -12,7 +12,7 @@ export interface ProfileData {
 
 const profileData: ProfileData = {
   menuItems: [
-    { id: "membership", label: "Medlemskab", route: "/pages/membership" },
+    { id: "membership", label: "Mit Medlemskab", route: "/pages/membership/details" },
     { id: "history", label: "Vaske historik", route: "/pages/history" },
     { id: "details", label: "Mine oplysninger", route: "/pages/details" },
     { id: "logout", label: "Log ud", route: "/" },

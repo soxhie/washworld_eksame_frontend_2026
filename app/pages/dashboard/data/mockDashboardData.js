@@ -1,7 +1,7 @@
 const mockDashboardData = {
   user: {
     firstName: "Filip",
-    membershipTier: "Medlemskab: Plus",
+    membershipTier: "Medlemskab: Premium",
     points: 120,
   },
   notifications: {
@@ -11,7 +11,7 @@ const mockDashboardData = {
     serviceName: "Premium vask",
     locationName: "WashWorld Aarhus C",
     scheduledAt: "I dag kl. 16:30",
-    status: "Bekraeftet",
+    status: "Bekræftet",
   },
   quickActions: [
     { id: "book", label: "Book vask", icon: "🚗", targetRoute: "/pages/booking" },
