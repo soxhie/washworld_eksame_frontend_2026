@@ -13,7 +13,7 @@ export default function OnboardingStep5() {
                 Vi har sendt dig et link til at bekræfte din konto. Klik på linket i
                 emailen for at aktivere din profil.
             </p>
-            <button className="nextButton" type="button" onClick={() => router.push("/pages/login")}>
+            <button className="nextButton" type="button" onClick={() => router.push("/pages/step6")}>
                 Gå til login
             </button>
         </div>
