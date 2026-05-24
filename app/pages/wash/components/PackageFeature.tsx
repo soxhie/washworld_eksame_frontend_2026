@@ -44,10 +44,10 @@ export default function PackageFeatures({ active }: Props) {
               alignItems: "center",
               paddingLeft: 12,
               fontWeight: 700,
-              fontSize: 16,
+              fontSize: 12,
               color: "#fff",
               marginRight: -20,
-              gap: 8,
+              gap: 6,
             }}
           >
             <img src={feature.icon} alt={feature.name} style={{ width: 18, height: 18, filter: "brightness(0) invert(1)" }} />

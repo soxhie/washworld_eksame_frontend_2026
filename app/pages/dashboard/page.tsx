@@ -16,7 +16,6 @@ const LiveWashMap = dynamic(() => import("./components/LiveWashMap"), {
   loading: () => <div className="mapLoading">Indlaeser kort...</div>,
 });
 
-
 type WashLocation = {
   id: string;
   name: string;
@@ -59,11 +58,7 @@ function normalizeSearchText(value: string) {
 
 const MAX_TRAFFIC_LEVEL = 94;
 
-function buildTrafficData(
-  selectedLocation: WashLocation | undefined,
-  selectedDayIndex: number,
-  todayIndex: number,
-): TrafficDay[] {
+function buildTrafficData(selectedLocation: WashLocation | undefined, selectedDayIndex: number, todayIndex: number): TrafficDay[] {
   if (!selectedLocation) {
     return [];
   }
@@ -88,7 +83,6 @@ function buildTrafficData(
     active: isToday && Number.parseInt(time, 10) === currentHour,
   }));
 }
-
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -136,10 +130,7 @@ export default function DashboardPage() {
 
   const selectedLocation = filteredLocations.find((location) => location.id === selectedLocationId);
   const todayActivityDayIndex = useMemo(() => getWeekdayIndex(), []);
-  const trafficData = useMemo(
-    () => buildTrafficData(selectedLocation, selectedActivityDayIndex, todayActivityDayIndex),
-    [selectedLocation, selectedActivityDayIndex, todayActivityDayIndex],
-  );
+  const trafficData = useMemo(() => buildTrafficData(selectedLocation, selectedActivityDayIndex, todayActivityDayIndex), [selectedLocation, selectedActivityDayIndex, todayActivityDayIndex]);
   const averageActivityLevel = useMemo(() => {
     if (trafficData.length === 0) {
       return 0;
@@ -150,9 +141,7 @@ export default function DashboardPage() {
   }, [trafficData]);
   const activitySummary = averageActivityLevel > 72 ? "Quite busy" : averageActivityLevel > 56 ? "A little busy" : "Open and steady";
   const openingHoursLabel = selectedLocation?.openHours ?? "7-22";
-  const membershipName = (mockDashboardData.user.membershipTier ?? "")
-    .replace(/^Medlemskab:\s*/i, "")
-    .trim() || "Standard";
+  const membershipName = (mockDashboardData.user.membershipTier ?? "").replace(/^Medlemskab:\s*/i, "").trim() || "Standard";
 
   useEffect(() => {
     if (!isLocationSheetOpen) {
@@ -180,7 +169,7 @@ export default function DashboardPage() {
             type="search"
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
-            placeholder="Search locations"
+            placeholder="Search locations" // Ændre til Søg vaskehaller
             className="mapSearchInput"
             aria-label="Soeg efter vaskehal"
           />
@@ -203,12 +192,7 @@ export default function DashboardPage() {
 
           {loadError ? <p className="mapErrorBanner">{loadError}</p> : null}
 
-          <button
-            type="button"
-            className="locateButton"
-            aria-label="Find min position"
-            onClick={() => setLocateRequestCount((count) => count + 1)}
-          >
+          <button type="button" className="locateButton" aria-label="Find min position" onClick={() => setLocateRequestCount((count) => count + 1)}>
             <LuLocateFixed aria-hidden="true" />
           </button>
         </div>
@@ -283,26 +267,22 @@ export default function DashboardPage() {
 
               <p className="activityStatus">
                 <span className="activityDot" aria-hidden="true" />
-                <strong>{selectedActivityDayIndex === todayActivityDayIndex ? "Live:" : `${ACTIVITY_WEEKDAYS[selectedActivityDayIndex]}:`}</strong> {
-                  (() => {
-                    const now = new Date();
-                    const hour = now.getHours();
-                    if (selectedActivityDayIndex === todayActivityDayIndex && (hour < 7 || hour >= 22)) {
-                      return "Closed";
-                    }
-                    return activitySummary;
-                  })()
-                }
+                <strong>{selectedActivityDayIndex === todayActivityDayIndex ? "Live:" : `${ACTIVITY_WEEKDAYS[selectedActivityDayIndex]}:`}</strong>{" "}
+                {(() => {
+                  const now = new Date();
+                  const hour = now.getHours();
+                  if (selectedActivityDayIndex === todayActivityDayIndex && (hour < 7 || hour >= 22)) {
+                    return "Closed";
+                  }
+                  return activitySummary;
+                })()}
               </p>
 
               <div className="popularTimesChart" aria-label="Travlhed fordelt paa timer">
                 {trafficData.map((item) => (
                   <div key={item.time} className={item.active ? "popularTimesColumnWrap isActive" : "popularTimesColumnWrap"}>
                     <div className="popularTimesColumnTrack" aria-hidden="true">
-                      <span
-                        className={item.active ? "popularTimesColumn popularTimesColumnActive" : "popularTimesColumn"}
-                        style={{ height: `${(item.level / MAX_TRAFFIC_LEVEL) * 100}%` }}
-                      />
+                      <span className={item.active ? "popularTimesColumn popularTimesColumnActive" : "popularTimesColumn"} style={{ height: `${(item.level / MAX_TRAFFIC_LEVEL) * 100}%` }} />
                     </div>
                     <span className="popularTimesHour">{Number.parseInt(item.time, 10) % 3 === 0 ? `${item.time}` : ""}</span>
                   </div>
@@ -311,18 +291,28 @@ export default function DashboardPage() {
             </section>
             {/* Hall details section */}
             {selectedLocation.hallsCount || selectedLocation.selfWashCount || selectedLocation.vacuumCount || selectedLocation.preWashCount || selectedLocation.maxHeight ? (
-              <section className="hallDetailsPanel" aria-label="Hal detaljer" style={{marginTop: 15, padding: 16, background: '#232323'}}>
-                <h3 style={{margin: 0, fontSize: 18}}>Hal detaljer</h3>
-                <ul style={{margin: 0, padding: 0, listStyle: 'none', fontSize: 15}}>
-                  <li><strong>Antal vaskehaller:</strong> {selectedLocation.hallsCount ?? "-"}</li>
-                  <li><strong>Antal selvvask:</strong> {selectedLocation.selfWashCount ?? "-"}</li>
-                  <li><strong>Antal støvsugere:</strong> {selectedLocation.vacuumCount ?? "-"}</li>
-                  <li><strong>Antal forvask:</strong> {selectedLocation.preWashCount ?? "-"}</li>
-                  <li><strong>Maks. højde:</strong> {selectedLocation.maxHeight ?? "-"}</li>
+              <section className="hallDetailsPanel" aria-label="Hal detaljer" style={{ marginTop: 15, padding: 16, background: "#232323" }}>
+                <h3 style={{ margin: 0, fontSize: 18 }}>Hal detaljer</h3>
+                <ul style={{ margin: 0, padding: 0, listStyle: "none", fontSize: 15 }}>
+                  <li>
+                    <strong>Antal vaskehaller:</strong> {selectedLocation.hallsCount ?? "-"}
+                  </li>
+                  <li>
+                    <strong>Antal selvvask:</strong> {selectedLocation.selfWashCount ?? "-"}
+                  </li>
+                  <li>
+                    <strong>Antal støvsugere:</strong> {selectedLocation.vacuumCount ?? "-"}
+                  </li>
+                  <li>
+                    <strong>Antal forvask:</strong> {selectedLocation.preWashCount ?? "-"}
+                  </li>
+                  <li>
+                    <strong>Maks. højde:</strong> {selectedLocation.maxHeight ?? "-"}
+                  </li>
                 </ul>
               </section>
             ) : (
-              <section className="hallDetailsPanel" aria-label="Hal detaljer" style={{marginTop: 24, padding: 16, background: '#232323', color: '#bbb', textAlign: 'center'}}>
+              <section className="hallDetailsPanel" aria-label="Hal detaljer" style={{ marginTop: 24, padding: 16, background: "#232323", color: "#bbb", textAlign: "center" }}>
                 <span>Ingen haldetaljer fundet for denne lokation.</span>
               </section>
             )}

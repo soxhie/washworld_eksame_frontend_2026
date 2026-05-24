@@ -1,7 +1,7 @@
 "use client";
 
-// import { LuArrowUpRight } from "react-icons/lu";
-import SwipeButton from "../components/swipeBtn";
+import { LuArrowUpRight } from "react-icons/lu";
+import SwipeButton from "./SwipeBtn";
 
 type Package = "guld" | "premium" | "brilliant";
 
@@ -36,15 +36,43 @@ export default function MembershipCard({ package: pkg, location, address, queueS
       <div style={{ display: "flex", justifyContent: "space-between", gap: 11, alignItems: "flex-start" }}>
         <div>
           <p style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>{location}:</p>
-          <p style={{ margin: "2px 0 0", color: "#14ef96", fontSize: 14, lineHeight: 1.2 }}>{address}</p>
+          <p style={{ margin: "2px 0 0", color: "#14ef96", fontSize: 14, lineHeight: 1.2 }}>
+            {(() => {
+              const match = address.match(/^(.+?),\s*(\d{4}.+)$/);
+              return match ? (
+                <>
+                  <span style={{ display: "block" }}>{match[1]},</span>
+                  <span style={{ display: "block" }}>{match[2]}</span>
+                </>
+              ) : (
+                <span>{address}</span>
+              );
+            })()}
+          </p>{" "}
         </div>
-        <button type="button" onClick={onSwitch} style={{ border: "none", background: "transparent", color: "#76a08f", fontSize: 10, display: "flex", alignItems: "center", gap: 2, cursor: "pointer", marginTop: 2, textDecoration: "underline" }}>
-          Skift vaskehal {/* <LuArrowUpRight /> */}
+        <button
+          type="button"
+          onClick={onSwitch}
+          style={{
+            border: "none",
+            background: "transparent",
+            color: "#76a08f",
+            fontSize: 10,
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            cursor: "pointer",
+            marginTop: 5,
+            textDecoration: "underline",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Skift vaskehal <LuArrowUpRight />
         </button>
       </div>
 
       <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 6 }}>
-        <span style={{ background: statusColors[queueStatus] ?? "#ffbf24", color: "#0a0a0a", fontSize: 11, fontWeight: 700, padding: "2px 6px" }}>{queueStatus}</span>
+        <span style={{ background: statusColors[queueStatus] ?? "#ffbf24", color: "#0a0a0a", fontSize: 11, fontWeight: 700, padding: "2px 6px", borderRadius: "2px" }}>{queueStatus}</span>
         <span style={{ fontSize: 11 }}>{waitTime}</span>
       </div>
 

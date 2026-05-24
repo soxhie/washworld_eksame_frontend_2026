@@ -40,7 +40,6 @@ type NormalizedLocation = {
   imageUrl?: string;
 };
 
-
 // Helper function to convert coordinate values to numbers, handling both string and number inputs and filtering out invalid values
 // Wash World's API is inconsistent with its coordinate formats, so we need to be flexible in parsing them while ensuring we end up with valid numbers or null
 // We consider a value valid if it can be parsed into a finite number. Invalid values (like non-numeric strings, null, undefined, or non-finite numbers) will be normalized to null to indicate missing/invalid coordinates.
@@ -70,7 +69,7 @@ function normalizeLocation(location: WashWorldApiLocation): NormalizedLocation |
 
   return {
     id: location.uid || location.Location_id || location.name,
-    name: location.name,
+    name: location.name.includes(" - ") ? `Wash World ${location.name.split(" - ")[0]}` : location.name,
     address: location.address,
     position: [latitude, longitude],
     openHours: location.open_hours,
@@ -106,9 +105,7 @@ export async function GET() {
       return NextResponse.json({ error: "Unexpected Wash World response format" }, { status: 502 });
     }
 
-    const locations = data
-      .map((location) => normalizeLocation(location as WashWorldApiLocation))
-      .filter((location): location is NormalizedLocation => location !== null);
+    const locations = data.map((location) => normalizeLocation(location as WashWorldApiLocation)).filter((location): location is NormalizedLocation => location !== null);
 
     return NextResponse.json(locations);
   } catch {
