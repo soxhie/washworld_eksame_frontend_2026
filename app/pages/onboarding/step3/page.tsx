@@ -20,7 +20,7 @@ export default function OnboardingStep3() {
   const [clickedPlan, setClickedPlan] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  
   useEffect(() => {
     fetch("http://127.0.0.1/api-memberships")
       .then(res => res.json())

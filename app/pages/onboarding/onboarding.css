@@ -16,13 +16,16 @@ h1{
   height: 100vh;
   padding: 25px;
   display: grid;
+  background: url(../../../public/ChatGPT\ Image\ May\ 20\,\ 2026\ at\ 01_30_43\ PM\ 1.png);
+  background-repeat: no-repeat;
+  background-size: cover;
   button{
   padding: 14px 0;
   width: 100%;
   border: none;
   font-weight: 800;
   font-size: 16px;
-  
+
 }
 }
 .buttons{
@@ -243,9 +246,11 @@ label{
 }
 
 
-.Onboarding-7{
+.Onboarding-6{
+  display: grid;
+  justify-items: center;
   h1{
-    margin-bottom: 50%;
+    margin-bottom: 25%;
   }
 h2{
   color: var(--primary-colors-brand-grn-sort-baggrund, #0CE578);
@@ -261,6 +266,12 @@ margin-bottom:16px;
 p{
   font-family: 16px;
   text-align: center;
+}
+.checkIcon{
+  font-size: 85px;
+  color: var(--color-primary);
+  text-align: center;
+  margin-bottom: 15%;
 }
 }
 .tilbageLink{

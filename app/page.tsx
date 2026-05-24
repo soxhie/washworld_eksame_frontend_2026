@@ -16,7 +16,7 @@ export default function Home() {
         <Link href="/pages/login" >
           <button className="brandGrøn">Login</button>
         </Link>
-        <Link href="/pages/onboarding/Step1">
+        <Link href="/pages/onboarding/step1">
           <button className="primaryWhite">Opret bruger</button>
         </Link>
       </div>

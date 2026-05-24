@@ -2,8 +2,11 @@
 import "../../globals.css"
 import "./forgot-password.css"
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {FaChevronLeft } from "react-icons/fa";
 
 export default function ForgotPassword() {
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
@@ -29,6 +32,9 @@ export default function ForgotPassword() {
 
     return (
         <div className="forgot-password">
+            <button className='tilbageLink' type="button" onClick={() => router.back()}>
+                    <FaChevronLeft /> Tilbage
+                  </button>
             <h1>Forgot password?</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="user_email">Email</label>
