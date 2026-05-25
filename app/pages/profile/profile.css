@@ -1,6 +1,6 @@
 /* WashHistory styles moved from WashHistory.css */
 .washHistory {
-  margin-top: 2rem;
+  margin-top: 0rem; /*2*/
   padding: 0 18px; /* Match side margins with other flows */
 }
 .washHistoryTitle {
@@ -163,6 +163,7 @@
 
 .membershipPlanInfo {
   min-width: 0;
+  margin-left: 20px;
 }
 
 .membershipPlanName {
@@ -213,7 +214,7 @@
 .membershipIncludedList {
   list-style: none;
   margin: 0;
-  padding: 0 0 18px;
+  padding: 0 22px 18px;
 }
 
 .membershipIncludedItem {
@@ -679,7 +680,7 @@
 .detailsForm {
   display: grid;
   gap: 16px;
-  padding-bottom: 130px;
+  /* padding-bottom: 130px; */
 }
 
 .detailsFormTitle {
@@ -818,8 +819,8 @@
   }
 
   .membershipDetails {
-    margin-top: 60px;
-    padding: 0 18px 118px;
+    margin-top: 12px; /*60px*/
+    padding: 0 18px 8px;
   }
 
   .membershipPlanCard {
@@ -832,6 +833,8 @@
   .membershipPlanIconWrap {
     width: 66px;
     height: 66px;
+    margin-left: 20px;
+
   }
 
   .membershipPlanIconGroup {
@@ -844,15 +847,15 @@
   }
 
   .membershipPlanName {
-    font-size: 38px;
-  }
-
-  .membershipPlanPrice {
     font-size: 32px;
   }
 
+  .membershipPlanPrice {
+    font-size: 20px;
+  }
+
   .membershipPlanDate {
-    font-size: 25px;
+    font-size: 14px;
   }
 
   .membershipPlanSubtitle {
@@ -865,13 +868,14 @@
   }
 
   .membershipIncludedTitle {
-    font-size: 17px;
+    font-size: 18px;
     margin-top: 12px;
   }
 
   .membershipIncludedItem {
     min-height: 38px;
     grid-template-columns: 30px 1fr;
+    gap: 20px
   }
 
   .membershipIncludedIcon {
@@ -886,12 +890,12 @@
   }
 
   .membershipIncludedLabel {
-    font-size: 28px;
+    font-size: 16px;
   }
 
   .membershipManageButton {
     min-height: 46px;
-    font-size: 30px;
+    font-size: 18px;
   }
 
   .membershipManageArrow {
@@ -899,7 +903,7 @@
   }
 
   .membershipCancelButton {
-    font-size: 27px;
+    font-size: 14px;
   }
 
   .membershipJoinButton {
@@ -1040,7 +1044,7 @@
   }
 
   .profileDetails {
-    margin-top: 60px;
+    margin-top: 10px; /*60px */
   }
 
   .profileBackButton {

@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaChevronLeft } from "react-icons/fa";
 import AppHeader from "../../components/layout/AppHeader";
 import BottomNav from "../../components/layout/BottomNav";
 import MembershipCard from "./components/MembershipCard";
 import NearbyHalls from "./components/NearbyHalls";
 import RecentWashes from "./components/RecentWashes";
+import BackButton from "../../components/layout/BackButton";
 
 type WashWorldLocation = {
   id: string;
@@ -44,9 +44,7 @@ function getDistanceKm(from: [number, number], to: [number, number]) {
   const latitude1 = toRadians(from[0]);
   const latitude2 = toRadians(to[0]);
 
-  const a =
-    Math.sin(deltaLatitude / 2) * Math.sin(deltaLatitude / 2) +
-    Math.sin(deltaLongitude / 2) * Math.sin(deltaLongitude / 2) * Math.cos(latitude1) * Math.cos(latitude2);
+  const a = Math.sin(deltaLatitude / 2) * Math.sin(deltaLatitude / 2) + Math.sin(deltaLongitude / 2) * Math.sin(deltaLongitude / 2) * Math.cos(latitude1) * Math.cos(latitude2);
 
   return 2 * earthRadiusKm * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
@@ -93,6 +91,7 @@ export default function WashPage() {
   const [selectedHallId, setSelectedHallId] = useState<string | null>(null);
   const [isLoadingHalls, setIsLoadingHalls] = useState(true);
   const [hallError, setHallError] = useState<string | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     let isActive = true;
@@ -167,12 +166,7 @@ export default function WashPage() {
     <main style={{ minHeight: "100vh", paddingBottom: 100, background: "#000" }}>
       <AppHeader variant="brand" />
       <div style={{ padding: "0 18px" }}>
-        <button
-          onClick={() => router.back()}
-          style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "#fff", cursor: "pointer", fontSize: "var(--body-sm-size)", marginBottom: 16 }}
-        >
-          <FaChevronLeft /> Tilbage
-        </button>
+        <BackButton />
         {selectedHall ? (
           <MembershipCard
             package="brilliant"
@@ -180,7 +174,9 @@ export default function WashPage() {
             address={selectedHall.address}
             queueStatus={selectedHall.status}
             waitTime={selectedHall.waitTime}
-            onStart={() => router.push("/pages/wash/washprogrambrilliant")}
+            isFavorite={isFavorite}
+            onFavoriteToggle={() => setIsFavorite((prev) => !prev)}
+            onStart={() => router.push("/pages/wash/activewash")}
             onSwitch={() => {
               if (nearbyHalls.length < 2) {
                 return;
@@ -198,7 +194,7 @@ export default function WashPage() {
           <section style={{ marginTop: 10, border: "1px solid #07de88", background: "#015126", padding: "14px 12px 18px" }}>
             <h1 style={{ margin: 0, fontSize: 30, fontWeight: 800, lineHeight: 1.1 }}>Medlemskab</h1>
             <p style={{ margin: "6px 0 0", color: "#08e184", fontSize: 14, fontWeight: 700 }}>
-              {isLoadingHalls ? "Henter de nærmeste vaskehaller..." : hallError ?? "Ingen vaskehaller tilgængelige."}
+              {isLoadingHalls ? "Henter de nærmeste vaskehaller..." : (hallError ?? "Ingen vaskehaller tilgængelige.")}
             </p>
           </section>
         )}

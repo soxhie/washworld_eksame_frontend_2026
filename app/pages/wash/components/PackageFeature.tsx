@@ -1,24 +1,22 @@
 "use client";
-
 type Package = "guld" | "premium" | "brilliant";
-
 type Props = {
   active: Package;
 };
 
 const features = [
-  { name: "Skumforvask", guld: true, premium: true, brilliant: true },
-  { name: "Aktiv shampoo", guld: true, premium: true, brilliant: true },
-  { name: "Hjulvask", guld: true, premium: true, brilliant: true },
-  { name: "Højtryksvask", guld: true, premium: true, brilliant: true },
-  { name: "Børstevask", guld: true, premium: true, brilliant: true },
-  { name: "Voks", guld: true, premium: true, brilliant: true },
-  { name: "Tørring", guld: true, premium: true, brilliant: true },
-  { name: "Højglans", guld: false, premium: true, brilliant: true },
-  { name: "Undervognsvask", guld: false, premium: true, brilliant: true },
-  { name: "Skumvask", guld: false, premium: false, brilliant: true },
-  { name: "Affedtning", guld: false, premium: false, brilliant: true },
-  { name: "Sæsonrens", guld: false, premium: false, brilliant: true },
+  { name: "Skumforvask", icon: "/svg/vaskeikoner/skumforvask.svg", guld: true, premium: true, brilliant: true },
+  { name: "Aktiv shampoo", icon: "/svg/vaskeikoner/aktiv_shampoo.svg", guld: true, premium: true, brilliant: true },
+  { name: "Hjulvask", icon: "/svg/vaskeikoner/hjulvask.svg", guld: true, premium: true, brilliant: true },
+  { name: "Højtryksvask", icon: "/svg/vaskeikoner/hojtryksvask.svg", guld: true, premium: true, brilliant: true },
+  { name: "Børstevask", icon: "/svg/vaskeikoner/borstevask.svg", guld: true, premium: true, brilliant: true },
+  { name: "Voks", icon: "/svg/vaskeikoner/skyllevoks.svg", guld: true, premium: true, brilliant: true },
+  { name: "Tørring", icon: "/svg/vaskeikoner/torring.svg", guld: true, premium: true, brilliant: true },
+  { name: "Højglans", icon: "/svg/vaskeikoner/hojglas.svg", guld: false, premium: true, brilliant: true },
+  { name: "Undervognsvask", icon: "/svg/vaskeikoner/undervognsvask.svg", guld: false, premium: true, brilliant: true },
+  { name: "Skumvask", icon: "/svg/vaskeikoner/skumforvask.svg", guld: false, premium: false, brilliant: true },
+  { name: "Affedtning", icon: "/svg/vaskeikoner/affedtning.svg", guld: false, premium: false, brilliant: true },
+  { name: "Sæsonrens", icon: "/svg/vaskeikoner/saesonrens.svg", guld: false, premium: false, brilliant: true },
 ];
 
 const PACKAGES: Package[] = ["guld", "premium", "brilliant"];
@@ -33,7 +31,6 @@ function Check({ active }: { active: boolean }) {
 
 export default function PackageFeatures({ active }: Props) {
   const activeIndex = PACKAGES.indexOf(active);
-
   return (
     <div style={{ background: "#111", padding: "26px 25px", display: "flex", flexDirection: "column", gap: 6 }}>
       {features.map((feature) => (
@@ -47,14 +44,15 @@ export default function PackageFeatures({ active }: Props) {
               alignItems: "center",
               paddingLeft: 12,
               fontWeight: 700,
-              fontSize: 16,
+              fontSize: 12,
               color: "#fff",
               marginRight: -20,
+              gap: 6,
             }}
           >
+            <img src={feature.icon} alt={feature.name} style={{ width: 18, height: 18, filter: "brightness(0) invert(1)" }} />
             {feature.name}
           </div>
-
           <div style={{ display: "flex", gap: 6 }}>
             {PACKAGES.map((pkg, i) => {
               const included = feature[pkg];

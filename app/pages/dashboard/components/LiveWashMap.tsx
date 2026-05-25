@@ -21,7 +21,8 @@ interface LiveWashMapProps {
 }
 
 // Default to Denmark center, but allow override
-const denmarkCenter: [number, number] = [56.2639, 9.5018];
+// const denmarkCenter: [number, number] = [56.2639, 9.5018];
+const denmarkCenter: [number, number] = [55.7307, 12.5014]; // start in soeborg
 
 function MapViewportController({
   locations,
@@ -67,14 +68,11 @@ function MapViewportController({
   return null;
 }
 
-export default function LiveWashMap({
-  locations,
-  selectedLocationId,
-  onSelectLocation,
-  locateRequestCount,
-}: LiveWashMapProps) {
+export default function LiveWashMap({ locations, selectedLocationId, onSelectLocation, locateRequestCount }: LiveWashMapProps) {
   const [currentPosition, setCurrentPosition] = useState<[number, number] | null>(null);
-  const mapCenter = currentPosition ?? denmarkCenter;
+  // const mapCenter = currentPosition ?? denmarkCenter;
+  const selectedLocation = locations.find((loc) => loc.id === selectedLocationId);
+  const mapCenter = currentPosition ?? selectedLocation?.position ?? denmarkCenter;
 
   const locationIcon = useMemo(
     () =>
@@ -110,17 +108,10 @@ export default function LiveWashMap({
 
   return (
     <MapContainer center={mapCenter} zoom={12.5} scrollWheelZoom className="liveWashMap" zoomControl={false}>
-      <TileLayer
-        attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
-        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-      />
+      <TileLayer attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>' url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
+      {/* <TileLayer attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>' url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" /> */}
 
-      <MapViewportController
-        locations={locations}
-        selectedLocationId={selectedLocationId}
-        currentPosition={currentPosition}
-        locateRequestCount={locateRequestCount}
-      />
+      <MapViewportController locations={locations} selectedLocationId={selectedLocationId} currentPosition={currentPosition} locateRequestCount={locateRequestCount} />
 
       {locations.map((location) => (
         <Marker
@@ -141,9 +132,7 @@ export default function LiveWashMap({
         </Marker>
       ))}
 
-      {currentPosition ? (
-        <CircleMarker center={currentPosition} radius={11} pathOptions={{ color: "#ffffff", weight: 3, fillColor: "#18de84", fillOpacity: 1 }} />
-      ) : null}
+      {currentPosition ? <CircleMarker center={currentPosition} radius={11} pathOptions={{ color: "#ffffff", weight: 3, fillColor: "#18de84", fillOpacity: 1 }} /> : null}
     </MapContainer>
   );
 }

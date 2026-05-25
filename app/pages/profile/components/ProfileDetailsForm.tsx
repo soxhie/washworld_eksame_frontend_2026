@@ -7,6 +7,7 @@ import {
   LuPhone,
 } from "react-icons/lu";
 import React from "react";
+import BackButton from "../../../components/layout/BackButton";
 
 interface ProfileDetailsFormProps {
   detailsForm: {
@@ -32,18 +33,19 @@ export default function ProfileDetailsForm({
 }: ProfileDetailsFormProps) {
   return (
     <section className="profileDetails" aria-label="Mine oplysninger formular">
-      <button
+      {/* <button
         type="button"
         className="profileBackButton"
         onClick={onBack}
       >
         <span aria-hidden="true">‹</span>
         Tilbage
-      </button>
+      </button> */}
+      <BackButton />
+      
 
       <form className="detailsForm" onSubmit={onSubmit}>
-        <h1 className="detailsFormTitle">Mine oplysninger</h1>
-
+        <h3 className="detailsFormTitle" style={{ color: "#fff", marginBottom: "0.5rem", fontSize: "var(--h3-size)", fontWeight: 800, marginLeft: "10px" }}>Mine oplysninger</h3>
         <label className="detailsField" htmlFor="details-phone">
           <span className="detailsFieldLabelWrap">
             <LuPhone className="detailsFieldIcon" aria-hidden="true" />

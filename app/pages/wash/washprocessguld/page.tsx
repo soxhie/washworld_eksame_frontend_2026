@@ -6,7 +6,7 @@ import WashProgram from "../components/WashProgram";
 
 export default function ActiveWashPage() {
   return (
-    <main style={{ minHeight: "100vh", overflowY: "auto", paddingBottom: 80 }}>
+    <main style={{ minHeight: "80vh", overflowY: "auto", paddingBottom: 80 }}>
       <AppHeader variant="brand" />
       <WashProgram package="guld" />
       <BottomNav activeTab="wash" variant="angled" />
