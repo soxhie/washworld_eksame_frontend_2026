@@ -108,8 +108,8 @@ export default function LiveWashMap({ locations, selectedLocationId, onSelectLoc
 
   return (
     <MapContainer center={mapCenter} zoom={12.5} scrollWheelZoom className="liveWashMap" zoomControl={false}>
-      <TileLayer attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>' url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
-      {/* <TileLayer attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>' url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" /> */}
+      <TileLayer attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>' url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+      {/* <TileLayer attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>' url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" /> */}
 
       <MapViewportController locations={locations} selectedLocationId={selectedLocationId} currentPosition={currentPosition} locateRequestCount={locateRequestCount} />
 
