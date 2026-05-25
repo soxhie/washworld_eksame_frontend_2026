@@ -1,5 +1,5 @@
 "use client";
-
+import BackButton from "@/app/components/layout/BackButton";
 import { IconType } from "react-icons";
 import {
   LuCloud,
@@ -34,20 +34,21 @@ export default function MembershipPlanDetails({ onBack, plan }: MembershipPlanDe
 
   return (
     <section className="membershipPlanDetails" aria-label={`Valgt plan ${plan.name}`}>
-      <button type="button" className="profileBackButton" onClick={onBack}>
+      {/* <button type="button" className="profileBackButton" onClick={onBack}>
         <span aria-hidden="true">‹</span>
         Tilbage
-      </button>
+      </button> */}
+      <BackButton/>
 
       <article className="membershipPlanCard" aria-label="Valgt medlemskabsplan">
-        <span className="membershipPlanIconWrap" aria-hidden="true">
-          <IoPeopleOutline className="membershipPlanPeopleIcon" />
-        </span>
-        <div className="membershipPlanInfo">
-          <h1 className="membershipPlanName">{plan.name}</h1>
-          <p className="membershipPlanPrice">{plan.price}kr./md</p>
-          <p className="membershipPlanSubtitle">{plan.shortDescription || "Ubegrænset bilvask"}</p>
-        </div>
+              <span className="membershipPlanIconWrap" aria-hidden="true">
+                <IoPeopleOutline className="membershipPlanPeopleIcon" />
+              </span>
+              <div className="membershipCreatePlanInfo">
+                <span className="membershipCreatePlanName">{plan.name}</span>
+                <span className="membershipCreatePlanPrice">{plan.price}kr./md</span>
+                <span className="membershipCreatePlanDescription">{plan.shortDescription || "Læs mere om planen"}</span>
+              </div>
       </article>
 
       <h2 className="membershipIncludedTitle">Inkluderet i valgte {plan.name} program:</h2>

@@ -116,3 +116,4 @@ export default function SwipeButton({ variant, onActivate }: Props) {
     </div>
   );
 }
+

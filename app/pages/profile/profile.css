@@ -535,6 +535,7 @@
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
+  margin-top: 30px;
 }
 
 .membershipCancelReasonButton {
@@ -851,7 +852,7 @@
   }
 
   .membershipPlanPrice {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   .membershipPlanDate {
@@ -864,7 +865,7 @@
 
   .membershipPlanDetails {
     margin-top: 60px;
-    padding: 0 18px 118px;
+    padding: 0 18px 30px;
   }
 
   .membershipIncludedTitle {
@@ -922,8 +923,8 @@
   }
 
   .membershipCreate {
-    margin-top: 52px;
-    padding: 0 18px 118px;
+    margin-top: 0px;
+    padding: 0 18px 30px;
   }
 
   .membershipCreateBackButton {
@@ -955,10 +956,30 @@
     font-size: 32px;
   }
 
-  .membershipCreateCardAction {
-    min-height: 98px;
-    padding: 10px 40px 10px 12px;
-  }
+.membershipCreateCardAction {
+  width: 100%;
+  min-height: 98px;
+  border: none;
+  background: transparent;
+  padding: 10px 40px 10px 12px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  position: relative;
+  color: #f8fbf9;
+}
+.membershipCreatePlanInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px;
+}
+
+.membershipCreatePayAsYouGoCard .membershipCreateCardAction {
+  min-height: 84px;
+}
 
   .membershipCreatePlanName {
     font-size: 32px;
@@ -978,8 +999,8 @@
   }
 
   .membershipCreateCompareLink {
-    font-size: 18px;
-    margin-top: 14px;
+    font-size: 16px;
+    margin-top: 32px;
     text-align: center;
   }
 
@@ -1010,8 +1031,8 @@
   }
 
   .membershipCancelView {
-    margin-top: 60px;
-    padding: 0 18px 118px;
+    margin-top: 0px;
+    padding: 0 18px 30px;
   }
 
   .membershipCancelTitle {
@@ -1039,12 +1060,12 @@
 
   .membershipCancelConfirmButton {
     min-height: 52px;
-    margin-top: 64px;
+    margin-top: 40px;
     font-size: 32px;
   }
 
   .profileDetails {
-    margin-top: 10px; /*60px */
+    margin-top: 10px;
   }
 
   .profileBackButton {

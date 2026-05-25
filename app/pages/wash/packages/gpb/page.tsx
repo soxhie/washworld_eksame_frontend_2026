@@ -22,7 +22,7 @@ export default function PackagesPage() {
   return (
     <div style={{ minHeight: "100vh", overflowY: "auto", paddingBottom: 80, background: "#000" }}>
       <AppHeader variant="brand" />
-      <div style={{ padding: "24px 20px 0" }}>
+      <div style={{ padding: "0px 20px 0" }}>
         <button
           onClick={() => router.back()}
           style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "#fff", cursor: "pointer", fontSize: "var(--body-md-size)", marginBottom: 16 }}

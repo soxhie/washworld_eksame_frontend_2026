@@ -1,5 +1,7 @@
 import { SubscriptionPlan } from "../data/membershipTypes";
 import Link from "next/link";
+import BackButton from "@/app/components/layout/BackButton";
+import { IoPeopleOutline } from "react-icons/io5";
 
 interface MembershipCreateProps {
   onBack: () => void;
@@ -9,24 +11,21 @@ interface MembershipCreateProps {
   error: string | null;
 }
 
-export default function MembershipCreate({
-  onBack,
-  plans,
-  onPlanClick,
-  isLoading,
-  error,
-}: MembershipCreateProps) {
+export default function MembershipCreate({ onBack, plans, onPlanClick, isLoading, error }: MembershipCreateProps) {
   const currentPlanName = "premium";
 
   return (
     <section className="membershipCreate" aria-label="Ændre medlemskab">
-      <button type="button" className="profileBackButton" onClick={onBack}>
+      {/* <button type="button" className="profileBackButton" onClick={onBack}>
         <span aria-hidden="true">‹</span>
         Tilbage
-      </button>
+      </button> */}
+      <BackButton />
 
-      <h1 className="membershipCreateTitle">Ændre medlemskab</h1>
-      <p className="membershipCreateSubtitle membershipCreateIntro">
+      <h1 className="membershipCreateTitle" style={{ fontSize: "var(--h2-size)", fontWeight: 800, textAlign: "center" }}>
+        Ændre medlemskab
+      </h1>
+      <p className="membershipCreateSubtitle membershipCreateIntro" style={{ fontSize: "var(--body-sm-size)" }}>
         Få ubegrænset bilvask til en fast lav pris og vask, hvor og hvornår det passer dig.
       </p>
 
@@ -57,23 +56,20 @@ export default function MembershipCreate({
         )}
 
         {plans.map((plan) => (
-          <article
-            key={plan.name}
-            className={`membershipCreateCard${plan.name.toLowerCase() === currentPlanName ? " isCurrent" : ""}`}
-          >
-            <button
-              type="button"
-              className="membershipCreateCardAction"
-              aria-label={`Vaelg ${plan.name}`}
-              onClick={() => onPlanClick(plan)}
-            >
-              <span className="membershipCreatePlanName">{plan.name}</span>
-              <span className="membershipCreatePlanPrice">{plan.price}kr./md</span>
-              <span className="membershipCreatePlanDescription">{plan.shortDescription || "Læs mere om planen"}</span>
-              <span className="membershipCreateChevron" aria-hidden="true">›</span>
-              {plan.name.toLowerCase() === currentPlanName && (
-                <span className="membershipCreateCurrentBadge">Nuværende</span>
-              )}
+          <article key={plan.name} className={`membershipCreateCard${plan.name.toLowerCase() === currentPlanName ? " isCurrent" : ""}`}>
+            <button type="button" className="membershipCreateCardAction" aria-label={`Vaelg ${plan.name}`} onClick={() => onPlanClick(plan)}>
+              <span className="membershipPlanIconWrap" aria-hidden="true">
+                <IoPeopleOutline className="membershipPlanPeopleIcon" />
+              </span>
+              <div className="membershipCreatePlanInfo">
+                <span className="membershipCreatePlanName">{plan.name}</span>
+                <span className="membershipCreatePlanPrice">{plan.price}kr./md</span>
+                <span className="membershipCreatePlanDescription">{plan.shortDescription || "Læs mere om planen"}</span>
+              </div>
+              <span className="membershipCreateChevron" aria-hidden="true">
+                ›
+              </span>
+              {plan.name.toLowerCase() === currentPlanName && <span className="membershipCreateCurrentBadge">Nuværende</span>}
             </button>
           </article>
         ))}
