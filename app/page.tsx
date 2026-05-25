@@ -15,12 +15,21 @@ export default function Home() {
         alt="WashWorld"
         priority
       />
-      <button className="nextButton"
+
+      <div>
+      <button 
+      className="brandGrøn"
+      onClick={() => {
+          router.push("/pages/login")
+        }}>Login</button>
+      <button
         type="button"
+        className="primaryWhite"
         onClick={() => {
-          router.push("/pages/onboarding/step1")
+          router.push("/pages/onboarding/Step1")
         }}
-      ></button>
+      >Opret bruger</button>
+      </div>
 
     </div>
 
