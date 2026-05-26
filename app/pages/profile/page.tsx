@@ -75,12 +75,6 @@ export default function ProfilePage() {
         <div style={{ color: "red" }}>{error}</div>
       ) : user ? (
         <>
-          <div className="profileInfo">
-            <div><b>Navn:</b> {user.user_name} {user.user_last_name}</div>
-            <div><b>Email:</b> {user.user_email}</div>
-            <div><b>Telefon:</b> {user.user_phone}</div>
-            {/* Add more user info as needed */}
-          </div>
           <ProfileMenu onItemClick={handleItemClick} />
         </>
       ) : null}

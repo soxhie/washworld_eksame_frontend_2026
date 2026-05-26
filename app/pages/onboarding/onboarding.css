@@ -180,6 +180,25 @@ input{
   .icon{
    font-size: 35px;
   }
+  .link{
+    color: var(--primary-colors-brand-grn-sort-baggrund, #0CE578);
+    text-align: center;
+    /* mobil/body_md_medium */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px; /* 150% */
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+    width: 100%;
+
+  }
+  
   h2{
     color: var(--primary-colors-brand-grn-sort-baggrund, #0CE578);
 
