@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
 type MapLocation = {
