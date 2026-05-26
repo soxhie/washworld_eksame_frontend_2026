@@ -37,6 +37,7 @@ function MapViewportController({
 }) {
   const map = useMap();
   const lastLocateRequestCountRef = useRef(0);
+  const lastFallbackLocateRequestCountRef = useRef(0);
 
   useEffect(() => {
     const selectedLocation = locations.find((location) => location.id === selectedLocationId);
@@ -57,11 +58,15 @@ function MapViewportController({
       return;
     }
 
+    if (locateRequestCount <= lastFallbackLocateRequestCountRef.current) {
+      return;
+    }
+
     const selectedLocation = locations.find((location) => location.id === selectedLocationId);
 
     if (selectedLocation) {
       map.flyTo(selectedLocation.position, 14, { duration: 0.8 });
-      lastLocateRequestCountRef.current = locateRequestCount;
+      lastFallbackLocateRequestCountRef.current = locateRequestCount;
     }
   }, [currentPosition, locateRequestCount, locations, map, selectedLocationId]);
 
