@@ -26,7 +26,7 @@ export default function Home() {
         type="button"
         className="primaryWhite"
         onClick={() => {
-          router.push("/pages/onboarding/Step1")
+          router.push("/pages/onboarding/step1")
         }}
       >Opret bruger</button>
       </div>

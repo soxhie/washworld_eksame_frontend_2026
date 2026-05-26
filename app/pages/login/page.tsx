@@ -76,12 +76,7 @@ export default function Login() {
             required
           />
           <div
-            style={{
-              position: "absolute",
-              right: "35px",
-              marginTop: "8px",
-              fontSize: "18px",
-            }}
+            className="icon-container"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}

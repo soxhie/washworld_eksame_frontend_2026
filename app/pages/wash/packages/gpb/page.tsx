@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import AppHeader from "@/app/components/layout/AppHeader";
-import BottomNav from "@/app/components/layout/BottomNav";
 import PackageFeatures from "../../components/PackageFeature";
 import PackageSelector from "../../components/PackageSelector";
 import { useRouter } from "next/navigation";
@@ -40,7 +39,6 @@ export default function PackagesPage() {
       <div style={{ marginTop: 2 }}>
         <PackageFeatures active={active} />
       </div>
-      <BottomNav activeTab="wash" variant="angled" />
     </div>
   );
 }

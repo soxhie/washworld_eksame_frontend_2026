@@ -95,10 +95,26 @@ export default function WashPage() {
 
   useEffect(() => {
     let isActive = true;
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      router.push("/pages/login");
+      return;
+    }
 
     async function loadNearbyHalls() {
       try {
-        const [response, currentPosition] = await Promise.all([fetch("/api/washworld-locations"), getBrowserPosition()]);
+        const [response, currentPosition] = await Promise.all([
+          fetch("/api/washworld-locations", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          getBrowserPosition(),
+        ]);
+
+        if (response.status === 401) {
+          localStorage.removeItem("access_token");
+          router.push("/pages/login");
+          return;
+        }
 
         if (!response.ok) {
           throw new Error("Kunne ikke hente Wash World lokationer.");
@@ -152,7 +168,7 @@ export default function WashPage() {
     return () => {
       isActive = false;
     };
-  }, []);
+  }, [router]);
 
   const selectedHall = useMemo(() => {
     if (nearbyHalls.length === 0) {

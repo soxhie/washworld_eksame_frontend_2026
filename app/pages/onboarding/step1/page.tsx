@@ -33,6 +33,14 @@ export default function OnboardingStep1() {
       setError("Email is required.");
       return;
     }
+    if (firstName.length < 2) {
+      setError("First name must be at least 2 characters.");
+      return;
+    }
+    if (firstName.length > 20) {
+      setError("First name must be less than 20 characters.");
+      return;
+    }
     try {
       // Use query param for GET request
       const res = await fetch(`http://localhost:80/email-validation?user_email=${encodeURIComponent(email)}`);
@@ -45,6 +53,7 @@ export default function OnboardingStep1() {
         setError("Adgangkoder er ikke ens");
         return;
       }
+     
 
       saveOnboardingData({ user_name: firstName, user_last_name: lastName, user_email: email, user_phone: phone, user_password: password });
       setTimeout(() => {

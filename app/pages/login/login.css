@@ -18,6 +18,12 @@ h1{
     justify-content: center;
     
 }
+.icon-container{
+  position:absolute;
+  right: 35px;
+  margin-top: 8px;
+  font-size: 18px;
+}
 .glemtAdgangskode{
   color: var(--secondary-dark-mode-80-gr-text-secondary, rgba(156, 163, 175, 0.80));
 
@@ -27,6 +33,7 @@ font-size: 12px;
 font-style: normal;
 font-weight: 500;
 line-height: 19px; /* 158.333% */
+text-align: end;
 
 
 }

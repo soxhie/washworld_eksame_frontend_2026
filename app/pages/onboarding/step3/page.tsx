@@ -60,8 +60,9 @@ export default function OnboardingStep3() {
         </button>
       ))}
       <button
+        className="link"
         onClick={() => {
-          router.push("pages/wash/packages/gpb");
+          router.replace("http://localhost:3000/pages/wash/packages/gpb");
         }}
       >
         Sammelign pakker

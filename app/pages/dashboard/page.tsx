@@ -97,8 +97,20 @@ export default function DashboardPage() {
   const [selectedActivityDayIndex, setSelectedActivityDayIndex] = useState(() => getWeekdayIndex());
 
   useEffect(() => {
-    fetch("/api/washworld-locations")
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      router.push("/pages/login");
+      return;
+    }
+    fetch("/api/washworld-locations", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then(async (res) => {
+        if (res.status === 401) {
+          localStorage.removeItem("access_token");
+          router.push("/pages/login");
+          return;
+        }
         if (!res.ok) {
           throw new Error("Kunne ikke hente Wash World lokationer.");
         }
@@ -118,7 +130,7 @@ export default function DashboardPage() {
       .catch((error: unknown) => {
         setLoadError(error instanceof Error ? error.message : "Kunne ikke hente Wash World lokationer.");
       });
-  }, []);
+  }, [router]);
 
   const filteredLocations = useMemo(() => {
     const normalizedQuery = normalizeSearchText(searchQuery);
