@@ -11,12 +11,15 @@ import BottomNav from "../../components/layout/BottomNav";
 import SwipeToStart from "../../components/SwipeToStart/SwipeToStart";
 import mockDashboardData from "./data/mockDashboardData";
 import MembershipCard from "../wash/components/MembershipCard";
-import { useWashLocations } from "@/app/hooks/useWashLocations"; // custom hook
+import { useWashLocations } from "@/app/hooks/useWashLocations"; // custom hook med api
+import { useAuth } from "@/app/hooks/useAuth";
 
 const LiveWashMap = dynamic(() => import("./components/LiveWashMap"), {
   ssr: false,
   loading: () => <div className="mapLoading">Indlaeser kort...</div>,
 });
+
+type Package = "guld" | "premium" | "brilliant";
 
 type WashLocation = {
   id: string;
@@ -39,6 +42,7 @@ type TrafficDay = {
   level: number;
   active?: boolean;
 };
+
 
 const ACTIVITY_WEEKDAYS = ["MAN", "TIR", "ONS", "TOR", "FRE", "LØR", "SØN"];
 
@@ -106,27 +110,27 @@ export default function DashboardPage() {
   // Toggle filter div
   const handleFilterToggle = () => setIsFilterOpen((prev) => !prev);
 
-async function handleFavoriteToggle() {
-  const previousValue = isFavorite;
-  setIsFavorite((prev) => !prev); // optimistic update
+  async function handleFavoriteToggle() {
+    const previousValue = isFavorite;
+    setIsFavorite((prev) => !prev); // optimistic update
 
-  const token = localStorage.getItem("access_token");
-  const method = previousValue ? "DELETE" : "POST";
+    const token = localStorage.getItem("access_token");
+    const method = previousValue ? "DELETE" : "POST";
 
-  try {
-    const res = await fetch("http://localhost:80/api-favorites", {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ location_id: selectedLocation?.id }),
-    });
-    if (!res.ok) throw new Error("Fejl");
-  } catch {
-    setIsFavorite(previousValue); // rollback
+    try {
+      const res = await fetch("http://localhost:80/api-favorites", {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ location_id: selectedLocation?.id }),
+      });
+      if (!res.ok) throw new Error("Fejl");
+    } catch {
+      setIsFavorite(previousValue); // rollback
+    }
   }
-}
 
   const { locations, loadError } = useWashLocations(); // custom hook
   useEffect(() => {
@@ -134,7 +138,6 @@ async function handleFavoriteToggle() {
     const soeborg = locations.find((loc) => loc.name.toLowerCase().includes("søborg"));
     setSelectedLocationId(soeborg?.id ?? null);
   }, [locations]);
-
 
   // Filtering logic
   const filteredLocations = useMemo(() => {
@@ -214,6 +217,15 @@ async function handleFavoriteToggle() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isLocationSheetOpen]);
 
+  const { user } = useAuth();
+
+  const membershipPackage = useMemo((): Package => {
+    const name = user?.membership_name?.toLowerCase() ?? "";
+    if (name.includes("brilliant")) return "brilliant";
+    if (name.includes("premium")) return "premium";
+    return "guld";
+  }, [user]);
+
   return (
     <main className={isLocationSheetOpen ? "DashboardPage DashboardPageSheetOpen" : "DashboardPage"}>
       <AppHeader variant="brand" />
@@ -221,74 +233,34 @@ async function handleFavoriteToggle() {
       <section className={isLocationSheetOpen ? "mapSection" : "mapSection mapSectionFullscreen"} aria-label="Wash World kort">
         <div className="mapSearchBar">
           <LuSearch aria-hidden="true" className="mapSearchIcon" />
-          <input
-            type="search"
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.target.value)}
-            placeholder="Søg vaskehaller"
-            className="mapSearchInput"
-            aria-label="Soeg efter vaskehal"
-          />
-          <button
-            type="button"
-            className="mapSearchButton"
-            aria-label="Filtrer kort"
-            onClick={handleFilterToggle}
-          >
+          <input type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Søg vaskehaller" className="mapSearchInput" aria-label="Soeg efter vaskehal" />
+          <button type="button" className="mapSearchButton" aria-label="Filtrer kort" onClick={handleFilterToggle}>
             <LuSlidersHorizontal aria-hidden="true" />
-          </button> 
+          </button>
         </div>
         {isFilterOpen && (
           <div className="filter">
             <span>
               <label htmlFor="filterOpenNow">Åben nu</label>
-              <input
-                type="checkbox"
-                id="filterOpenNow"
-                checked={filterOpenNow}
-                onChange={() => setFilterOpenNow((v) => !v)}
-              />
+              <input type="checkbox" id="filterOpenNow" checked={filterOpenNow} onChange={() => setFilterOpenNow((v) => !v)} />
             </span>
             <span>
               <label htmlFor="filterSelfWash">Selvask</label>
-              <input
-                type="checkbox"
-                id="filterSelfWash"
-                checked={filterSelfWash}
-                onChange={() => setFilterSelfWash((v) => !v)}
-              />
+              <input type="checkbox" id="filterSelfWash" checked={filterSelfWash} onChange={() => setFilterSelfWash((v) => !v)} />
             </span>
             <span>
               <label>Antal vaskehaller</label>
               <span>
                 <label htmlFor="halls1">1</label>
-                <input
-                  type="radio"
-                  id="halls1"
-                  name="hallsCount"
-                  checked={filterHallsCount === 1}
-                  onChange={() => setFilterHallsCount(1)}
-                />
+                <input type="radio" id="halls1" name="hallsCount" checked={filterHallsCount === 1} onChange={() => setFilterHallsCount(1)} />
               </span>
               <span>
                 <label htmlFor="halls2">2</label>
-                <input
-                  type="radio"
-                  id="halls2"
-                  name="hallsCount"
-                  checked={filterHallsCount === 2}
-                  onChange={() => setFilterHallsCount(2)}
-                />
+                <input type="radio" id="halls2" name="hallsCount" checked={filterHallsCount === 2} onChange={() => setFilterHallsCount(2)} />
               </span>
               <span>
                 <label htmlFor="halls3">3</label>
-                <input
-                  type="radio"
-                  id="halls3"
-                  name="hallsCount"
-                  checked={filterHallsCount === 3}
-                  onChange={() => setFilterHallsCount(3)}
-                />
+                <input type="radio" id="halls3" name="hallsCount" checked={filterHallsCount === 3} onChange={() => setFilterHallsCount(3)} />
               </span>
               <span>
                 <button type="button" onClick={() => setFilterHallsCount(null)} style={{ marginLeft: 8, fontSize: 12 }}>
@@ -359,7 +331,7 @@ async function handleFavoriteToggle() {
               </div>
             </section> */}
               <MembershipCard
-                package="premium"
+                package={membershipPackage}
                 location={selectedLocation.name}
                 address={selectedLocation.address}
                 isFavorite={isFavorite}

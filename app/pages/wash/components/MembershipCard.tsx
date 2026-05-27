@@ -27,9 +27,9 @@ const packageLabels: Record<Package, string> = {
 };
 
 const packageLabelsDashboard: Record<Package, string> = {
-  guld: "Guld",
-  premium: "Premium",
-  brilliant: "Brilliant",
+  guld: "Guld abonnement - Aktiv",
+  premium: "Premium abonnement - Aktiv",
+  brilliant: "Brilliant abonnement - Aktiv",
 };
 
 const statusColors: Record<string, string> = {

@@ -154,6 +154,8 @@ border-bottom: 1px solid #00d881;
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -2px;
+  margin-top:6px;
+  margin-left:-2px;
 }
 
 .membershipPlanPeopleIcon {
