@@ -55,6 +55,7 @@ export default function Login() {
         <FaChevronLeft /> Tilbage
       </Link>
       <h1>Login</h1>
+      <form action="handle">
       <div className="inputContainer">
         <label>Email</label>
         <input
@@ -82,7 +83,9 @@ export default function Login() {
             {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
           </div>
         </div>
-        <Link className="glemtAdgangskode" href="/pages/forgotPassword">Glemt adgangskode? </Link>
+        
+      </div>
+      <Link className="glemtAdgangskode" href="/pages/forgotPassword">Glemt adgangskode? </Link>
         <button
           className="nextButton"
           type="button"
@@ -91,10 +94,10 @@ export default function Login() {
         >
           <FaArrowRight />
         </button>
+        </form>
         {error && (
           <div style={{ color: "red", marginTop: "10px" }}>{error}</div>
         )}
-      </div>
     </div>
   );
 }

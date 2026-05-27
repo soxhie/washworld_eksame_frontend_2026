@@ -95,6 +95,15 @@ export default function DashboardPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedActivityDayIndex, setSelectedActivityDayIndex] = useState(() => getWeekdayIndex());
+  // Filter state
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  // Example filter states (expand as needed)
+  const [filterOpenNow, setFilterOpenNow] = useState(false);
+  const [filterSelfWash, setFilterSelfWash] = useState(false);
+  const [filterHallsCount, setFilterHallsCount] = useState<number | null>(null);
+
+  // Toggle filter div
+  const handleFilterToggle = () => setIsFilterOpen((prev) => !prev);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -132,15 +141,54 @@ export default function DashboardPage() {
       });
   }, [router]);
 
-  const filteredLocations = useMemo(() => {
-    const normalizedQuery = normalizeSearchText(searchQuery);
-    if (!normalizedQuery) return locations;
 
-    return locations.filter((location) => {
-      const haystack = normalizeSearchText(`${location.name} ${location.address}`);
-      return haystack.includes(normalizedQuery);
-    });
-  }, [searchQuery, locations]);
+  // Filtering logic
+  const filteredLocations = useMemo(() => {
+    let result = locations;
+    const normalizedQuery = normalizeSearchText(searchQuery);
+    if (normalizedQuery) {
+      // Exclude 'wash world' from the name when searching
+      const scored = result
+        .map((location) => {
+          const cleanedName = location.name.replace(/wash\s*world/gi, "").trim();
+          const haystack = normalizeSearchText(`${cleanedName} ${location.address}`);
+          const startsWith = haystack.startsWith(normalizedQuery);
+          const includes = haystack.includes(normalizedQuery);
+          return {
+            location,
+            score: startsWith ? 2 : includes ? 1 : 0,
+          };
+        })
+        .filter((item) => item.score > 0)
+        .sort((a, b) => b.score - a.score || a.location.name.localeCompare(b.location.name));
+      result = scored.map((item) => item.location);
+    }
+    // Apply filter: open now (example, needs real open/close logic)
+    if (filterOpenNow) {
+      result = result.filter((loc) => {
+        // Placeholder: always true, implement real logic if openHours is available
+        return true;
+      });
+    }
+    // Apply filter: self wash
+    if (filterSelfWash) {
+      result = result.filter((loc) => loc.selfWashCount && loc.selfWashCount > 0);
+    }
+    // Apply filter: halls count
+    if (filterHallsCount !== null) {
+      result = result.filter((loc) => loc.hallsCount === filterHallsCount);
+    }
+    return result;
+  }, [searchQuery, locations, filterOpenNow, filterSelfWash, filterHallsCount]);
+
+  // Auto-select the first filtered location when searching
+  useEffect(() => {
+    if (searchQuery) {
+      if (filteredLocations.length > 0) {
+        setSelectedLocationId(filteredLocations[0].id);
+      }
+    }
+  }, [searchQuery, filteredLocations]);
 
   const selectedLocation = filteredLocations.find((location) => location.id === selectedLocationId);
   const todayActivityDayIndex = useMemo(() => getWeekdayIndex(), []);
@@ -183,15 +231,79 @@ export default function DashboardPage() {
             type="search"
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
-            placeholder="Search locations" // Ændre til Søg vaskehaller
+            placeholder="Søg vaskehaller"
             className="mapSearchInput"
             aria-label="Soeg efter vaskehal"
           />
-          <button type="button" className="mapSearchButton" aria-label="Filtrer kort">
+          <button
+            type="button"
+            className="mapSearchButton"
+            aria-label="Filtrer kort"
+            onClick={handleFilterToggle}
+          >
             <LuSlidersHorizontal aria-hidden="true" />
           </button>
         </div>
-
+        {isFilterOpen && (
+          <div className="filter">
+            <span>
+              <label htmlFor="filterOpenNow">Åben nu</label>
+              <input
+                type="checkbox"
+                id="filterOpenNow"
+                checked={filterOpenNow}
+                onChange={() => setFilterOpenNow((v) => !v)}
+              />
+            </span>
+            <span>
+              <label htmlFor="filterSelfWash">Selvask</label>
+              <input
+                type="checkbox"
+                id="filterSelfWash"
+                checked={filterSelfWash}
+                onChange={() => setFilterSelfWash((v) => !v)}
+              />
+            </span>
+            <span>
+              <label>Antal vaskehaller</label>
+              <span>
+                <label htmlFor="halls1">1</label>
+                <input
+                  type="radio"
+                  id="halls1"
+                  name="hallsCount"
+                  checked={filterHallsCount === 1}
+                  onChange={() => setFilterHallsCount(1)}
+                />
+              </span>
+              <span>
+                <label htmlFor="halls2">2</label>
+                <input
+                  type="radio"
+                  id="halls2"
+                  name="hallsCount"
+                  checked={filterHallsCount === 2}
+                  onChange={() => setFilterHallsCount(2)}
+                />
+              </span>
+              <span>
+                <label htmlFor="halls3">3</label>
+                <input
+                  type="radio"
+                  id="halls3"
+                  name="hallsCount"
+                  checked={filterHallsCount === 3}
+                  onChange={() => setFilterHallsCount(3)}
+                />
+              </span>
+              <span>
+                <button type="button" onClick={() => setFilterHallsCount(null)} style={{ marginLeft: 8, fontSize: 12 }}>
+                  Nulstil
+                </button>
+              </span>
+            </span>
+          </div>
+        )}
         <div className={isLocationSheetOpen ? "mapCanvasWrap" : "mapCanvasWrap mapCanvasWrapFullscreen"}>
           <LiveWashMap
             locations={filteredLocations}

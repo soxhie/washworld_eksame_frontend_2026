@@ -79,17 +79,17 @@ export default function LiveWashMap({ locations, selectedLocationId, onSelectLoc
   const selectedLocation = locations.find((loc) => loc.id === selectedLocationId);
   const mapCenter = currentPosition ?? selectedLocation?.position ?? denmarkCenter;
 
-  const locationIcon = useMemo(
-    () =>
-      L.divIcon({
-        className: "washMapMarker",
-        html: '<span class="washMapMarkerInner"></span>',
-        iconSize: [28, 28],
-        iconAnchor: [14, 28],
-        popupAnchor: [0, -24],
-      }),
-    [],
-  );
+  const getLocationIcon = (name: string) =>
+    L.divIcon({
+      className: "washMapMarker",
+      html: `<div style="display: flex; flex-direction: column; align-items: center;">
+        <span class='washMapMarkerInner'></span>
+        <span style='color: #fff; font-weight: 600; text-shadow: 0 1px 4px #000, 0 0 2px #000; font-size: 13px; margin-top: 10px; white-space: nowrap;'>${name}</span>
+      </div>`,
+      iconSize: [80, 36], // wider to fit text
+      iconAnchor: [40, 28],
+      popupAnchor: [0, -24],
+    });
 
   useEffect(() => {
     if (!("geolocation" in navigator)) {
@@ -122,7 +122,7 @@ export default function LiveWashMap({ locations, selectedLocationId, onSelectLoc
         <Marker
           key={location.id}
           position={location.position}
-          icon={locationIcon}
+          icon={getLocationIcon(location.name)}
           eventHandlers={{
             click: () => onSelectLocation(location.id),
           }}
