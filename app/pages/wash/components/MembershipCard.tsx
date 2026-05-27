@@ -57,7 +57,7 @@ function DashboardMembershipCard({ pkg, address, isFavorite, onFavoriteToggle, o
   return (
     <section
       style={{
-        marginTop: 10,
+        // marginTop: 10,
         padding: "16px 14px 14px",
         background: "linear-gradient(180deg, rgba(41, 42, 45, 0.9) 0%, rgba(35, 36, 39, 0.9) 100%)",
         border: "1px solid rgba(255, 255, 255, 0.08)",

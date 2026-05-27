@@ -242,7 +242,7 @@ export default function DashboardPage() {
             onClick={handleFilterToggle}
           >
             <LuSlidersHorizontal aria-hidden="true" />
-          </button>
+          </button> */}
         </div>
         {isFilterOpen && (
           <div className="filter">
@@ -324,22 +324,21 @@ export default function DashboardPage() {
         </div>
 
         {selectedLocation && isLocationSheetOpen ? (
-          <section className="locationSheet" aria-label="Valgt vaskehal">
-            <button
-              type="button"
-              className="sheetSecondaryButton sheetIconButton sheetTopCloseButton"
-              aria-label="Luk detaljer"
-              onClick={() => {
-                setIsLocationSheetOpen(false);
-              }}
-            >
-              <LuX aria-hidden="true" />
-            </button>
+<section className="locationSheet" aria-label="Valgt vaskehal">
+  <div className="locationSheetHeaderRow">
+    <button
+      type="button"
+      className="sheetSecondaryButton sheetIconButton sheetTopCloseButton"
+      aria-label="Luk detaljer"
+      onClick={() => setIsLocationSheetOpen(false)}
+    >
+      <LuX aria-hidden="true" />
+    </button>
+    <p className="locationSheetHeaderName">{selectedLocation.name}</p>
+    <p className="locationSheetHeaderOpen">Åbent - {openingHoursLabel}</p>
+  </div>
 
-            <div className="locationSheetHeaderRow">
-              <p className="locationSheetHeaderName">{selectedLocation.name}</p>
-              <p className="locationSheetHeaderOpen">Åbent - {openingHoursLabel}</p>
-            </div>
+  <div className="locationSheetScrollable">
 
             {selectedLocation.message ? (
               <p className="locationAlert locationAlertTop" role="status">
@@ -456,6 +455,9 @@ export default function DashboardPage() {
                 <span>Ingen haldetaljer fundet for denne lokation.</span>
               </section>
             )}
+
+           </div>
+
           </section>
         ) : null}
       </section>
