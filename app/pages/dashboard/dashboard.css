@@ -966,7 +966,7 @@
   }
 
   .sheetSecondaryButton {
-    color: var(--color-active-bg);
+    color: #fff;
   }
   .membershipTier {
     font-size: 34px;
