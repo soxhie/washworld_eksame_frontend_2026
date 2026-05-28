@@ -648,7 +648,7 @@
 }
 
 .sheetTopCloseButton {
-  margin: 0 0 6px;
+  margin: 0 0 3px;
 }
 
 .popularTimesPanel {
@@ -966,7 +966,7 @@
   }
 
   .sheetSecondaryButton {
-    color: var(--color-active-bg);
+    color: #fff;
   }
   .membershipTier {
     font-size: 34px;

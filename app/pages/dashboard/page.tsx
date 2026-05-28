@@ -11,11 +11,15 @@ import BottomNav from "../../components/layout/BottomNav";
 import SwipeToStart from "../../components/SwipeToStart/SwipeToStart";
 import mockDashboardData from "./data/mockDashboardData";
 import MembershipCard from "../wash/components/MembershipCard";
+import { useWashLocations } from "@/app/hooks/useWashLocations"; // custom hook med api
+import { useAuth } from "@/app/hooks/useAuth";
 
 const LiveWashMap = dynamic(() => import("./components/LiveWashMap"), {
   ssr: false,
   loading: () => <div className="mapLoading">Indlaeser kort...</div>,
 });
+
+type Package = "guld" | "premium" | "brilliant";
 
 type WashLocation = {
   id: string;
@@ -38,6 +42,7 @@ type TrafficDay = {
   level: number;
   active?: boolean;
 };
+
 
 const ACTIVITY_WEEKDAYS = ["MAN", "TIR", "ONS", "TOR", "FRE", "LØR", "SØN"];
 
@@ -88,11 +93,11 @@ function buildTrafficData(selectedLocation: WashLocation | undefined, selectedDa
 export default function DashboardPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [locations, setLocations] = useState<WashLocation[]>([]);
+  // const [locations, setLocations] = useState<WashLocation[]>([]); hvis der ikke bruges hook
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
   const [isLocationSheetOpen, setIsLocationSheetOpen] = useState(false);
   const [locateRequestCount, setLocateRequestCount] = useState(1);
-  const [loadError, setLoadError] = useState<string | null>(null);
+  // const [loadError, setLoadError] = useState<string | null>(null); hvis der ikke bruges hook
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedActivityDayIndex, setSelectedActivityDayIndex] = useState(() => getWeekdayIndex());
   // Filter state
@@ -105,42 +110,34 @@ export default function DashboardPage() {
   // Toggle filter div
   const handleFilterToggle = () => setIsFilterOpen((prev) => !prev);
 
-  useEffect(() => {
+  async function handleFavoriteToggle() {
+    const previousValue = isFavorite;
+    setIsFavorite((prev) => !prev); // optimistic update
+
     const token = localStorage.getItem("access_token");
-    if (!token) {
-      router.push("/pages/login");
-      return;
-    }
-    fetch("/api/washworld-locations", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(async (res) => {
-        if (res.status === 401) {
-          localStorage.removeItem("access_token");
-          router.push("/pages/login");
-          return;
-        }
-        if (!res.ok) {
-          throw new Error("Kunne ikke hente Wash World lokationer.");
-        }
+    const method = previousValue ? "DELETE" : "POST";
 
-        return res.json();
-      })
-      .then((data) => {
-        if (!Array.isArray(data)) return;
-
-        const parsed: WashLocation[] = data;
-        setLocations(parsed);
-        const soeborg = parsed.find((loc) => loc.name.toLowerCase().includes("søborg"));
-        setSelectedLocationId(soeborg?.id ?? null);
-        setIsLocationSheetOpen(false);
-        setLoadError(parsed.length === 0 ? "Ingen Wash World lokationer fundet." : null);
-      })
-      .catch((error: unknown) => {
-        setLoadError(error instanceof Error ? error.message : "Kunne ikke hente Wash World lokationer.");
+    try {
+      const res = await fetch("http://localhost:80/api-favorites", {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ location_id: selectedLocation?.id }),
       });
-  }, [router]);
+      if (!res.ok) throw new Error("Fejl");
+    } catch {
+      setIsFavorite(previousValue); // rollback
+    }
+  }
 
+  const { locations, loadError } = useWashLocations(); // custom hook
+  useEffect(() => {
+    if (locations.length === 0) return;
+    const soeborg = locations.find((loc) => loc.name.toLowerCase().includes("søborg"));
+    setSelectedLocationId(soeborg?.id ?? null);
+  }, [locations]);
 
   // Filtering logic
   const filteredLocations = useMemo(() => {
@@ -220,6 +217,15 @@ export default function DashboardPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isLocationSheetOpen]);
 
+  const { user } = useAuth();
+
+  const membershipPackage = useMemo((): Package => {
+    const name = user?.membership_name?.toLowerCase() ?? "";
+    if (name.includes("brilliant")) return "brilliant";
+    if (name.includes("premium")) return "premium";
+    return "guld";
+  }, [user]);
+
   return (
     <main className={isLocationSheetOpen ? "DashboardPage DashboardPageSheetOpen" : "DashboardPage"}>
       <AppHeader variant="brand" />
@@ -227,74 +233,34 @@ export default function DashboardPage() {
       <section className={isLocationSheetOpen ? "mapSection" : "mapSection mapSectionFullscreen"} aria-label="Wash World kort">
         <div className="mapSearchBar">
           <LuSearch aria-hidden="true" className="mapSearchIcon" />
-          <input
-            type="search"
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.target.value)}
-            placeholder="Søg vaskehaller"
-            className="mapSearchInput"
-            aria-label="Soeg efter vaskehal"
-          />
-          <button
-            type="button"
-            className="mapSearchButton"
-            aria-label="Filtrer kort"
-            onClick={handleFilterToggle}
-          >
+          <input type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Søg vaskehaller" className="mapSearchInput" aria-label="Soeg efter vaskehal" />
+          <button type="button" className="mapSearchButton" aria-label="Filtrer kort" onClick={handleFilterToggle}>
             <LuSlidersHorizontal aria-hidden="true" />
-          </button> 
+          </button>
         </div>
         {isFilterOpen && (
           <div className="filter">
             <span>
               <label htmlFor="filterOpenNow">Åben nu</label>
-              <input
-                type="checkbox"
-                id="filterOpenNow"
-                checked={filterOpenNow}
-                onChange={() => setFilterOpenNow((v) => !v)}
-              />
+              <input type="checkbox" id="filterOpenNow" checked={filterOpenNow} onChange={() => setFilterOpenNow((v) => !v)} />
             </span>
             <span>
               <label htmlFor="filterSelfWash">Selvask</label>
-              <input
-                type="checkbox"
-                id="filterSelfWash"
-                checked={filterSelfWash}
-                onChange={() => setFilterSelfWash((v) => !v)}
-              />
+              <input type="checkbox" id="filterSelfWash" checked={filterSelfWash} onChange={() => setFilterSelfWash((v) => !v)} />
             </span>
             <span>
               <label>Antal vaskehaller</label>
               <span>
                 <label htmlFor="halls1">1</label>
-                <input
-                  type="radio"
-                  id="halls1"
-                  name="hallsCount"
-                  checked={filterHallsCount === 1}
-                  onChange={() => setFilterHallsCount(1)}
-                />
+                <input type="radio" id="halls1" name="hallsCount" checked={filterHallsCount === 1} onChange={() => setFilterHallsCount(1)} />
               </span>
               <span>
                 <label htmlFor="halls2">2</label>
-                <input
-                  type="radio"
-                  id="halls2"
-                  name="hallsCount"
-                  checked={filterHallsCount === 2}
-                  onChange={() => setFilterHallsCount(2)}
-                />
+                <input type="radio" id="halls2" name="hallsCount" checked={filterHallsCount === 2} onChange={() => setFilterHallsCount(2)} />
               </span>
               <span>
                 <label htmlFor="halls3">3</label>
-                <input
-                  type="radio"
-                  id="halls3"
-                  name="hallsCount"
-                  checked={filterHallsCount === 3}
-                  onChange={() => setFilterHallsCount(3)}
-                />
+                <input type="radio" id="halls3" name="hallsCount" checked={filterHallsCount === 3} onChange={() => setFilterHallsCount(3)} />
               </span>
               <span>
                 <button type="button" onClick={() => setFilterHallsCount(null)} style={{ marginLeft: 8, fontSize: 12 }}>
@@ -324,29 +290,23 @@ export default function DashboardPage() {
         </div>
 
         {selectedLocation && isLocationSheetOpen ? (
-<section className="locationSheet" aria-label="Valgt vaskehal">
-  <div className="locationSheetHeaderRow">
-    <button
-      type="button"
-      className="sheetSecondaryButton sheetIconButton sheetTopCloseButton"
-      aria-label="Luk detaljer"
-      onClick={() => setIsLocationSheetOpen(false)}
-    >
-      <LuX aria-hidden="true" />
-    </button>
-    <p className="locationSheetHeaderName">{selectedLocation.name}</p>
-    <p className="locationSheetHeaderOpen">Åbent - {openingHoursLabel}</p>
-  </div>
+          <section className="locationSheet" aria-label="Valgt vaskehal">
+            <div className="locationSheetHeaderRow">
+              <button type="button" className="sheetSecondaryButton sheetIconButton sheetTopCloseButton" aria-label="Luk detaljer" onClick={() => setIsLocationSheetOpen(false)}>
+                <LuX aria-hidden="true" />
+              </button>
+              <p className="locationSheetHeaderName">{selectedLocation.name}</p>
+              <p className="locationSheetHeaderOpen">Åbent - {openingHoursLabel}</p>
+            </div>
 
-  <div className="locationSheetScrollable">
+            <div className="locationSheetScrollable">
+              {selectedLocation.message ? (
+                <p className="locationAlert locationAlertTop" role="status">
+                  {selectedLocation.message}
+                </p>
+              ) : null}
 
-            {selectedLocation.message ? (
-              <p className="locationAlert locationAlertTop" role="status">
-                {selectedLocation.message}
-              </p>
-            ) : null}
-
-            {/* <section className="membershipPanel" aria-label="Start vask sektion">
+              {/* <section className="membershipPanel" aria-label="Start vask sektion">
               <div className="membershipTopRow">
                 <div>
                   <p className="membershipTitle">Medlemskab</p>
@@ -370,94 +330,93 @@ export default function DashboardPage() {
                 <SwipeToStart label="Start din vask" flush onComplete={() => router.push("/pages/wash/washprogrampremium")} />
               </div>
             </section> */}
-            <MembershipCard
-              package="premium"
-              location={selectedLocation.name}
-              address={selectedLocation.address}
-              isFavorite={isFavorite}
-              onFavoriteToggle={() => setIsFavorite((prev) => !prev)}
-              onStart={() => router.push("/pages/wash/activewash")}
-              onSwitch={() => setIsLocationSheetOpen(false)}
-              variant="dashboard"
-            />
+              <MembershipCard
+                package={membershipPackage}
+                location={selectedLocation.name}
+                address={selectedLocation.address}
+                isFavorite={isFavorite}
+                // onFavoriteToggle={() => setIsFavorite((prev) => !prev)}
+                onFavoriteToggle={handleFavoriteToggle}
+                onStart={() => router.push("/pages/wash/activewash")}
+                onSwitch={() => setIsLocationSheetOpen(false)}
+                variant="dashboard"
+              />
 
-            <section className="activityPanel" aria-label="Aktivitet for valgt vaskehal">
-              <div className="activityWeekdays" role="tablist" aria-label="Vaelg dag">
-                {ACTIVITY_WEEKDAYS.map((weekday, index) => {
-                  const isActiveDay = index === selectedActivityDayIndex;
-                  return (
-                    <button
-                      key={weekday}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActiveDay}
-                      className={isActiveDay ? "activityWeekdayButton isActive" : "activityWeekdayButton"}
-                      onClick={() => setSelectedActivityDayIndex(index)}
-                    >
-                      {weekday}
-                    </button>
-                  );
-                })}
-              </div>
+              <section className="activityPanel" aria-label="Aktivitet for valgt vaskehal">
+                <div className="activityWeekdays" role="tablist" aria-label="Vaelg dag">
+                  {ACTIVITY_WEEKDAYS.map((weekday, index) => {
+                    const isActiveDay = index === selectedActivityDayIndex;
+                    return (
+                      <button
+                        key={weekday}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActiveDay}
+                        className={isActiveDay ? "activityWeekdayButton isActive" : "activityWeekdayButton"}
+                        onClick={() => setSelectedActivityDayIndex(index)}
+                      >
+                        {weekday}
+                      </button>
+                    );
+                  })}
+                </div>
 
-              <p className="activityStatus">
-                <span className="activityDot" aria-hidden="true" />
-                <strong>{selectedActivityDayIndex === todayActivityDayIndex ? "Nu:" : `${ACTIVITY_WEEKDAYS[selectedActivityDayIndex]}:`}</strong>{" "}
-                {(() => {
-                  const now = new Date();
-                  const hour = now.getHours();
-                  if (selectedActivityDayIndex === todayActivityDayIndex && (hour < 7 || hour >= 22)) {
-                    return "Lukket";
-                  }
-                  return activitySummary;
-                })()}
-              </p>
+                <p className="activityStatus">
+                  <span className="activityDot" aria-hidden="true" />
+                  <strong>{selectedActivityDayIndex === todayActivityDayIndex ? "Nu:" : `${ACTIVITY_WEEKDAYS[selectedActivityDayIndex]}:`}</strong>{" "}
+                  {(() => {
+                    const now = new Date();
+                    const hour = now.getHours();
+                    if (selectedActivityDayIndex === todayActivityDayIndex && (hour < 7 || hour >= 22)) {
+                      return "Lukket";
+                    }
+                    return activitySummary;
+                  })()}
+                </p>
 
-              <div className="popularTimesChart" aria-label="Travlhed fordelt paa timer">
-                {trafficData.map((item) => (
-                  <div key={item.time} className={item.active ? "popularTimesColumnWrap isActive" : "popularTimesColumnWrap"}>
-                    <div className="popularTimesColumnTrack" aria-hidden="true">
-                      <span className={item.active ? "popularTimesColumn popularTimesColumnActive" : "popularTimesColumn"} style={{ height: `${(item.level / MAX_TRAFFIC_LEVEL) * 100}%` }} />
+                <div className="popularTimesChart" aria-label="Travlhed fordelt paa timer">
+                  {trafficData.map((item) => (
+                    <div key={item.time} className={item.active ? "popularTimesColumnWrap isActive" : "popularTimesColumnWrap"}>
+                      <div className="popularTimesColumnTrack" aria-hidden="true">
+                        <span className={item.active ? "popularTimesColumn popularTimesColumnActive" : "popularTimesColumn"} style={{ height: `${(item.level / MAX_TRAFFIC_LEVEL) * 100}%` }} />
+                      </div>
+                      <span className="popularTimesHour">{Number.parseInt(item.time, 10) % 3 === 0 ? `${item.time}` : ""}</span>
                     </div>
-                    <span className="popularTimesHour">{Number.parseInt(item.time, 10) % 3 === 0 ? `${item.time}` : ""}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
-            {/* Hall details section */}
-            {selectedLocation.hallsCount || selectedLocation.selfWashCount || selectedLocation.vacuumCount || selectedLocation.preWashCount || selectedLocation.maxHeight ? (
-              <section
-                className="hallDetailsPanel"
-                aria-label="Hal detaljer"
-                style={{ marginTop: 15, padding: 16, background: "linear-gradient(180deg, rgba(41, 42, 45, 0.9) 0%, rgba(35, 36, 39, 0.9) 100%)" }}
-              >
-                <h3 style={{ margin: 0, fontSize: 18 }}>Hal detaljer</h3>
-                <ul style={{ margin: 0, padding: 0, listStyle: "none", fontSize: 15 }}>
-                  <li>
-                    <strong>Antal vaskehaller:</strong> {selectedLocation.hallsCount ?? "-"}
-                  </li>
-                  <li>
-                    <strong>Antal selvvask:</strong> {selectedLocation.selfWashCount ?? "-"}
-                  </li>
-                  <li>
-                    <strong>Antal støvsugere:</strong> {selectedLocation.vacuumCount ?? "-"}
-                  </li>
-                  <li>
-                    <strong>Antal forvask:</strong> {selectedLocation.preWashCount ?? "-"}
-                  </li>
-                  <li>
-                    <strong>Maks. højde:</strong> {selectedLocation.maxHeight ?? "-"}
-                  </li>
-                </ul>
+                  ))}
+                </div>
               </section>
-            ) : (
-              <section className="hallDetailsPanel" aria-label="Hal detaljer" style={{ marginTop: 24, padding: 16, background: "#232323", color: "#bbb", textAlign: "center" }}>
-                <span>Ingen haldetaljer fundet for denne lokation.</span>
-              </section>
-            )}
-
-           </div>
-
+              {/* Hall details section */}
+              {selectedLocation.hallsCount || selectedLocation.selfWashCount || selectedLocation.vacuumCount || selectedLocation.preWashCount || selectedLocation.maxHeight ? (
+                <section
+                  className="hallDetailsPanel"
+                  aria-label="Hal detaljer"
+                  style={{ marginTop: 15, padding: 16, background: "linear-gradient(180deg, rgba(41, 42, 45, 0.9) 0%, rgba(35, 36, 39, 0.9) 100%)" }}
+                >
+                  <h3 style={{ margin: 0, fontSize: 18 }}>Hal detaljer</h3>
+                  <ul style={{ margin: 0, padding: 0, listStyle: "none", fontSize: 15 }}>
+                    <li>
+                      <strong>Antal vaskehaller:</strong> {selectedLocation.hallsCount ?? "-"}
+                    </li>
+                    <li>
+                      <strong>Antal selvvask:</strong> {selectedLocation.selfWashCount ?? "-"}
+                    </li>
+                    <li>
+                      <strong>Antal støvsugere:</strong> {selectedLocation.vacuumCount ?? "-"}
+                    </li>
+                    <li>
+                      <strong>Antal forvask:</strong> {selectedLocation.preWashCount ?? "-"}
+                    </li>
+                    <li>
+                      <strong>Maks. højde:</strong> {selectedLocation.maxHeight ?? "-"}
+                    </li>
+                  </ul>
+                </section>
+              ) : (
+                <section className="hallDetailsPanel" aria-label="Hal detaljer" style={{ marginTop: 24, padding: 16, background: "#232323", color: "#bbb", textAlign: "center" }}>
+                  <span>Ingen haldetaljer fundet for denne lokation.</span>
+                </section>
+              )}
+            </div>
           </section>
         ) : null}
       </section>

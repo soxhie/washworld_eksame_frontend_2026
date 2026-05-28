@@ -154,6 +154,8 @@ border-bottom: 1px solid #00d881;
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -2px;
+  margin-top:6px;
+  margin-left:-2px;
 }
 
 .membershipPlanPeopleIcon {
@@ -1451,3 +1453,13 @@ label{
 }
 
 
+.deleteAccountBtn {
+  background: none;
+  border: none;
+  color: #e53935;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+  width: 100%;
+}

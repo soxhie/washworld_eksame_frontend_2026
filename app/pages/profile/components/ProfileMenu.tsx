@@ -19,13 +19,18 @@ export default function ProfileMenu({ onItemClick }: ProfileMenuProps) {
     <section className="profileMenu" aria-label="Profil menu">
       {profileData.menuItems.map((item) => {
         const Icon = iconMap[item.id];
+        const isDelete = item.id === "delete-account";
+
+        if (isDelete) {
+          return (
+            <button key={item.id} type="button" className="deleteAccountBtn" onClick={() => onItemClick(item.id)}>
+              {item.label}
+            </button>
+          );
+        }
+
         return (
-          <button
-            key={item.id}
-            type="button"
-            className="profileMenuItem"
-            onClick={() => onItemClick(item.id)}
-          >
+          <button key={item.id} type="button" className="profileMenuItem" onClick={() => onItemClick(item.id)}>
             {Icon && <Icon className="menuIcon" aria-hidden="true" />}
             <span className="menuLabel">{item.label}</span>
             <span className="menuChevron" aria-hidden="true">›</span>

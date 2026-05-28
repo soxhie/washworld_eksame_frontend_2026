@@ -23,12 +23,12 @@ export default function WashProgram({ package: pkg }: { package: Package }) {
   const [secondsLeft, setSecondsLeft] = useState(DISPLAY_TOTAL);
 
   const [stepDurations] = useState(() => {
-  const base = Math.floor(DISPLAY_TOTAL / programSteps.length);
-  const durations = programSteps.map(() => base + Math.floor(Math.random() * 10) - 5);
-  const total = durations.reduce((sum, d) => sum + d, 0);
-  durations[durations.length - 1] += DISPLAY_TOTAL - total;
-  return durations;
-});
+    const base = Math.floor(DISPLAY_TOTAL / programSteps.length);
+    const durations = programSteps.map(() => base + Math.floor(Math.random() * 10) - 5);
+    const total = durations.reduce((sum, d) => sum + d, 0);
+    durations[durations.length - 1] += DISPLAY_TOTAL - total;
+    return durations;
+  });
 
   const currentStep = useMemo(() => {
     const elapsed = DISPLAY_TOTAL - secondsLeft;
@@ -68,7 +68,7 @@ export default function WashProgram({ package: pkg }: { package: Package }) {
   const mins = Math.floor(secondsLeft / 60);
   const secs = secondsLeft % 60;
   const isLastStep = currentStep === programSteps.length - 1;
-  const label = secondsLeft === 0 ? "0sek" : isLastStep ? `${secs}sek` : `${mins}:${secs.toString().padStart(2, "0")}`;
+  const label = secondsLeft === 0 ? "0" : isLastStep ? `${secs}` : `${mins}:${secs.toString().padStart(2, "0")}`;
 
   const translateY = -currentStep * ITEM_HEIGHT + (VISIBLE_ITEMS * ITEM_HEIGHT) / 2 - ITEM_HEIGHT / 2;
 

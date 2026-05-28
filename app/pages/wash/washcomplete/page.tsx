@@ -10,7 +10,7 @@ export default function WashCompletePage() {
   const router = useRouter();
 
   return (
-    <main style={{ minHeight: "100vh", overflowY: "auto", paddingBottom: 80, display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <main style={{ minHeight: "100vh", overflowY: "auto", paddingBottom: 80, display: "flex", flexDirection: "column", alignItems: "center", color: "var(--background)" }}>
       <AppHeader variant="brand" />
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, gap: 24, padding: "40px 20px", marginBottom: 120 }}>
         <h1 style={{ fontSize: "var(--h2-size)", fontWeight: 800, textAlign: "center", color: "var(--color-primary)" }}>Tak for dit besøg</h1>

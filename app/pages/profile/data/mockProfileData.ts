@@ -16,6 +16,7 @@ const profileData: ProfileData = {
     { id: "history", label: "Vaske historik", route: "/pages/history" },
     { id: "details", label: "Mine oplysninger", route: "/pages/details" },
     { id: "logout", label: "Log ud", route: "/" },
+    { id: "delete-account", label: "Slet konto", route: "" }, //delete profile
   ],
 };
 

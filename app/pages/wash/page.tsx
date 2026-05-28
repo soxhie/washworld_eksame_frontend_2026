@@ -8,6 +8,9 @@ import MembershipCard from "./components/MembershipCard";
 import NearbyHalls from "./components/NearbyHalls";
 import RecentWashes from "./components/RecentWashes";
 import BackButton from "../../components/layout/BackButton";
+import { useAuth } from "@/app/hooks/useAuth";
+
+type Package = "guld" | "premium" | "brilliant";
 
 type WashWorldLocation = {
   id: string;
@@ -92,6 +95,15 @@ export default function WashPage() {
   const [isLoadingHalls, setIsLoadingHalls] = useState(true);
   const [hallError, setHallError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
+
+  const { user } = useAuth();
+
+  const membershipPackage = useMemo((): Package => {
+    const name = user?.membership_name?.toLowerCase() ?? "";
+    if (name.includes("brilliant")) return "brilliant";
+    if (name.includes("premium")) return "premium";
+    return "guld";
+  }, [user]);
 
   useEffect(() => {
     let isActive = true;
@@ -185,7 +197,7 @@ export default function WashPage() {
         <BackButton />
         {selectedHall ? (
           <MembershipCard
-            package="brilliant"
+            package={membershipPackage}
             location={selectedHall.name}
             address={selectedHall.address}
             queueStatus={selectedHall.status}

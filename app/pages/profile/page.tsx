@@ -6,45 +6,21 @@ import AppHeader from "../../components/layout/AppHeader";
 import BottomNav from "../../components/layout/BottomNav";
 import ProfileMenu from "./components/ProfileMenu";
 import "./profile.css";
+import { useAuth } from "@/app/hooks/useAuth";
 
 export default function ProfilePage() {
   const router = useRouter();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      router.push("/pages/login");
-      return;
-    }
-    fetch("http://localhost:80/api-my-info", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(async (res) => {
-        if (res.status === 401) {
-          localStorage.removeItem("access_token");
-          router.push("/pages/login");
-          return;
-        }
-        const data = await res.json();
-        if (data.status === "ok") {
-          setUser(data.user);
-        } else {
-          setError(data.message || "Kunne ikke hente brugerdata");
-        }
-      })
-      .catch(() => setError("System under maintenance"))
-      .finally(() => setLoading(false));
-  }, [router]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { user, loading, error, logout, deleteAccount } = useAuth();
 
   function handleItemClick(id: string) {
     if (id === "logout") {
       setShowLogoutModal(true);
+      return;
+    }
+    if (id === "delete-account") {
+      setShowDeleteModal(true);
       return;
     }
     if (id === "membership") {
@@ -60,10 +36,8 @@ export default function ProfilePage() {
         method: "GET",
       });
     } catch {}
-    localStorage.removeItem("authUser");
-    localStorage.removeItem("access_token");
+    logout();
     setShowLogoutModal(false);
-    router.push("/pages/login");
   }
 
   return (
@@ -78,23 +52,37 @@ export default function ProfilePage() {
           <ProfileMenu onItemClick={handleItemClick} />
         </>
       ) : null}
+      {showDeleteModal && (
+        <div className="logoutOverlay">
+          <div className="logoutModal">
+            <p className="logoutQuestion">Er du sikker på, at du vil slette din konto?</p>
+            <div className="logoutActions">
+              <button
+                type="button"
+                className="logoutConfirm"
+                onClick={async () => {
+                  await deleteAccount();
+                  setShowDeleteModal(false);
+                }}
+              >
+                Slet konto
+              </button>
+              <button type="button" className="logoutCancel" onClick={() => setShowDeleteModal(false)}>
+                Fortryd
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {showLogoutModal && (
         <div className="logoutOverlay" role="dialog" aria-modal="true" aria-label="Log ud bekræftelse">
           <div className="logoutModal">
             <p className="logoutQuestion">Log ud af din konto ?</p>
             <div className="logoutActions">
-              <button
-                type="button"
-                className="logoutConfirm"
-                onClick={handleConfirmLogout}
-              >
+              <button type="button" className="logoutConfirm" onClick={handleConfirmLogout}>
                 Log ud
               </button>
-              <button
-                type="button"
-                className="logoutCancel"
-                onClick={() => setShowLogoutModal(false)}
-              >
+              <button type="button" className="logoutCancel" onClick={() => setShowLogoutModal(false)}>
                 Fortryd
               </button>
             </div>

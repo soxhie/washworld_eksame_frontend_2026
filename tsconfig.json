@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,7 +23,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
@@ -30,8 +36,10 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts",
     "app/pages/onboarding/step2/page.tsx",
-    "app/pages/onboarding/Step1/page.tsx",
+    "app/pages/onboarding/step1/page.tsx",
     "app/page_onboarding.jsx"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

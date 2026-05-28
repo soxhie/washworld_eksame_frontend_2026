@@ -27,9 +27,9 @@ const packageLabels: Record<Package, string> = {
 };
 
 const packageLabelsDashboard: Record<Package, string> = {
-  guld: "Guld",
-  premium: "Premium",
-  brilliant: "Brilliant",
+  guld: "Guld abonnement - Aktiv",
+  premium: "Premium abonnement - Aktiv",
+  brilliant: "Brilliant abonnement - Aktiv",
 };
 
 const statusColors: Record<string, string> = {
@@ -107,7 +107,7 @@ function WashMembershipCard({
     <section style={{ marginTop: 10, border: "1px solid #07de88", background: "#015126", padding: "14px 12px 18px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
-          <h1 style={{ margin: 0, fontSize: 30, fontWeight: 800, lineHeight: 0.8 }}>Medlemskab</h1>
+          <h1 style={{ margin: 0, fontSize: 30, fontWeight: 800, lineHeight: 0.8, color: "#fff"}}>Medlemskab</h1>
           <p style={{ margin: "4px 0 0", color: "#08e184", fontSize: 18, fontWeight: 700 }}>{packageLabels[pkg]}</p>
         </div>
       </div>
