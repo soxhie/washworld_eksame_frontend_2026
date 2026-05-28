@@ -8,7 +8,8 @@ import {
 } from "react-icons/lu";
 import React from "react";
 import BackButton from "../../../components/layout/BackButton";
-
+import BetalingToggle from "../../onboarding/components/betalingToggle";
+import { useEffect, useState } from "react";
 interface ProfileDetailsFormProps {
   detailsForm: {
     phone: string;
@@ -23,6 +24,11 @@ interface ProfileDetailsFormProps {
   onBack: () => void;
   saveMessage: string | null;
 }
+type PaymentMethod = {
+  payment_gateway_id: string;
+  payment_gateway_name: string;
+  payment_gateway_icon_path: string;
+};
 
 export default function ProfileDetailsForm({
   detailsForm,
@@ -31,6 +37,26 @@ export default function ProfileDetailsForm({
   onBack,
   saveMessage,
 }: ProfileDetailsFormProps) {
+  const [showPopup, setShowPopUp] = React.useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("Card");
+    const [methods, setMethods] = useState<PaymentMethod[]>([]);
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState("");
+
+   useEffect(() => {
+    fetch("http://localhost:80/api-payment-gateways")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("response:", data);
+        if (data.status === "ok") setMethods(data.gateways ?? []);
+        else setError("Kunne ikke hente betalingsmetoder.");
+      })
+      .catch(() => setError("Netværksfejl. Prøv igen."));
+  }, []);
+  
+
+   
+  
   return (
     <section className="profileDetails" aria-label="Mine oplysninger formular">
       {/* <button
@@ -104,14 +130,34 @@ export default function ProfileDetailsForm({
             <span className="detailsFieldLabel">Betalingsmetode</span>
           </span>
           <div className="detailsFieldValueRow">
-            <input
+            <button
+              type="button"
               id="details-payment"
-              type="text"
               className="detailsFieldInput"
-              value={detailsForm.paymentMethod}
-              onChange={(event) => onChange("paymentMethod", event.target.value)}
-            />
-
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}
+              onClick={() => setShowPopUp(true)}
+            >
+              {/* Show the selected payment method icon if available, otherwise default icon */}
+              {(() => {
+                const selected = methods.find((m) => m.payment_gateway_id === detailsForm.paymentMethod);
+                if (selected) {
+                  return (
+                    <img
+                      src={`http://localhost:80/icons/${selected.payment_gateway_icon_path}`}
+                      alt={selected.payment_gateway_name}
+                      style={{ width: "28px", height: "28px", objectFit: "contain" }}
+                    />
+                  );
+                }
+                return <LuCreditCard aria-hidden="true" />;
+              })()}
+              <span>
+                {(() => {
+                  const selected = methods.find((m) => m.payment_gateway_id === detailsForm.paymentMethod);
+                  return selected ? selected.payment_gateway_name : "Vælg betalingsmetode";
+                })()}
+              </span>
+            </button>
           </div>
         </label>
 
@@ -155,6 +201,48 @@ export default function ProfileDetailsForm({
 
         {saveMessage ? <p className="detailsSaveMessage">{saveMessage}</p> : null}
       </form>
+      {showPopup && (
+        <div className="betalingsOverlay">
+          <div className="batalingPopup">
+            <h1>Betalingsmetoder</h1>
+
+            {methods.map((method) => (
+              <div
+                key={method.payment_gateway_id}
+                className={`button ${detailsForm.paymentMethod === method.payment_gateway_id ? "clicked" : ""}`}
+                onClick={() => {
+                  setPaymentMethod(method.payment_gateway_id);
+                  onChange("paymentMethod", method.payment_gateway_id);
+                }}
+              >
+                <img
+                  src={`http://localhost:80/icons/${method.payment_gateway_icon_path}`}
+                  alt={method.payment_gateway_name}
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    objectFit: "contain",
+                  }}
+                />
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  checked={detailsForm.paymentMethod === method.payment_gateway_id}
+                  readOnly
+                />
+                <h3>{method.payment_gateway_name}</h3>
+              </div>
+            ))}
+            <button
+              className="detailsSaveButton"
+              type="button"
+              onClick={() => setShowPopUp(false)}
+            >
+              Gem
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

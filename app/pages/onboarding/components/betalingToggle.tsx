@@ -3,12 +3,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getOnboardingData, saveOnboardingData, clearOnboardingData } from "../utils/onboardingStorage";
 import { FaArrowRight, FaChevronLeft } from "react-icons/fa";
-import BetalingToggle from "../components/betalingToggle";
+import { CiCreditCard1 } from "react-icons/ci";
+import process from "process";
+import CardInput from "../components/cardInput";
 import "../onboarding.css";
 import "../../../globals.css"
+import MobilePayInput from "../components/MobilepayInput";
 
-import Progress from "../components/progress";
-import BackButton from "@/app/components/layout/BackButton";
 
 type PaymentMethod = {
   payment_gateway_id: string;
@@ -16,13 +17,19 @@ type PaymentMethod = {
   payment_gateway_icon_path: string;
 };
 
-export default function OnboardingStep4() {
+
+export default function BetalingToggle() {
   const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState("Card");
   const [methods, setMethods] = useState<PaymentMethod[]>([]);
-
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const payload = getOnboardingData();
+  const [phone, setPhone] = useState(typeof payload.phone === 'string' ? payload.phone : '');
+  const handlePhoneChange = (newPhone: string) => {
+    setPhone(newPhone);
+    saveOnboardingData({ phone: newPhone });
+  };
 
   useEffect(() => {
     fetch("http://localhost:80/api-payment-gateways")
@@ -34,7 +41,6 @@ export default function OnboardingStep4() {
       })
       .catch(() => setError("Netværksfejl. Prøv igen."));
   }, []);
-  const payload = getOnboardingData();
   console.log("payload being sent:", payload);
 
   const handleSubmit = async () => {
@@ -69,13 +75,38 @@ export default function OnboardingStep4() {
   return (
     <div className="Onboarding-4">
      
-      <BackButton />
-      <h1>Betalingsmetode</h1>
-        <BetalingToggle/>
-      <button className="nextButton" type="button" onClick={handleSubmit} disabled={submitting}>
-        <FaArrowRight />
-      </button>
-      <Progress />
+      {methods.map((method) => (
+        <div key={method.payment_gateway_id} className={`button ${paymentMethod === method.payment_gateway_id ? "clicked" : ""}`} onClick={() => setPaymentMethod(method.payment_gateway_id)}>
+          <img
+            src={`http://localhost:80/icons/${method.payment_gateway_icon_path}`}
+            alt={method.payment_gateway_name}
+            style={{
+              width: "40px",
+              height: "40px",
+              objectFit: "contain",
+            }}
+          />
+          <input type="radio" name="paymentMethod" checked={paymentMethod === method.payment_gateway_id} readOnly />
+
+         
+          <h3>{method.payment_gateway_name}</h3>
+        </div>
+      ))}
+
+      {(() => {
+        const selectedMethod = methods.find((m) => m.payment_gateway_id === paymentMethod);
+        if (!selectedMethod) return null;
+        if (selectedMethod.payment_gateway_name === "Mobilepay") {
+          return <MobilePayInput detailsForm={{ phone }} onPhoneChange={handlePhoneChange} />;
+        }
+        if (selectedMethod.payment_gateway_name === "Betalingskort") {
+          return <CardInput />;
+        }
+        return null;
+      })()}
+
+      
     </div>
   );
 }
+

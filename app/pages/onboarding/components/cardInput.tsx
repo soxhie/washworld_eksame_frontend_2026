@@ -5,16 +5,16 @@ export default function CardInput(){
         <div>
             <div style={{display:"flex", flexDirection:"column"}}>
             <label htmlFor="">Kortnummer</label>
-            <input type="text" />
+            <input type="text" disabled/>
             </div>
             <div style={{display:"flex"}}>
                 <div>
                     <label htmlFor="">Udløbsdato</label>
-                    <input type="text" />
+                    <input type="text" disabled />
                 </div>
                 <div>
                     <label htmlFor="">CVV</label>
-                    <input type="text" size={3}/>
+                    <input type="text" size={3} disabled/>
                     
                 </div>
             </div>
