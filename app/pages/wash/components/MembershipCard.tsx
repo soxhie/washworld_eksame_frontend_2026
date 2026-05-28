@@ -57,7 +57,7 @@ function DashboardMembershipCard({ pkg, address, isFavorite, onFavoriteToggle, o
   return (
     <section
       style={{
-        // marginTop: 10,
+        //marginTop: 10,
         padding: "16px 14px 14px",
         background: "linear-gradient(180deg, rgba(41, 42, 45, 0.9) 0%, rgba(35, 36, 39, 0.9) 100%)",
         border: "1px solid rgba(255, 255, 255, 0.08)",
@@ -65,7 +65,7 @@ function DashboardMembershipCard({ pkg, address, isFavorite, onFavoriteToggle, o
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
-          <h1 style={{ margin: 0, fontSize: 30, fontWeight: 800, lineHeight: 0.8 }}>Medlemskab</h1>
+          <h1 style={{ margin: 0, fontSize: 30, fontWeight: 800, lineHeight: 0.8, textAlign: "left" }}>Medlemskab</h1>
           <p style={{ margin: "4px 0 10px", color: "#08e184", fontSize: 18, fontWeight: 700 }}>{packageLabelsDashboard[pkg]}</p>
           <p style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>Wash World</p>
           <p style={{ margin: "2px 0 0", color: "#14ef96", fontSize: 14, lineHeight: 1.2 }}>{address}</p>
