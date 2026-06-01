@@ -3,6 +3,7 @@ import { LuArrowUpRight } from "react-icons/lu";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import SwipeButton from "./SwipeButton";
 import SwipeToStart from "../../../components/SwipeToStart/SwipeToStart";
+import "../membershipcard.css"
 
 type Package = "guld" | "premium" | "brilliant";
 type Variant = "wash" | "dashboard";
