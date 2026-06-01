@@ -13,7 +13,7 @@ const steps: Record<Package, string[]> = {
 
 const ITEM_HEIGHT = 32;
 const VISIBLE_ITEMS = 5;
-const DISPLAY_TOTAL = 60;
+const DISPLAY_TOTAL = 30;
 const START_DELAY = 3000;
 
 export default function WashProgram({ package: pkg }: { package: Package }) {
