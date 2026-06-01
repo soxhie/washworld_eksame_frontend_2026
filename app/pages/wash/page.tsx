@@ -96,13 +96,14 @@ export default function WashPage() {
   const [hallError, setHallError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   const membershipPackage = useMemo((): Package => {
     const name = user?.membership_name?.toLowerCase() ?? "";
     if (name.includes("brilliant")) return "brilliant";
     if (name.includes("premium")) return "premium";
-    return "guld";
+    if (name.includes("guld") || name.includes("gold")) return "guld";
+    return "premium";
   }, [user]);
 
   useEffect(() => {
@@ -195,7 +196,12 @@ export default function WashPage() {
       <AppHeader variant="brand" />
       <div style={{ padding: "0 18px" }}>
         <BackButton />
-        {selectedHall ? (
+        {authLoading ? (
+          <section style={{ marginTop: 10, border: "1px solid #07de88", background: "#015126", padding: "14px 12px 18px" }}>
+            <h1 style={{ margin: 0, fontSize: 30, fontWeight: 800, lineHeight: 1.1 }}>Medlemskab</h1>
+            <p style={{ margin: "6px 0 0", color: "#08e184", fontSize: 14, fontWeight: 700 }}>Indlaeser medlemskab...</p>
+          </section>
+        ) : selectedHall ? (
           <MembershipCard
             package={membershipPackage}
             location={selectedHall.name}

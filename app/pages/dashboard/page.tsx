@@ -217,13 +217,14 @@ export default function DashboardPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isLocationSheetOpen]);
 
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   const membershipPackage = useMemo((): Package => {
     const name = user?.membership_name?.toLowerCase() ?? "";
     if (name.includes("brilliant")) return "brilliant";
     if (name.includes("premium")) return "premium";
-    return "guld";
+    if (name.includes("guld") || name.includes("gold")) return "guld";
+    return "premium";
   }, [user]);
 
   return (
@@ -330,17 +331,23 @@ export default function DashboardPage() {
                 <SwipeToStart label="Start din vask" flush onComplete={() => router.push("/pages/wash/washprogrampremium")} />
               </div>
             </section> */}
-              <MembershipCard
-                package={membershipPackage}
-                location={selectedLocation.name}
-                address={selectedLocation.address}
-                isFavorite={isFavorite}
-                // onFavoriteToggle={() => setIsFavorite((prev) => !prev)}
-                onFavoriteToggle={handleFavoriteToggle}
-                onStart={() => router.push("/pages/wash/activewash")}
-                onSwitch={() => setIsLocationSheetOpen(false)}
-                variant="dashboard"
-              />
+              {authLoading ? (
+                <section className="activityPanel" aria-label="Indlaeser medlemskab">
+                  <p>Indlaeser medlemskab...</p>
+                </section>
+              ) : (
+                <MembershipCard
+                  package={membershipPackage}
+                  location={selectedLocation.name}
+                  address={selectedLocation.address}
+                  isFavorite={isFavorite}
+                  // onFavoriteToggle={() => setIsFavorite((prev) => !prev)}
+                  onFavoriteToggle={handleFavoriteToggle}
+                  onStart={() => router.push("/pages/wash/activewash")}
+                  onSwitch={() => setIsLocationSheetOpen(false)}
+                  variant="dashboard"
+                />
+              )}
 
               <section className="activityPanel" aria-label="Aktivitet for valgt vaskehal">
                 <div className="activityWeekdays" role="tablist" aria-label="Vaelg dag">
