@@ -58,7 +58,12 @@ export default function MembershipPlanDetails({ onBack, plan }: MembershipPlanDe
       <SwipeToStart
         label="Skift medlemskab"
         completedLabel="Videresender..."
-onComplete={() => router.push(`/pages/profile/membership/change/${plan.id}/payment?name=${plan.name}`)}      />
+        onComplete={() =>
+          router.push(
+            `/pages/profile/membership/change/${plan.id}/payment?name=${encodeURIComponent(plan.name)}`,
+          )
+        }
+      />
     </section>
   );
 }

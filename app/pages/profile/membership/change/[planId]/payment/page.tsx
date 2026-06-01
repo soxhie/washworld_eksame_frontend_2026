@@ -28,15 +28,20 @@ export default function MembershipPaymentPage() {
   };
 
   async function handleConfirmChange() {
-    const dbMembershipId = membershipMap[planName];
+    const dbMembershipId = membershipMap[planName] ?? planId;
     if (!dbMembershipId) {
       alert("Ukendt plan. Prøv igen.");
       return;
     }
 
     const token = localStorage.getItem("access_token");
+    if (!token) {
+      alert("Du er ikke logget ind. Log ind og prøv igen.");
+      return;
+    }
+
     try {
-      const res = await fetch("http://localhost:80/api-update-my-info", {
+      const res = await fetch("http://localhost:80/api-update-my-membership", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
