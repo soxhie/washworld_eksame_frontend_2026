@@ -35,10 +35,7 @@ export default function MembershipChangeSuccessPage() {
     };
   }, []);
 
-  const activePlan = useMemo(
-    () => plans.find((plan) => plan.id === planId) || null,
-    [plans, planId],
-  );
+  const activePlan = useMemo(() => plans.find((plan) => plan.id === planId) || null, [plans, planId]);
 
   const planName = activePlan?.name || "Premium";
 
@@ -55,12 +52,7 @@ export default function MembershipChangeSuccessPage() {
         <p className="membershipChangeSuccessHeading">Dit medlemskab er nu ændret</p>
         <p className="membershipChangeSuccessSubtext">God fornøjelse med din næste vask</p>
 
-        <button
-          type="button"
-          className="membershipChangeSuccessNext"
-          onClick={() => router.push("/pages/dashboard")}
-          aria-label="Fortsæt"
-        >
+        <button type="button" className="membershipChangeSuccessNext" onClick={() => router.push("/pages/dashboard")} aria-label="Fortsæt">
           <LuArrowRight aria-hidden="true" />
         </button>
       </section>
