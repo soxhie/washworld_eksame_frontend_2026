@@ -86,7 +86,6 @@ export default function OnboardingStep2() {
         className="nextButton"
         type="button"
         onClick={() => {
-          saveOnboardingData({ address });
           router.push("/pages/onboarding/step3");
         }}
       >
