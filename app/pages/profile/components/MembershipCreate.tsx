@@ -76,7 +76,7 @@ export default function MembershipCreate({ onBack, plans, onPlanClick, isLoading
         ))}
       </div>
 
-      <Link href="/pages/wash/packages/gpb" className="membershipCreateCompareLink">
+      <Link href="/pages/wash/packages/compare" className="membershipCreateCompareLink">
         Sammenlign pakker
       </Link>
     </section>
