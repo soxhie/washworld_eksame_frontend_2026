@@ -746,13 +746,29 @@
 .detailsFieldInput {
   width: 100%;
   min-width: 0;
-  border: none;
+  border: 1px dashed rgba(0, 216, 129, 0.4);
   outline: none;
   background: transparent;
   color: #d8f8e8;
   font-size: 17px;
   font-weight: 500;
   padding: 0;
+  pointer-events: none;
+}
+
+.detailsFieldInput:not(:read-only) {
+  border: 1px dashed #00d881;
+  pointer-events: auto;
+}
+
+.detailsFieldInput:read-only:focus {
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.detailsFieldInput::placeholder {
+  color: #c5e8d7;
 }
 
 .detailsFieldValueRow {
@@ -788,12 +804,21 @@
   margin-top: 6px;
   height: 54px;
   border: 1px solid #00d881;
-  background: linear-gradient(135deg, #0bcc73 0%, #099e5a 100%);
-  color: #031e12;
+  /* background: #00d881; */
+  /* opacity: 0.75; */
+  color: #ffffff;
   font-size: 20px;
   font-weight: 800;
+  padding: 0 60px;
 }
-
+.detailsCancel {
+  background: #066632;
+  color: #fff;
+}
+.detailsConfirm {
+  background: #5c1a1a;
+  color: #fff;
+}
 .detailsSaveMessage {
   margin: 0;
   color: #8ef5c4;

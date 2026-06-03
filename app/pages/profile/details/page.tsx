@@ -41,7 +41,8 @@ export default function ProfileDetailsPage() {
             email: data.user.user_email || prev.email,
             address: data.user.user_adress || prev.address,
             plateNumber: data.user.car_plate || prev.plateNumber,
-            paymentMethod: data.user.payment_gateway_name || prev.paymentMethod,
+            // paymentMethod: data.user.payment_gateway_name || prev.paymentMethod,
+            paymentMethod: data.user.payment_gateway_id || prev.paymentMethod,
           }));
         }
       });
