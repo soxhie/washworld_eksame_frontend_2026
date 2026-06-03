@@ -755,13 +755,20 @@
   padding: 0;
   pointer-events: none;
 }
-.detailsFieldInput:read-only {
-  opacity: 6.7;
-  cursor: default;
+
+.detailsFieldInput:not(:read-only) {
+  border: 1px dashed #00d881;
+  pointer-events: auto;
 }
+
 .detailsFieldInput:read-only:focus {
   outline: none;
   box-shadow: none;
+  background: transparent;
+}
+
+.detailsFieldInput::placeholder {
+  color: #c5e8d7;
 }
 
 .detailsFieldInput:not(:read-only) {
@@ -808,13 +815,21 @@
   margin-top: 6px;
   height: 54px;
   border: 1px solid #00d881;
-  /* background: linear-gradient(135deg, #0bcc73 0%, #099e5a 100%); */
-  /* color: #00d881; */
+  /* background: #00d881; */
+  /* opacity: 0.75; */
+  color: #ffffff;
   font-size: 20px;
   font-weight: 800;
-  padding: 0px 60px;
+  padding: 0 60px;
 }
-
+.detailsCancel {
+  background: #066632;
+  color: #fff;
+}
+.detailsConfirm {
+  background: #5c1a1a;
+  color: #fff;
+}
 .detailsSaveMessage {
   margin: 0;
   color: #8ef5c4;
