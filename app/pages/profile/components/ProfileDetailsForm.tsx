@@ -1,15 +1,8 @@
-import {
-  LuCar,
-  LuCreditCard,
-  LuLock,
-  LuMail,
-  LuMapPin,
-  LuPhone,
-} from "react-icons/lu";
-import React from "react";
+"use client";
+import { LuCar, LuCreditCard, LuLock, LuMail, LuMapPin, LuPhone } from "react-icons/lu";
+import React, { useEffect, useState } from "react";
 import BackButton from "../../../components/layout/BackButton";
-import BetalingToggle from "../../onboarding/components/betalingToggle";
-import { useEffect, useState } from "react";
+
 interface ProfileDetailsFormProps {
   detailsForm: {
     phone: string;
@@ -23,27 +16,22 @@ interface ProfileDetailsFormProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onBack: () => void;
   saveMessage: string | null;
+  
 }
+
 type PaymentMethod = {
   payment_gateway_id: string;
   payment_gateway_name: string;
   payment_gateway_icon_path: string;
 };
 
-export default function ProfileDetailsForm({
-  detailsForm,
-  onChange,
-  onSubmit,
-  onBack,
-  saveMessage,
-}: ProfileDetailsFormProps) {
+export default function ProfileDetailsForm({ detailsForm, onChange, onSubmit, onBack, saveMessage }: ProfileDetailsFormProps) {
+  const [isEditing, setIsEditing] = useState(false); //added
   const [showPopup, setShowPopUp] = React.useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("Card");
-    const [methods, setMethods] = useState<PaymentMethod[]>([]);
-    const [submitting, setSubmitting] = useState(false);
-    const [error, setError] = useState("");
+  const [methods, setMethods] = useState<PaymentMethod[]>([]);
+  const [error, setError] = useState("");
 
-   useEffect(() => {
+  useEffect(() => {
     fetch("http://localhost:80/api-payment-gateways")
       .then((res) => res.json())
       .then((data) => {
@@ -53,26 +41,19 @@ export default function ProfileDetailsForm({
       })
       .catch(() => setError("Netværksfejl. Prøv igen."));
   }, []);
-  
 
-   
-  
   return (
     <section className="profileDetails" aria-label="Mine oplysninger formular">
-      {/* <button
-        type="button"
-        className="profileBackButton"
-        onClick={onBack}
-      >
-        <span aria-hidden="true">‹</span>
-        Tilbage
-      </button> */}
       <BackButton />
-      
+      <form
+        className="detailsForm"
+        onSubmit={(e) => {
+          onSubmit(e);
+          setIsEditing(false); //added
+        }}
+      >
+        <h1 style={{ fontSize: "var(--display-h1-size)", lineHeight: "var(--display-h1-line)", fontWeight: 800, marginBottom: "10px", textAlign: "center" }}>Mine oplysninger</h1>
 
-      <form className="detailsForm" onSubmit={onSubmit}>
-        {/* <h3 className="detailsFormTitle" style={{ color: "#fff", marginBottom: "0.5rem", fontSize: "var(--h3-size)", fontWeight: 800, marginLeft: "10px" }}>Mine oplysninger</h3> */}
-                <h1 style={{ fontSize: "var(--display-h1-size)", lineHeight: "var(--display-h1-line)", fontWeight: 800, marginBottom:"10px", textAlign: "center" }}>Mine oplysninger</h1>
         <label className="detailsField" htmlFor="details-phone">
           <span className="detailsFieldLabelWrap">
             <LuPhone className="detailsFieldIcon" aria-hidden="true" />
@@ -84,9 +65,9 @@ export default function ProfileDetailsForm({
               type="tel"
               className="detailsFieldInput"
               value={detailsForm.phone}
-              onChange={(event) => onChange("phone", event.target.value)}
+              onChange={(e) => onChange("phone", e.target.value)}
+              readOnly={!isEditing} //added
             />
-
           </div>
         </label>
 
@@ -101,9 +82,9 @@ export default function ProfileDetailsForm({
               type="email"
               className="detailsFieldInput"
               value={detailsForm.email}
-              onChange={(event) => onChange("email", event.target.value)}
+              onChange={(e) => onChange("email", e.target.value)}
+              readOnly={!isEditing} //added
             />
-
           </div>
         </label>
 
@@ -118,9 +99,9 @@ export default function ProfileDetailsForm({
               type="text"
               className="detailsFieldInput"
               value={detailsForm.password}
-              onChange={(event) => onChange("password", event.target.value)}
+              onChange={(e) => onChange("password", e.target.value)}
+              readOnly={!isEditing} //added
             />
-
           </div>
         </label>
 
@@ -134,19 +115,14 @@ export default function ProfileDetailsForm({
               type="button"
               id="details-payment"
               className="detailsFieldInput"
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}
-              onClick={() => setShowPopUp(true)}
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: isEditing ? "pointer" : "default" }} //added cursor: isEditing ? "pointer" : "default"
+              onClick={() => isEditing && setShowPopUp(true)} //added
             >
-              {/* Show the selected payment method icon if available, otherwise default icon */}
               {(() => {
                 const selected = methods.find((m) => m.payment_gateway_id === detailsForm.paymentMethod);
                 if (selected) {
                   return (
-                    <img
-                      src={`http://localhost:80/icons/${selected.payment_gateway_icon_path}`}
-                      alt={selected.payment_gateway_name}
-                      style={{ width: "28px", height: "28px", objectFit: "contain" }}
-                    />
+                    <img src={`http://localhost:80/icons/${selected.payment_gateway_icon_path}`} alt={selected.payment_gateway_name} style={{ width: "28px", height: "28px", objectFit: "contain" }} />
                   );
                 }
                 return <LuCreditCard aria-hidden="true" />;
@@ -172,9 +148,9 @@ export default function ProfileDetailsForm({
               type="text"
               className="detailsFieldInput"
               value={detailsForm.address}
-              onChange={(event) => onChange("address", event.target.value)}
+              onChange={(e) => onChange("address", e.target.value)}
+              readOnly={!isEditing} //added
             />
-
           </div>
         </label>
 
@@ -189,57 +165,60 @@ export default function ProfileDetailsForm({
               type="text"
               className="detailsFieldInput"
               value={detailsForm.plateNumber}
-              onChange={(event) => onChange("plateNumber", event.target.value)}
+              onChange={(e) => onChange("plateNumber", e.target.value)}
+              readOnly={!isEditing} //added
             />
-
           </div>
         </label>
 
-        <button type="submit" className="detailsSaveButton">
-          Gem alle oplysninger
-        </button>
+        {!isEditing ? (
+          <button type="button" className="detailsSaveButton" onClick={() => setIsEditing(true)}>
+            Rediger
+          </button>
+        ) : (
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button type="submit" className="detailsSaveButton detailsCancel">
+              Gem
+            </button>
+            <button type="button" className="detailsSaveButton detailsConfirm" onClick={() => setIsEditing(false)}>
+              Annuller
+            </button>
+          </div>
+        )}
 
         {saveMessage ? <p className="detailsSaveMessage">{saveMessage}</p> : null}
       </form>
+
       {showPopup && (
         <div className="betalingsOverlay">
           <div className="batalingPopup">
             <h1>Betalingsmetoder</h1>
-
             {methods.map((method) => (
               <div
                 key={method.payment_gateway_id}
                 className={`button ${detailsForm.paymentMethod === method.payment_gateway_id ? "clicked" : ""}`}
                 onClick={() => {
-                  setPaymentMethod(method.payment_gateway_id);
                   onChange("paymentMethod", method.payment_gateway_id);
                 }}
               >
-                <img
-                  src={`http://localhost:80/icons/${method.payment_gateway_icon_path}`}
-                  alt={method.payment_gateway_name}
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    objectFit: "contain",
-                  }}
-                />
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  checked={detailsForm.paymentMethod === method.payment_gateway_id}
-                  readOnly
-                />
+                <img src={`http://localhost:80/icons/${method.payment_gateway_icon_path}`} alt={method.payment_gateway_name} style={{ width: "40px", height: "40px", objectFit: "contain" }} />
+                <input type="radio" name="paymentMethod" checked={detailsForm.paymentMethod === method.payment_gateway_id} readOnly />
                 <h3>{method.payment_gateway_name}</h3>
               </div>
             ))}
-            <button
-              className="detailsSaveButton"
-              type="button"
-              onClick={() => setShowPopUp(false)}
-            >
+            <button type="button" className="detailsSaveButton" onClick={() => setShowPopUp(false)}>
+  Gem
+</button>
+            {/* <button type="submit" className="detailsSaveButton detailsCancel">
               Gem
             </button>
+            <button
+  type="button"
+  className="detailsSaveButton detailsConfirm"
+  onClick={() => setIsEditing(false)}
+>
+  Annuller
+</button> */}
           </div>
         </div>
       )}

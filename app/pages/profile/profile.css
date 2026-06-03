@@ -746,15 +746,36 @@
 .detailsFieldInput {
   width: 100%;
   min-width: 0;
-  border: none;
+  border: 1px dashed rgba(0, 216, 129, 0.4);
   outline: none;
   background: transparent;
   color: #d8f8e8;
   font-size: 17px;
   font-weight: 500;
   padding: 0;
+  pointer-events: none;
+}
+.detailsFieldInput:read-only {
+  opacity: 6.7;
+  cursor: default;
+}
+.detailsFieldInput:read-only:focus {
+  outline: none;
+  box-shadow: none;
 }
 
+.detailsFieldInput:not(:read-only) {
+  border: 1px dashed #ffffff;
+  pointer-events: auto;
+}
+.detailsConfirm {
+  background: #5c1a1a;
+  color: #fff;
+}
+.detailsCancel {
+  background: #066632;
+  color: #fff;
+}
 .detailsFieldValueRow {
   display: flex;
   align-items: center;
@@ -762,7 +783,6 @@
   margin-left: 32px;
   padding: 8px 10px;
   background: rgba(0, 0, 0, 0.22);
-  border: 1px dashed rgba(194, 255, 222, 0.42);
 }
 
 .detailsFieldEditableTag {
@@ -788,10 +808,11 @@
   margin-top: 6px;
   height: 54px;
   border: 1px solid #00d881;
-  background: linear-gradient(135deg, #0bcc73 0%, #099e5a 100%);
-  color: #031e12;
+  /* background: linear-gradient(135deg, #0bcc73 0%, #099e5a 100%); */
+  /* color: #00d881; */
   font-size: 20px;
   font-weight: 800;
+  padding: 0px 60px;
 }
 
 .detailsSaveMessage {

@@ -27,7 +27,7 @@ export default function ProfileDetailsPage() {
     const token = localStorage.getItem("access_token");
     if (!token) return;
 
-    fetch("http://127.0.0.1:80/api-my-info", {
+    fetch("http://localhost:80/api-my-info", { //127.0.0.1
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -39,7 +39,7 @@ export default function ProfileDetailsPage() {
             ...prev,
             phone: data.user.user_phone || prev.phone,
             email: data.user.user_email || prev.email,
-            address: data.user.user_adress || prev.address,
+            address: data.user.user_address || prev.address,
             plateNumber: data.user.car_plate || prev.plateNumber,
             paymentMethod: data.user.payment_gateway_name || prev.paymentMethod,
           }));
@@ -58,7 +58,7 @@ export default function ProfileDetailsPage() {
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:80/api-update-my-info", {
+      const response = await fetch("http://localhost:80/api-update-my-info", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
