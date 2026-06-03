@@ -9,10 +9,11 @@ interface MembershipCreateProps {
   onPlanClick: (plan: SubscriptionPlan) => void;
   isLoading: boolean;
   error: string | null;
+  currentPlanName: string;
 }
 
-export default function MembershipCreate({ onBack, plans, onPlanClick, isLoading, error }: MembershipCreateProps) {
-  const currentPlanName = "premium";
+export default function MembershipCreate({ onBack, plans, onPlanClick, isLoading, error, currentPlanName }: MembershipCreateProps) {
+  // const currentPlanName = "premium";
 
   return (
     <section className="membershipCreate" aria-label="Ændre medlemskab">
@@ -56,7 +57,7 @@ export default function MembershipCreate({ onBack, plans, onPlanClick, isLoading
         )}
 
         {plans.map((plan) => (
-          <article key={plan.name} className={`membershipCreateCard${plan.name.toLowerCase() === currentPlanName ? " isCurrent" : ""}`}>
+          <article key={plan.name} className={`membershipCreateCard${plan.name.toLowerCase() === currentPlanName.toLowerCase() ? " isCurrent" : ""}`}>
             <button type="button" className="membershipCreateCardAction" aria-label={`Vaelg ${plan.name}`} onClick={() => onPlanClick(plan)}>
               <span className="membershipPlanIconWrap" aria-hidden="true">
                 <IoPeopleOutline className="membershipPlanPeopleIcon" />
@@ -69,7 +70,7 @@ export default function MembershipCreate({ onBack, plans, onPlanClick, isLoading
               <span className="membershipCreateChevron" aria-hidden="true">
                 ›
               </span>
-              {plan.name.toLowerCase() === currentPlanName && <span className="membershipCreateCurrentBadge">Nuværende</span>}
+              {plan.name.toLowerCase() === currentPlanName.toLowerCase() && <span className="membershipCreateCurrentBadge">Nuværende</span>}
             </button>
           </article>
         ))}
