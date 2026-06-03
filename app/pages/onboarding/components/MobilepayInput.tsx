@@ -15,8 +15,7 @@ export default function MobilePayInput({ detailsForm, onPhoneChange }: MobilePay
                 type="tel"
                 name="user_phone"
                 id="user_phone"
-                value={detailsForm.phone}
-                onChange={e => onPhoneChange(e.target.value)}
+                disabled
             />
         </div>
     );

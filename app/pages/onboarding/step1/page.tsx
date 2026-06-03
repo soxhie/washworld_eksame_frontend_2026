@@ -21,24 +21,44 @@ export default function OnboardingStep1() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-  const [error, setError] = useState("");
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [formError, setFormError] = useState("");
   const [success, setSuccess] = useState("");
 
+  
   const validateEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
+    setFirstNameError("");
+    setLastNameError("");
+    setEmailError("");
+    setFormError("");
     setSuccess("");
+
+    const trimmedFirstName = firstName.trim();
+    const trimmedLastName = lastName.trim();
+
+    if (trimmedFirstName.length < 2) {
+      setFirstNameError("First name must be at least 2 characters.");
+      return;
+    }
+    if (trimmedFirstName.length > 20) {
+      setFirstNameError("First name must be less than 20 characters.");
+      return;
+    }
+    if (trimmedLastName.length < 2) {
+      setLastNameError("Last name must be at least 2 characters.");
+      return;
+    }
+    if (trimmedLastName.length > 20) {
+      setLastNameError("Last name must be less than 20 characters.");
+      return;
+    }
+
     // Check if email is present
     if (!email) {
-      setError("Email is required.");
-      return;
-    }
-    if (firstName.length < 2) {
-      setError("First name must be at least 2 characters.");
-      return;
-    }
-    if (firstName.length > 20) {
-      setError("First name must be less than 20 characters.");
+      setEmailError("Email is required.");
       return;
     }
     try {
@@ -46,21 +66,21 @@ export default function OnboardingStep1() {
       const res = await fetch(`http://localhost:80/email-validation?user_email=${encodeURIComponent(email)}`);
       if (!res.ok) {
         const data = await res.json();
-        setError(data.message || "Bruger allerede oprettet");
+        setEmailError(data.message || "Bruger allerede oprettet");
         return;
       }
       if (password !== repeatPassword) {
-        setError("Adgangkoder er ikke ens");
+        setFormError("Adgangkoder er ikke ens");
         return;
       }
      
 
-      saveOnboardingData({ user_name: firstName, user_last_name: lastName, user_email: email, user_phone: phone, user_password: password });
+      saveOnboardingData({ user_name: trimmedFirstName, user_last_name: trimmedLastName, user_email: email, user_phone: phone, user_password: password });
       setTimeout(() => {
         router.push("/pages/onboarding/step2");
       }, 1500);
     } catch (err) {
-      setError("Network error. Please try igen.");
+      setFormError("Network error. Please try igen.");
     }
   };
   return (
@@ -84,6 +104,7 @@ export default function OnboardingStep1() {
           value={firstName}
           onChange={e => setFirstName(e.target.value)}
         />
+        {firstNameError && <div style={{ color: 'red', marginTop: 4 }}>{firstNameError}</div>}
       </div>
       <div className="inputContainer">
         <label htmlFor="Efternavn">Efternavn</label>
@@ -94,6 +115,7 @@ export default function OnboardingStep1() {
           value={lastName}
           onChange={e => setLastName(e.target.value)}
         />
+        {lastNameError && <div style={{ color: 'red', marginTop: 4 }}>{lastNameError}</div>}
       </div>
       <div className="inputContainer">
         <label>Email</label>
@@ -104,7 +126,7 @@ export default function OnboardingStep1() {
           value={email}
           onChange={e => setEmail(e.target.value)}
         />
-        {error && <div style={{ color: 'red', marginTop: 4 }}>{error}</div>}
+        {emailError && <div style={{ color: 'red', marginTop: 4 }}>{emailError}</div>}
       </div>
       <div className="inputContainer">
         <label>Telefonnummer</label>
@@ -125,6 +147,7 @@ export default function OnboardingStep1() {
         repeatPassword={repeatPassword}
         setRepeatPassword={setRepeatPassword}
       />
+      {formError && <div style={{ color: 'red', marginTop: 4 }}>{formError}</div>}
       <Toggle />
       <button className='nextButton' type="submit">
         <FaArrowRight />

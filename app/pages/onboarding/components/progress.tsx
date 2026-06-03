@@ -8,6 +8,8 @@ const stepPaths = [
     "/pages/onboarding/step4",
     "/pages/onboarding/step5",
     "/pages/onboarding/step6",
+    "/pages/onboarding/step7",
+    "/pages/onboarding/step8"
 ];
 
 export default function Progress() {

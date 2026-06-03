@@ -26,11 +26,12 @@ export default function BetalingToggle() {
   const [error, setError] = useState("");
   const payload = getOnboardingData();
   const [phone, setPhone] = useState(typeof payload.phone === 'string' ? payload.phone : '');
+  
   const handlePhoneChange = (newPhone: string) => {
     setPhone(newPhone);
     saveOnboardingData({ phone: newPhone });
   };
-
+  
   useEffect(() => {
     fetch("http://localhost:80/api-payment-gateways")
       .then((res) => res.json())
@@ -41,7 +42,7 @@ export default function BetalingToggle() {
       })
       .catch(() => setError("Netværksfejl. Prøv igen."));
   }, []);
-  console.log("payload being sent:", payload);
+  
 
   const handleSubmit = async () => {
     if (!paymentMethod) {
@@ -100,7 +101,10 @@ export default function BetalingToggle() {
           return <MobilePayInput detailsForm={{ phone }} onPhoneChange={handlePhoneChange} />;
         }
         if (selectedMethod.payment_gateway_name === "Betalingskort") {
-          return <CardInput />;
+          return (
+            <CardInput
+            />
+          );
         }
         return null;
       })()}

@@ -1,31 +1,86 @@
 "use client";
-
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { getOnboardingData, saveOnboardingData, clearOnboardingData } from "../utils/onboardingStorage";
+import { FaArrowRight, FaChevronLeft } from "react-icons/fa";
+import BetalingToggle from "../components/betalingToggle";
 import "../onboarding.css";
-import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
-import { FaArrowRight } from "react-icons/fa";
+import "../../../globals.css"
+
 import Progress from "../components/progress";
 import BackButton from "@/app/components/layout/BackButton";
+
+type PaymentMethod = {
+  payment_gateway_id: string;
+  payment_gateway_name: string;
+  payment_gateway_icon_path: string;
+};
+
 export default function OnboardingStep6() {
-    const router = useRouter();
+  const router = useRouter();
+  const [paymentMethod, setPaymentMethod] = useState("Card");
+  const [methods, setMethods] = useState<PaymentMethod[]>([]);
 
-    return (
-        <div className="Onboarding-5">
-            {/* <button className='tilbageLink' type="button" onClick={() => router.back()}>
-             <FaChevronLeft /> Tilbage
-            </button> */}
-            <BackButton/>
-            <h1>Tjek din email</h1>
-            <p>
-                Vi har sendt dig et link til at bekræfte din konto. Klik på linket i
-                emailen for at aktivere din profil.
-            </p>
-            <button className="nextButton" type="button" onClick={() => router.push("/pages/onboarding/step7")}>
-                <FaArrowRight />
-            </button>
-            <Progress/>
-        </div>
-    );
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:80/api-payment-gateways")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("response:", data);
+        if (data.status === "ok") setMethods(data.gateways ?? []);
+        else setError("Kunne ikke hente betalingsmetoder.");
+      })
+      .catch(() => setError("Netværksfejl. Prøv igen."));
+  }, []);
+  const payload = getOnboardingData();
+  console.log("payload being sent:", payload);
+
+  const handleSubmit = async () => {
+    if (!paymentMethod) {
+      setError("Vælg venligst en betalingsmetode.");
+      return;
+    }
+    saveOnboardingData({ transaction_gateway_fk: paymentMethod });
+    const payload = getOnboardingData();
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("http://localhost:80/api-signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message || "Tilmelding mislykkedes.");
+        return;
+      }
+
+      if (data.verification_key) {
+        localStorage.setItem("onboarding_verification_key", data.verification_key);
+      }
+
+      clearOnboardingData();
+      router.push("/pages/onboarding/step7");
+    } catch {
+      setError("Netværksfejl. Prøv igen.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="Onboarding-4">
+     
+      <BackButton />
+      <h1>Betalingsmetode</h1>
+        <BetalingToggle/>
+      <button className="nextButton" type="button" onClick={handleSubmit} disabled={submitting}>
+        <FaArrowRight />
+      </button>
+      <Progress />
+    </div>
+  );
 }
-
-

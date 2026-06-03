@@ -24,7 +24,8 @@ export function useAuth() {
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (!token) {
-      router.push("/pages/login");
+      const hasKnownUser = Boolean(localStorage.getItem("authUser"));
+      router.push(hasKnownUser ? "/pages/login?mode=pin" : "/pages/login");
       return;
     }
     fetch("http://localhost:80/api-my-info", {
@@ -34,8 +35,9 @@ export function useAuth() {
     })
       .then(async (res) => {
         if (res.status === 401) {
+          const hasKnownUser = Boolean(localStorage.getItem("authUser"));
           localStorage.removeItem("access_token");
-          router.push("/pages/login");
+          router.push(hasKnownUser ? "/pages/login?mode=pin" : "/pages/login");
           return;
         }
         const data = await res.json();
