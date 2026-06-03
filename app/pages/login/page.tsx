@@ -117,11 +117,13 @@ export default function Login() {
         {isPinMode ? (
           <>
             <div className="inputContainer">
-              <label>Email</label>
-              <input name="user_email" type="text" value={email} readOnly />
+             
+              <input hidden name="user_email" type="text" value={email} readOnly />
             </div>
-            <h3>Session udloebet. Log ind med PIN-kode</h3>
-            <PinInput onChange={setPinCode} />
+           
+              <label>PIN-kode</label>
+              <PinInput onChange={setPinCode} />
+            
           </>
         ) : (
           <>

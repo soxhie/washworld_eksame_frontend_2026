@@ -7,7 +7,8 @@ h1{
     font-family: var(--font-primary);
     font-size: var(--display-h1-size);
     margin-bottom: 80px;
-    text-align: center;
+    text-align: center !important;
+    font-weight: 800;
 }
 
 .login{
@@ -73,3 +74,22 @@ text-align: end;
     font-weight: 800;
     line-height: 19px; /* 118.75% */
   }
+  .pinInputContainer{
+      gap: 10px;
+    display: flex;
+    justify-content: center;
+    margin-top: 30%;
+  input{
+    width: 53px;
+    height: 53px;
+    border-bottom: 2px solid white;
+    text-align: center;
+  }
+  p{
+    color: var(--secondary-dark-mode-80-gr-text-secondary, rgba(156, 163, 175, 0.80));
+    
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+  }
+}
