@@ -20,9 +20,19 @@
   /* background: #111; */
   /* border-radius: 8px; */
   margin-bottom: 0.25rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0.75rem;
   /* border: 1px solid #222; */
-border-bottom: 1px solid #00d881;
+  border-bottom: 1px solid #00d881;
+}
+.washHistoryItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #00d881;
+}
+.washHistoryItem:last-child {
+  border-bottom: none;
 }
 .washHistoryIconWrap {
   margin-right: 1rem;
@@ -48,10 +58,10 @@ border-bottom: 1px solid #00d881;
 .washHistoryLabel {
   background: #00ff99;
   color: #111;
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   font-weight: 600;
   /* border-radius: 4px; */
-  padding: 0.25rem 0.75rem;
+  padding: 0.16rem 0.45rem;
   margin-left: 1rem;
   align-self: flex-start;
 }
