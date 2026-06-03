@@ -13,7 +13,7 @@ const steps: Record<Package, string[]> = {
 
 const ITEM_HEIGHT = 32;
 const VISIBLE_ITEMS = 5;
-const DISPLAY_TOTAL = 30;
+const DISPLAY_TOTAL = 20;
 const START_DELAY = 3000;
 
 export default function WashProgram({ package: pkg }: { package: Package }) {
@@ -74,7 +74,7 @@ export default function WashProgram({ package: pkg }: { package: Package }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "24px 20px", gap: 16, background: "transparent" }}>
-      <ProcessBar totalSeconds={DISPLAY_TOTAL} secondsLeft={isStarted ? secondsLeft : DISPLAY_TOTAL} label={isStarted ? label : "01:00"} />
+      <ProcessBar totalSeconds={DISPLAY_TOTAL} secondsLeft={isStarted ? secondsLeft : DISPLAY_TOTAL} label={isStarted ? label : "00:30"} />
       <div style={{ height: ITEM_HEIGHT * VISIBLE_ITEMS, overflow: "hidden", position: "relative", width: "100%", maxWidth: 280 }}>
         <div
           style={{ position: "absolute", top: 0, left: 0, right: 0, height: ITEM_HEIGHT, background: "linear-gradient(to bottom, #030303 0%, transparent 100%)", zIndex: 1, pointerEvents: "none" }}
