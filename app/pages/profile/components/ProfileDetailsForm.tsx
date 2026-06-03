@@ -119,7 +119,13 @@ export default function ProfileDetailsForm({
           </div>
         </label>
 
-        <label className="detailsField" htmlFor="details-payment">
+
+
+
+
+
+
+        {/* <label className="detailsField" htmlFor="details-payment">
           <span className="detailsFieldLabelWrap">
             <LuCreditCard className="detailsFieldIcon" aria-hidden="true" />
             <span className="detailsFieldLabel">Betalingsmetode</span>
@@ -153,7 +159,74 @@ export default function ProfileDetailsForm({
               </span>
             </button>
           </div>
-        </label>
+        </label> */}
+
+<label className="detailsField" htmlFor="details-payment">
+  <span className="detailsFieldLabelWrap">
+    <LuCreditCard className="detailsFieldIcon" aria-hidden="true" />
+    <span className="detailsFieldLabel">Betalingsmetode</span>
+  </span>
+  <div className="detailsFieldValueRow">
+    {!isEditing ? (
+      // Read-only — show selected payment method
+      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        {(() => {
+          const selected = methods.find((m) => m.payment_gateway_id === detailsForm.paymentMethod);
+          if (selected) {
+            return (
+              <>
+                <img
+                  src={`http://localhost:80/icons/${selected.payment_gateway_icon_path}`}
+                  alt={selected.payment_gateway_name}
+                  style={{ width: "28px", height: "28px", objectFit: "contain" }}
+                />
+                <span style={{ color: "#d8f8e8", fontSize: "14px", fontWeight: 500 }}>
+                  {selected.payment_gateway_name}
+                </span>
+              </>
+            );
+          }
+          return <span style={{ color: "#d8f8e8", fontSize: "14px" }}>Vælg betalingsmetode</span>;
+        })()}
+      </div>
+    ) : (
+      // Edit mode — show both options side by side
+      <div style={{ display: "flex", gap: "10px", width: "100%" }}>
+        {methods.map((method) => (
+          <button
+            key={method.payment_gateway_id}
+            type="button"
+            onClick={() => onChange("paymentMethod", method.payment_gateway_id)}
+            style={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+              padding: "8px 12px",
+              border: detailsForm.paymentMethod === method.payment_gateway_id
+                ? "1px solid #00d881"
+                : "1px solid rgba(0, 216, 129, 0.3)",
+              background: "transparent",
+              color: "#fff",
+              cursor: "pointer",
+            }}
+          >
+            <span style={{
+              background: detailsForm.paymentMethod === method.payment_gateway_id ? "#00d881" : "transparent",
+              flexShrink: 0,
+            }} />
+            <img
+              src={`http://localhost:80/icons/${method.payment_gateway_icon_path}`}
+              alt={method.payment_gateway_name}
+              style={{ width: "20px", height: "20px", objectFit: "contain" }}
+            />
+            <span style={{ fontSize: "14px", fontWeight: 700 }}>{method.payment_gateway_name}</span>
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+</label>
 
         <label className="detailsField" htmlFor="details-address">
           <span className="detailsFieldLabelWrap">
@@ -215,7 +288,7 @@ export default function ProfileDetailsForm({
         {saveMessage && !isEditing ? <p className="detailsSaveMessage">{saveMessage}</p> : null}
       </form>
 
-      {showPopup && (
+      {/* {showPopup && (
         <div className="betalingsOverlay">
           <div className="batalingPopup">
             <h1>Betalingsmetoder</h1>
@@ -250,7 +323,7 @@ export default function ProfileDetailsForm({
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </section>
   );
 }
