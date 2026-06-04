@@ -1,15 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { getOnboardingData, saveOnboardingData, clearOnboardingData } from "../utils/onboardingStorage";
-import { FaArrowRight, FaChevronLeft } from "react-icons/fa";
-import { CiCreditCard1 } from "react-icons/ci";
-import process from "process";
-import CardInput from "../components/cardInput";
 import "../onboarding.css";
-import "../../../globals.css"
-import MobilePayInput from "../components/MobilepayInput";
-
+import "../../../globals.css";
 
 type PaymentMethod = {
   payment_gateway_id: string;
@@ -17,100 +9,48 @@ type PaymentMethod = {
   payment_gateway_icon_path: string;
 };
 
+type Props = {
+  onSelect: (id: string) => void;
+};
 
-export default function BetalingToggle() {
-  const router = useRouter();
-  const [paymentMethod, setPaymentMethod] = useState("Card");
+export default function BetalingToggle({ onSelect }: Props) {
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [methods, setMethods] = useState<PaymentMethod[]>([]);
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const payload = getOnboardingData();
-  const [phone, setPhone] = useState(typeof payload.phone === 'string' ? payload.phone : '');
-  
-  const handlePhoneChange = (newPhone: string) => {
-    setPhone(newPhone);
-    saveOnboardingData({ phone: newPhone });
-  };
-  
+
   useEffect(() => {
     fetch("http://localhost:80/api-payment-gateways")
       .then((res) => res.json())
       .then((data) => {
-        console.log("response:", data);
         if (data.status === "ok") setMethods(data.gateways ?? []);
         else setError("Kunne ikke hente betalingsmetoder.");
       })
       .catch(() => setError("Netværksfejl. Prøv igen."));
   }, []);
-  
 
-  const handleSubmit = async () => {
-    if (!paymentMethod) {
-      setError("Vælg venligst en betalingsmetode.");
-      return;
-    }
-    saveOnboardingData({ transaction_gateway_fk: paymentMethod });
-    const payload = getOnboardingData();
-
-    setSubmitting(true);
-    try {
-      const res = await fetch("http://localhost:80/api-signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.message || "Tilmelding mislykkedes.");
-        return;
-      }
-      clearOnboardingData();
-      router.push("/pages/onboarding/step5");
-    } catch {
-      setError("Netværksfejl. Prøv igen.");
-    } finally {
-      setSubmitting(false);
-    }
+  const handleSelect = (id: string) => {
+    setPaymentMethod(id);
+    onSelect(id);
   };
 
   return (
     <div className="Onboarding-4">
-     
+      {error && <p className="error">{error}</p>}
       {methods.map((method) => (
-        <div key={method.payment_gateway_id} className={`button ${paymentMethod === method.payment_gateway_id ? "clicked" : ""}`} onClick={() => setPaymentMethod(method.payment_gateway_id)}>
+        <div
+          key={method.payment_gateway_id}
+          className={`button ${paymentMethod === method.payment_gateway_id ? "clicked" : ""}`}
+          onClick={() => handleSelect(method.payment_gateway_id)}
+        >
           <img
             src={`http://localhost:80/icons/${method.payment_gateway_icon_path}`}
             alt={method.payment_gateway_name}
-            style={{
-              width: "40px",
-              height: "40px",
-              objectFit: "contain",
-            }}
+            style={{ width: "40px", height: "40px", objectFit: "contain" }}
           />
           <input type="radio" name="paymentMethod" checked={paymentMethod === method.payment_gateway_id} readOnly />
-
-         
           <h3>{method.payment_gateway_name}</h3>
         </div>
       ))}
-
-      {(() => {
-        const selectedMethod = methods.find((m) => m.payment_gateway_id === paymentMethod);
-        if (!selectedMethod) return null;
-        if (selectedMethod.payment_gateway_name === "Mobilepay") {
-          return <MobilePayInput detailsForm={{ phone }} onPhoneChange={handlePhoneChange} />;
-        }
-        if (selectedMethod.payment_gateway_name === "Betalingskort") {
-          return (
-            <CardInput
-            />
-          );
-        }
-        return null;
-      })()}
-
-      
     </div>
   );
 }
-
