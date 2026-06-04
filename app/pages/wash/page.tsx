@@ -211,18 +211,7 @@ export default function WashPage() {
             isFavorite={isFavorite}
             onFavoriteToggle={() => setIsFavorite((prev) => !prev)}
             onStart={() => router.push("/pages/wash/activewash")}
-            onSwitch={() => {
-              if (nearbyHalls.length < 2) {
-                return;
-              }
-
-              const currentIndex = nearbyHalls.findIndex((hall) => hall.id === selectedHall.id);
-              const nextHall = nearbyHalls[(currentIndex + 1) % nearbyHalls.length] ?? nearbyHalls[0];
-
-              if (nextHall) {
-                setSelectedHallId(nextHall.id);
-              }
-            }}
+            onSwitch={() => router.push("/pages/dashboard")}
           />
         ) : (
           <section style={{ marginTop: 10, border: "1px solid #07de88", background: "#015126", padding: "14px 12px 18px" }}>

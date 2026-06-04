@@ -20,9 +20,19 @@
   /* background: #111; */
   /* border-radius: 8px; */
   margin-bottom: 0.25rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0.75rem;
   /* border: 1px solid #222; */
-border-bottom: 1px solid #00d881;
+  border-bottom: 1px solid #00d881;
+}
+.washHistoryItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #00d881;
+}
+.washHistoryItem:last-child {
+  border-bottom: none;
 }
 .washHistoryIconWrap {
   margin-right: 1rem;
@@ -48,10 +58,10 @@ border-bottom: 1px solid #00d881;
 .washHistoryLabel {
   background: #00ff99;
   color: #111;
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   font-weight: 600;
   /* border-radius: 4px; */
-  padding: 0.25rem 0.75rem;
+  padding: 0.16rem 0.45rem;
   margin-left: 1rem;
   align-self: flex-start;
 }
@@ -736,15 +746,43 @@ border-bottom: 1px solid #00d881;
 .detailsFieldInput {
   width: 100%;
   min-width: 0;
-  border: none;
+  border: 1px dashed rgba(0, 216, 129, 0.4);
   outline: none;
   background: transparent;
   color: #d8f8e8;
   font-size: 17px;
   font-weight: 500;
   padding: 0;
+  pointer-events: none;
 }
 
+.detailsFieldInput:not(:read-only) {
+  border: 1px dashed #00d881;
+  pointer-events: auto;
+}
+
+.detailsFieldInput:read-only:focus {
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.detailsFieldInput::placeholder {
+  color: #c5e8d7;
+}
+
+.detailsFieldInput:not(:read-only) {
+  border: 1px dashed #ffffff;
+  pointer-events: auto;
+}
+.detailsConfirm {
+  background: #5c1a1a;
+  color: #fff;
+}
+.detailsCancel {
+  background: #066632;
+  color: #fff;
+}
 .detailsFieldValueRow {
   display: flex;
   align-items: center;
@@ -752,7 +790,6 @@ border-bottom: 1px solid #00d881;
   margin-left: 32px;
   padding: 8px 10px;
   background: rgba(0, 0, 0, 0.22);
-  border: 1px dashed rgba(194, 255, 222, 0.42);
 }
 
 .detailsFieldEditableTag {
@@ -778,12 +815,21 @@ border-bottom: 1px solid #00d881;
   margin-top: 6px;
   height: 54px;
   border: 1px solid #00d881;
-  background: linear-gradient(135deg, #0bcc73 0%, #099e5a 100%);
-  color: #031e12;
+  /* background: #00d881; */
+  /* opacity: 0.75; */
+  color: #ffffff;
   font-size: 20px;
   font-weight: 800;
+  padding: 0 60px;
 }
-
+.detailsCancel {
+  background: #066632;
+  color: #fff;
+}
+.detailsConfirm {
+  background: #5c1a1a;
+  color: #fff;
+}
 .detailsSaveMessage {
   margin: 0;
   color: #8ef5c4;
