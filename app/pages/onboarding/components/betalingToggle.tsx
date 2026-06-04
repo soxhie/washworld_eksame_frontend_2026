@@ -1,10 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { getOnboardingData, saveOnboardingData, clearOnboardingData } from "../utils/onboardingStorage";
-import { FaArrowRight, FaChevronLeft } from "react-icons/fa";
-import { CiCreditCard1 } from "react-icons/ci";
-import process from "process";
+import { getOnboardingData, saveOnboardingData } from "../utils/onboardingStorage";
 import CardInput from "../components/cardInput";
 import "../onboarding.css";
 import "../../../globals.css"
@@ -19,17 +15,14 @@ type PaymentMethod = {
 
 
 export default function BetalingToggle() {
-  const router = useRouter();
-  const [paymentMethod, setPaymentMethod] = useState("Card");
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [methods, setMethods] = useState<PaymentMethod[]>([]);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
   const payload = getOnboardingData();
-  const [phone, setPhone] = useState(typeof payload.phone === 'string' ? payload.phone : '');
+  const [phone, setPhone] = useState(typeof payload.user_phone === "string" ? payload.user_phone : "");
   
   const handlePhoneChange = (newPhone: string) => {
     setPhone(newPhone);
-    saveOnboardingData({ phone: newPhone });
+    saveOnboardingData({ user_phone: newPhone });
   };
   
   useEffect(() => {
@@ -37,47 +30,30 @@ export default function BetalingToggle() {
       .then((res) => res.json())
       .then((data) => {
         console.log("response:", data);
-        if (data.status === "ok") setMethods(data.gateways ?? []);
-        else setError("Kunne ikke hente betalingsmetoder.");
+        if (data.status === "ok") {
+          setMethods(data.gateways ?? []);
+          const savedGateway = payload.transaction_gateway_fk;
+          if (typeof savedGateway === "string") {
+            setPaymentMethod(savedGateway);
+          }
+        }
+        else console.error("Kunne ikke hente betalingsmetoder.");
       })
-      .catch(() => setError("Netværksfejl. Prøv igen."));
+      .catch(() => console.error("Netværksfejl. Prøv igen."));
   }, []);
-  
-
-  const handleSubmit = async () => {
-    if (!paymentMethod) {
-      setError("Vælg venligst en betalingsmetode.");
-      return;
-    }
-    saveOnboardingData({ transaction_gateway_fk: paymentMethod });
-    const payload = getOnboardingData();
-
-    setSubmitting(true);
-    try {
-      const res = await fetch("http://localhost:80/api-signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.message || "Tilmelding mislykkedes.");
-        return;
-      }
-      clearOnboardingData();
-      router.push("/pages/onboarding/step5");
-    } catch {
-      setError("Netværksfejl. Prøv igen.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   return (
     <div className="Onboarding-4">
      
       {methods.map((method) => (
-        <div key={method.payment_gateway_id} className={`button ${paymentMethod === method.payment_gateway_id ? "clicked" : ""}`} onClick={() => setPaymentMethod(method.payment_gateway_id)}>
+        <div
+          key={method.payment_gateway_id}
+          className={`button ${paymentMethod === method.payment_gateway_id ? "clicked" : ""}`}
+          onClick={() => {
+            setPaymentMethod(method.payment_gateway_id);
+            saveOnboardingData({ transaction_gateway_fk: method.payment_gateway_id });
+          }}
+        >
           <img
             src={`http://localhost:80/icons/${method.payment_gateway_icon_path}`}
             alt={method.payment_gateway_name}

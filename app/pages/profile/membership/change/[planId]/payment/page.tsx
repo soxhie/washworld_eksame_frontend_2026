@@ -15,7 +15,7 @@ export default function MembershipPaymentPage() {
   const { planId } = useParams<{ planId: string }>();
   const searchParams = useSearchParams();
   const planName = searchParams.get("name") ?? "";
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>("card");
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
   const [cardNumber, setCardNumber] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");

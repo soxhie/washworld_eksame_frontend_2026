@@ -1,8 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { getOnboardingData, saveOnboardingData, clearOnboardingData } from "../utils/onboardingStorage";
-import { FaArrowRight, FaChevronLeft } from "react-icons/fa";
+import { getOnboardingData, clearOnboardingData } from "../utils/onboardingStorage";
+import { FaArrowRight } from "react-icons/fa";
 import BetalingToggle from "../components/betalingToggle";
 import "../onboarding.css";
 import "../../../globals.css"
@@ -10,43 +10,58 @@ import "../../../globals.css"
 import Progress from "../components/progress";
 import BackButton from "@/app/components/layout/BackButton";
 
-type PaymentMethod = {
-  payment_gateway_id: string;
-  payment_gateway_name: string;
-  payment_gateway_icon_path: string;
-};
-
 export default function OnboardingStep6() {
   const router = useRouter();
-  const [paymentMethod, setPaymentMethod] = useState("Card");
-  const [methods, setMethods] = useState<PaymentMethod[]>([]);
-
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    fetch("http://localhost:80/api-payment-gateways")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("response:", data);
-        if (data.status === "ok") setMethods(data.gateways ?? []);
-        else setError("Kunne ikke hente betalingsmetoder.");
-      })
-      .catch(() => setError("Netværksfejl. Prøv igen."));
-  }, []);
-  const payload = getOnboardingData();
-  console.log("payload being sent:", payload);
-
   const handleSubmit = async () => {
-    if (!paymentMethod) {
+    setError("");
+    const payload = getOnboardingData();
+    const selectedGateway = payload.transaction_gateway_fk;
+    const membershipFk = payload.membership_fk;
+    const userName = payload.user_name;
+    const userLastName = payload.user_last_name;
+    const userEmail = payload.user_email;
+    const userPhone = payload.user_phone;
+    const userPassword = payload.user_password;
+   
+    const carPlate = payload.car_plate;
+
+    if (typeof selectedGateway !== "string" || !selectedGateway) {
       setError("Vælg venligst en betalingsmetode.");
       return;
     }
-    saveOnboardingData({ transaction_gateway_fk: paymentMethod });
-    const payload = getOnboardingData();
+
+    if (typeof membershipFk !== "string" || !membershipFk) {
+      setError("Vælg venligst et abonnement, før du fortsætter.");
+      return;
+    }
+
+    if (
+      typeof userName !== "string" ||
+      typeof userLastName !== "string" ||
+      typeof userEmail !== "string" ||
+      typeof userPhone !== "string" ||
+      typeof userPassword !== "string" ||
+      typeof carPlate !== "string" ||
+      !userName ||
+      !userLastName ||
+      !userEmail ||
+      !userPhone ||
+      !userPassword ||
+     
+      !carPlate
+    ) {
+      
+      return;
+    }
 
     setSubmitting(true);
     try {
+      localStorage.removeItem("onboarding_verification_key");
+      localStorage.removeItem("onboarding_email_verified");
+
       const res = await fetch("http://localhost:80/api-signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -77,8 +92,9 @@ export default function OnboardingStep6() {
       <BackButton />
       <h1>Betalingsmetode</h1>
         <BetalingToggle/>
+      {error && <p style={{ color: "red", marginTop: 8 }}>{error}</p>}
       <button className="nextButton" type="button" onClick={handleSubmit} disabled={submitting}>
-        <FaArrowRight />
+        {submitting ? "..." : <FaArrowRight />}
       </button>
       <Progress />
     </div>

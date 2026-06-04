@@ -86,7 +86,7 @@ export default function OnboardingStep2() {
         className="nextButton"
         type="button"
         onClick={() => {
-          router.push("/pages/onboarding/step3");
+          router.push("/pages/onboarding/step4");
         }}
       >
         <FaArrowRight />

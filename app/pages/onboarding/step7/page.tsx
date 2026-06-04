@@ -12,6 +12,13 @@ export default function OnboardingStep7() {
     const [statusMessage, setStatusMessage] = useState("Vi tjekker din verificering...");
 
     useEffect(() => {
+        const alreadyVerified = localStorage.getItem("onboarding_email_verified") === "true";
+        if (alreadyVerified) {
+            setIsVerified(true);
+            setStatusMessage("Din konto er verificeret. Du kan fortsætte.");
+            return;
+        }
+
         const verificationKey = localStorage.getItem("onboarding_verification_key");
 
         if (!verificationKey) {
@@ -29,11 +36,16 @@ export default function OnboardingStep7() {
                 if (!isMounted) return;
 
                 if (res.ok && data.status === "ok") {
-                    const verified = Boolean(data.verified);
+                    const verified =
+                        data.verified === true ||
+                        data.verified === 1 ||
+                        data.verified === "1" ||
+                        data.verified === "true";
                     setIsVerified(verified);
 
                     if (verified) {
                         setStatusMessage("Din konto er verificeret. Du kan fortsætte.");
+                        localStorage.setItem("onboarding_email_verified", "true");
                         localStorage.removeItem("onboarding_verification_key");
                         return;
                     }
