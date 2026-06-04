@@ -23,8 +23,8 @@ const PACKAGES: Package[] = ["guld", "premium", "brilliant"];
 
 function Check({ active }: { active: boolean }) {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M5 13l4 4L19 7" stroke={active ? "#22c55e" : "#fff"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M5 13l4 4L19 7" stroke={active ? "#22c55e" : "#000"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -38,19 +38,19 @@ export default function PackageFeatures({ active }: Props) {
           <div
             style={{
               flex: 1,
-              background: "#22c55e",
+              background: "var(--color-primary)",
               clipPath: "polygon(0 0, 100% 0, calc(100% - 24px) 100%, 0 100%)",
               display: "flex",
               alignItems: "center",
               paddingLeft: 12,
               fontWeight: 700,
               fontSize: 12,
-              color: "#fff",
+              color: "#000",
               marginRight: -20,
-              gap: 6,
+              gap: 12,
             }}
           >
-            <img src={feature.icon} alt={feature.name} style={{ width: 18, height: 18, filter: "brightness(0) invert(1)" }} />
+            <img src={feature.icon} alt={feature.name} style={{ width: 18, height: 18, filter: "brightness(0)" }} />
             {feature.name}
           </div>
           <div style={{ display: "flex", gap: 6 }}>
