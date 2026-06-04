@@ -15,7 +15,7 @@ type Props = {
 };
 
 async function postStartWash() {
-  const token = localStorage.getItem("access_token"); // match your actual key
+  const token = localStorage.getItem("access_token");
   const res = await fetch("http://localhost:80/api-start-wash", {
     method: "POST",
     headers: {
@@ -72,12 +72,12 @@ export default function SwipeButton({ variant, onActivate }: Props) {
           setTimeout(() => onActivate?.(), 600);
         } catch {
           setError("Noget gik galt. Prøv igen.");
-          setOffset(0); // reset slider on failure
+          setOffset(0);
         }
         return;
       }
 
-      // For other variants (e.g. "medlem"), just activate without API call
+
       setDone(true);
       setTimeout(() => onActivate?.(), 600);
       return;
