@@ -6,6 +6,7 @@ import "../onboarding.css";
 import { FaArrowRight } from "react-icons/fa";
 import Progress from "../components/progress";
 import BackButton from "@/app/components/layout/BackButton";
+
 export default function OnboardingStep7() {
     const router = useRouter();
     const [isVerified, setIsVerified] = useState(false);
