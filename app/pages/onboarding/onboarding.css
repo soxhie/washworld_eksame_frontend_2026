@@ -7,16 +7,16 @@ h1 {
   font-size: var(--h1-size, 32px);
   font-weight: 800;
   text-align: center;
+  margin-bottom:0;
 }
-
-.progressDots {
-  gap: 20px;
-  display: flex;
-  justify-content: center;
-  position: absolute;
-  bottom: 50px;
-  width: stretch;
-  color: var(--secondary-colors-60-gr, rgba(102, 102, 102, 0.60));
+.progressDots{
+     gap: 20px;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 20px;
+    width: stretch;
+    color: var(--secondary-colors-60-gr, rgba(102, 102, 102, 0.60));
 }
 
 .progressDots .active {
@@ -74,6 +74,26 @@ body {
       bottom: 8px;
       left: 90%;
     }
+  .backButton{
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+  .password{
+  input, textarea, select {
+ 
+  border-radius: 4px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+.icon-container {
+  position: relative;
+    bottom: 8px;
+    left: 90%;
+}
   }
 }
 
@@ -286,7 +306,7 @@ label {
 .nextButton {
   border-radius: 100%;
   position: absolute;
-  top: 85%;
+  top: 88%;
   right: 25px;
   width: fit-content;
   background-color: var(--primary-colors-brand-grn-hvid-baggrund, #06C167);
@@ -386,4 +406,4 @@ input:checked + .slider:before {
     font-style: normal;
     font-weight: 500;
   }
-}
+}}

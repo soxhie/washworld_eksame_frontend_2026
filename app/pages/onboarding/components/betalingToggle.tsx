@@ -25,7 +25,7 @@ export default function BetalingToggle({ onSelect }: Props) {
         if (data.status === "ok") setMethods(data.gateways ?? []);
         else setError("Kunne ikke hente betalingsmetoder.");
       })
-      .catch(() => setError("Netværksfejl. Prøv igen."));
+      .catch(() => console.error("Netværksfejl. Prøv igen."));
   }, []);
 
   const handleSelect = (id: string) => {
