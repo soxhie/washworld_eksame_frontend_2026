@@ -68,7 +68,7 @@ export default function ProfileDetailsPage() {
         body: JSON.stringify({
           user_phone: detailsForm.phone,
           user_email: detailsForm.email,
-          user_address: detailsForm.address,
+          // user_address: detailsForm.address,
           car_plate: detailsForm.plateNumber,
           transaction_gateway_fk: detailsForm.paymentMethod, // ck added
         }),
