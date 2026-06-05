@@ -96,7 +96,7 @@ body {
 }
   }
 }
-
+}
 .Onboarding-2 {
   display: flex;
   flex-direction: column;
@@ -175,7 +175,7 @@ body {
   }
 }
 
-.Onboarding-3 .plan-btn {
+/* .Onboarding-3 .plan-btn {
   width: 100%;
   min-height: 98px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -214,6 +214,101 @@ body {
 .Onboarding-3 .plan-btn .icon {
   width: 24px;
   height: 24px;
+  color: #fff;
+  font-size: 20px;
+} */
+.Onboarding-3 {
+  display: flex;
+  flex-direction: column;
+}
+
+.Onboarding-3 input[type="radio"] {
+  appearance: none;
+}
+
+.Onboarding-3 p {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.Onboarding-3 .link {
+  color: var(--primary-colors-brand-grn-sort-baggrund, #0CE578);
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  text-decoration-line: underline;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.Onboarding-3 h2 {
+  color: var(--primary-colors-brand-grn-sort-baggrund, #0CE578);
+  font-family: Inter;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 114%;
+}
+
+.Onboarding-3 h3 {
+  color: var(--primary-colors-brand-grn-sort-baggrund, #0CE578);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 29px;
+}
+
+.Onboarding-3 h4 {
+  color: #FFF;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 24px;
+}
+
+.Onboarding-3 .plan-btn {
+  width: 100%;
+  min-height: 98px;
+  border: 1px solid #06C167;
+  background: transparent;
+  padding: 10px 12px 10px 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 26px;
+  text-align: left;
+  color: #f8fbf9;
+  margin-bottom: 12px;
+}
+
+.Onboarding-3 .plan-btn input[type="radio"] {
+  display: none;
+}
+
+.Onboarding-3 .plan-btn.clicked {
+  background: #0ce57847;
+}
+
+.Onboarding-3 .plan-btn .icon-container {
+  width: 68px;
+  height: 68px;
+  background: #06C167;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.Onboarding-3 .plan-btn .icon {
+  width: 28px;
+  height: 28px;
   color: #fff;
   font-size: 20px;
 }
@@ -406,4 +501,4 @@ input:checked + .slider:before {
     font-style: normal;
     font-weight: 500;
   }
-}}
+}
