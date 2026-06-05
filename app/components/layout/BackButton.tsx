@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { FaChevronLeft } from "react-icons/fa";
-
+import "../../pages/onboarding/onboarding.css"
 export default function BackButton() {
   const router = useRouter();
   return (

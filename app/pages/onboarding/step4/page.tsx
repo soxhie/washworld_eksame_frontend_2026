@@ -25,7 +25,7 @@ export default function OnboardingStep4() {
       <p>Vi bruger nummerpladen til</p>
       <p>automatisk genkendelse</p>
       <label htmlFor="">Nummerplade</label>
-      <input type="text" value={carPlate} onChange={(e) => setCarPlate(e.target.value)} />
+      <input required type="text" placeholder="DK 123 4567" value={carPlate} onChange={(e) => setCarPlate(e.target.value)} />
       <button className="button">
         <FaPlus />
         Tilføj endnu en bil
@@ -33,6 +33,7 @@ export default function OnboardingStep4() {
       <button
         className="nextButton"
         type="button"
+        disabled={!carPlate.trim()}
         onClick={() => {
           saveOnboardingData({ car_plate: carPlate });
           router.push("/pages/onboarding/step5");

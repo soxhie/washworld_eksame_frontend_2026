@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getOnboardingData, clearOnboardingData } from "../utils/onboardingStorage";
 import { FaArrowRight } from "react-icons/fa";
@@ -8,6 +8,7 @@ import "../onboarding.css";
 import "../../../globals.css"
 import Progress from "../components/progress";
 import BackButton from "@/app/components/layout/BackButton";
+import { saveOnboardingData } from "../utils/onboardingStorage";
 
 // type PaymentMethod = {
 //   payment_gateway_id: string;
@@ -18,23 +19,23 @@ import BackButton from "@/app/components/layout/BackButton";
 export default function OnboardingStep6() {
   const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState("");
-  // const [methods, setMethods] = useState<PaymentMethod[]>([]);
+  const [methods, setMethods] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
 
-  // useEffect(() => {
-  //   fetch("http://localhost:80/api-payment-gateways")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log("response:", data);
-  //       if (data.status === "ok") setMethods(data.gateways ?? []);
-  //       else setError("Kunne ikke hente betalingsmetoder.");
-  //     })
-  //     .catch(() => setError("Netværksfejl. Prøv igen."));
-  // }, []);
-  // const payload = getOnboardingData();
-  // console.log("payload being sent:", payload);
+   useEffect(() => {
+     fetch("http://localhost:80/api-payment-gateways")
+       .then((res) => res.json())
+       .then((data) => {
+         console.log("response:", data);
+         if (data.status === "ok") setMethods(data.gateways ?? []);
+         else setError("Kunne ikke hente betalingsmetoder.");
+       })
+       .catch(() => setError("Netværksfejl. Prøv igen."));
+   }, []);
+   const payload = getOnboardingData();
+   console.log("payload being sent:", payload);
 
   const handleSubmit = async () => {
     setError("");
@@ -54,7 +55,7 @@ export default function OnboardingStep6() {
       return;
     }
     saveOnboardingData({ transaction_gateway_fk: paymentMethod });
-    const payload = getOnboardingData();
+    
     setSubmitting(true);
     try {
       localStorage.removeItem("onboarding_verification_key");
