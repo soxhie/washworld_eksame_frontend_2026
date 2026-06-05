@@ -1,20 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getOnboardingData, clearOnboardingData } from "../utils/onboardingStorage";
+import { getOnboardingData, saveOnboardingData, clearOnboardingData } from "../utils/onboardingStorage";
 import { FaArrowRight } from "react-icons/fa";
 import BetalingToggle from "../components/betalingToggle";
 import "../onboarding.css";
 import "../../../globals.css"
 import Progress from "../components/progress";
 import BackButton from "@/app/components/layout/BackButton";
-import { saveOnboardingData } from "../utils/onboardingStorage";
 
-// type PaymentMethod = {
-//   payment_gateway_id: string;
-//   payment_gateway_name: string;
-//   payment_gateway_icon_path: string;
-// };
 
 export default function OnboardingStep6() {
   const router = useRouter();
@@ -23,39 +17,20 @@ export default function OnboardingStep6() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-
-   useEffect(() => {
-     fetch("http://localhost:80/api-payment-gateways")
-       .then((res) => res.json())
-       .then((data) => {
-         console.log("response:", data);
-         if (data.status === "ok") setMethods(data.gateways ?? []);
-         else setError("Kunne ikke hente betalingsmetoder.");
-       })
-       .catch(() => setError("Netværksfejl. Prøv igen."));
-   }, []);
-   const payload = getOnboardingData();
-   console.log("payload being sent:", payload);
-
   const handleSubmit = async () => {
     setError("");
-    const payload = getOnboardingData();
-    const selectedGateway = payload.transaction_gateway_fk;
-    const membershipFk = payload.membership_fk;
-    const userName = payload.user_name;
-    const userLastName = payload.user_last_name;
-    const userEmail = payload.user_email;
-    const userPhone = payload.user_phone;
-    const userPassword = payload.user_password;
-   
-    const carPlate = payload.car_plate;
 
-    if (typeof selectedGateway !== "string" || !selectedGateway) {
+    if (!paymentMethod) {
       setError("Vælg venligst en betalingsmetode.");
       return;
     }
+
     saveOnboardingData({ transaction_gateway_fk: paymentMethod });
-    
+    const payload = {
+      ...getOnboardingData(),
+      transaction_gateway_fk: paymentMethod,
+    };
+
     setSubmitting(true);
     try {
       localStorage.removeItem("onboarding_verification_key");
