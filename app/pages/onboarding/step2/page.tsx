@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { saveOnboardingData } from "../utils/onboardingStorage";
+import { getOnboardingData, saveOnboardingData, clearOnboardingData } from "../utils/onboardingStorage";
 import { autofillDanishAddress } from "../utils/autofillDanishAddress";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import Progress from "../components/progress";
@@ -45,7 +45,7 @@ export default function OnboardingStep2() {
     setSuggestions([]);
     inputRef.current?.blur();
   };
-
+  
   return (
     <div className="Onboarding-2">
       <BackButton />
@@ -87,6 +87,7 @@ export default function OnboardingStep2() {
         type="button"
         onClick={() => {
           router.push("/pages/onboarding/step4");
+          saveOnboardingData({ user_address: address });
         }}
       >
         <FaArrowRight />

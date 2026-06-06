@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import "./reset-password.css"
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import "../pages/onboarding/onboarding.css"
+import "../onboarding/onboarding.css"
 
 type Props = {
     password: string;
@@ -35,7 +35,7 @@ export default function ResetPassword() {
         setLoading(true);
         setMessage("");
         try {
-            const res = await fetch("http://127.0.0.1/reset-password", {
+            const res = await fetch("http://127.0.0.1:80/reset-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ password, "confirm-password": confirmPassword, key })

@@ -9,6 +9,7 @@ import "../onboarding.css";
 import Progress from "../components/progress";
 import { GrGroup } from "react-icons/gr";
 import BackButton from "@/app/components/layout/BackButton";
+
 type Membership = {
   membership_id: string;
   membership_name: string;

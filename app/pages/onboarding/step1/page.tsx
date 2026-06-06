@@ -62,8 +62,13 @@ export default function OnboardingStep1() {
       return;
     }
     try {
-      // Use query param for GET request
-      const res = await fetch(`http://localhost:80/email-validation?user_email=${encodeURIComponent(email)}`);
+      const res = await fetch("http://localhost:80/email-validation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_email: email }),
+      });
       if (!res.ok) {
         const data = await res.json();
         setEmailError(data.message || "Bruger allerede oprettet");
