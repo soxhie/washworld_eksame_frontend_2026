@@ -15,22 +15,29 @@ interface WashHistoryProps {
   showBackButton?: boolean;
   title?: string;
 }
+type WashEntry = {
+  wash_id: string;
+  created_at: number;
+  membership_name: string | null;
+};
+async function fetchWashHistory() {
+  const token = localStorage.getItem("access_token");
+  const res = await fetch("http://localhost:80/api-my-wash-history", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Kunne ikke hente vaskhistorik");
+  const data = await res.json();
+  return data.washes as WashEntry[];
+}
 
 export default function WashHistory({ history, onBack, showBackButton = true, title = "Seneste vaske historik" }: WashHistoryProps) {
   return (
     <section className="washHistory" aria-label="Seneste vaske historik">
       {showBackButton && onBack ? (
-        // <button
-        //   type="button"
-        //   className="profileBackButton"
-        //   onClick={onBack}
-        // >
-        //   <span aria-hidden="true">‹</span>
-        //   Tilbage
-        // </button>
+    
         <BackButton />
       ) : null}
-      {/* <h3 style={{ color: "#fff", marginBottom: "0.5rem", fontSize: "var(--h3-size)", fontWeight: 800, marginLeft: "10px" }}>Seneste vaske historik</h3> */}
+      
         <h1 style={{ fontSize: "var(--display-h1-size)", lineHeight: "var(--display-h1-line)", fontWeight: 800, margin: 0, textAlign: "center" }}>Vaske historik</h1>
       <ul className="washHistoryList">
         {history.map((item, idx) => (

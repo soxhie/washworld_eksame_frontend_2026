@@ -21,8 +21,8 @@ h1{
 }
 .icon-container{
   position:absolute;
-  right: 35px;
-  margin-top: 8px;
+  right: 5px;
+ 
   font-size: 18px;
 }
 .glemtAdgangskode{
@@ -56,7 +56,7 @@ text-align: end;
   transition: background 0.2s, opacity 0.2s;
 }
 .inputContainer{
-  margin-bottom: 16px;
+  margin-bottom: 0 !important;
   display: flex;
   flex-direction: column;
   input{

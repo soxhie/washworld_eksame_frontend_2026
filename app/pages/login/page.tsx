@@ -1,7 +1,7 @@
 "use client";
 import "./login.css";
 import "../../globals.css";
-import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import SinglePassword from "../onboarding/components/singlePassword";
 import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import { useState } from "react";
@@ -55,7 +55,7 @@ export default function Login() {
         <FaChevronLeft /> Tilbage
       </Link>
       <h1>Login</h1>
-      <form action="handle">
+      <form action="handle" style={{display:"flex", flexDirection:"column",gap:"16px"}}>
       <div className="inputContainer">
         <label>Email</label>
         <input
@@ -66,25 +66,10 @@ export default function Login() {
           required
         />
       </div>
-      <div className="inputContainer">
-        <label>Adgangskode</label>
-        <div style={{ display: "flex" }}>
-          <input
-            name="user_password"
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <div
-            className="icon-container"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
-          </div>
-        </div>
-        
-      </div>
+        <SinglePassword 
+        password={password}
+        setPassword={setPassword}
+        />
       <Link className="glemtAdgangskode" href="/pages/forgotPassword">Glemt adgangskode? </Link>
         <button
           className="nextButton"

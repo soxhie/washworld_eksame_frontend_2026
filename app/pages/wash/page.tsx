@@ -98,6 +98,12 @@ export default function WashPage() {
 
   const { user, loading: authLoading } = useAuth();
 
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.replace("/pages/login");
+    }
+  }, [authLoading, user, router]);
+
   const membershipPackage = useMemo((): Package => {
     const name = user?.membership_name?.toLowerCase() ?? "";
     if (name.includes("brilliant")) return "brilliant";
@@ -110,7 +116,8 @@ export default function WashPage() {
     let isActive = true;
     const token = localStorage.getItem("access_token");
     if (!token) {
-      router.push("/pages/login");
+      localStorage.removeItem("authUser");
+      router.replace("/pages/login");
       return;
     }
 
@@ -123,9 +130,10 @@ export default function WashPage() {
           getBrowserPosition(),
         ]);
 
-        if (response.status === 401) {
+        if (response.status === 401 || response.status === 403) {
           localStorage.removeItem("access_token");
-          router.push("/pages/login");
+          localStorage.removeItem("authUser");
+          router.replace("/pages/login");
           return;
         }
 

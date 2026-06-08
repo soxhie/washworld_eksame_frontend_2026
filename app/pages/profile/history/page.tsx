@@ -43,10 +43,7 @@ export default function ProfileHistoryPage() {
   if (isError || !washes || washes.length === 0) return (
     <main className="ProfilePage">
       <AppHeader variant="brand" />
-      <WashHistory
-        history={mockWashHistory}
-        onBack={() => router.push("/pages/profile")}
-      />
+      <p>Ingen vaskehistorik endnu.</p>
       <BottomNav activeTab="profile" variant="angled" />
     </main>
   );

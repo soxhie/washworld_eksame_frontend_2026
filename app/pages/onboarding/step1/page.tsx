@@ -7,7 +7,7 @@ import { saveOnboardingData } from "../utils/onboardingStorage";
 import Toggle from "../components/toggle";
 import { FaArrowRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
-import PasswordRequirements from "../components/passwordRequirements";
+import PasswordRequirements from "../components/signupPassword";
 import "../onboarding.css";
 import Progress from "../components/progress";
 import BackButton from "@/app/components/layout/BackButton";
@@ -24,8 +24,21 @@ export default function OnboardingStep1() {
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [toggleError, setToggleError] = useState("");
   const [formError, setFormError] = useState("");
   const [success, setSuccess] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  
+  const isNextDisabled =
+    !firstName.trim() ||
+    !lastName.trim() ||
+    !email.trim() ||
+    !phone.trim() ||
+    !password.trim() ||
+    !repeatPassword.trim() ||
+    !termsAccepted ||
+    !privacyAccepted;
 
   
   const validateEmail = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,6 +46,7 @@ export default function OnboardingStep1() {
     setFirstNameError("");
     setLastNameError("");
     setEmailError("");
+    setToggleError("");
     setFormError("");
     setSuccess("");
 
@@ -59,6 +73,10 @@ export default function OnboardingStep1() {
     // Check if email is present
     if (!email) {
       setEmailError("Email is required.");
+      return;
+    }
+    if (!termsAccepted || !privacyAccepted) {
+      setToggleError("Must fill out");
       return;
     }
     try {
@@ -90,7 +108,7 @@ export default function OnboardingStep1() {
   };
   return (
     <div>
-    <form className="Onboarding-1" onSubmit={validateEmail} action="#" autoComplete="off">
+    <form className="Onboarding-1" onSubmit={validateEmail} action="#" autoComplete="off" noValidate>
       {/* <button
         className='tilbageLink'
         type="button"
@@ -105,29 +123,26 @@ export default function OnboardingStep1() {
         <input
           type="text"
           name="user_name"
-          required
           value={firstName}
           onChange={e => setFirstName(e.target.value)}
         />
-        {firstNameError && <div style={{ color: 'red', marginTop: 4 }}>{firstNameError}</div>}
+        {firstNameError && <div style={{ color: 'red', marginTop: 4, minHeight: 20 }}>{firstNameError}</div>}
       </div>
       <div className="inputContainer">
         <label htmlFor="Efternavn">Efternavn</label>
         <input
           type="text"
           name="user_last_name"
-          required
           value={lastName}
           onChange={e => setLastName(e.target.value)}
         />
-        {lastNameError && <div style={{ color: 'red', marginTop: 4 }}>{lastNameError}</div>}
+        {lastNameError && <div style={{ color: 'red', marginTop: 4, minHeight: 20 }}>{lastNameError}</div>}
       </div>
       <div className="inputContainer">
         <label>Email</label>
         <input
           name="user_email"
           type="email"
-          required
           value={email}
           onChange={e => setEmail(e.target.value)}
         />
@@ -152,9 +167,26 @@ export default function OnboardingStep1() {
         repeatPassword={repeatPassword}
         setRepeatPassword={setRepeatPassword}
       />
+      
       {formError && <div style={{ color: 'red', marginTop: 4 }}>{formError}</div>}
-      <Toggle />
-      <button className='nextButton' type="submit">
+      <Toggle
+        termsAccepted={termsAccepted}
+        privacyAccepted={privacyAccepted}
+        onTermsChange={(checked) => {
+          setTermsAccepted(checked);
+          if (checked && privacyAccepted) {
+            setToggleError("");
+          }
+        }}
+        onPrivacyChange={(checked) => {
+          setPrivacyAccepted(checked);
+          if (checked && termsAccepted) {
+            setToggleError("");
+          }
+        }}
+        error={toggleError}
+      />
+      <button className='nextButton' type="submit" disabled={isNextDisabled} aria-disabled={isNextDisabled}>
         <FaArrowRight />
       </button>
     </form>

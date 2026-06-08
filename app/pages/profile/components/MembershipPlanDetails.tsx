@@ -29,6 +29,47 @@ interface MembershipPlanDetailsProps {
 
 export default function MembershipPlanDetails({ onBack, plan }: MembershipPlanDetailsProps) {
   const router = useRouter();
+
+  const membershipMap: Record<string, string> = {
+    Brilliant: "104eb10034fd4a07888fd6937ad6aea8",
+    Premium: "0d5073d1426242c99f9ba711d99f2b34",
+    Guld: "46514f804c0111f18db996d21e5e70c2",
+  };
+
+  async function handleConfirmChange() {
+    const dbMembershipId = membershipMap[plan.name] ?? plan.id;
+    if (!dbMembershipId) {
+      alert("Ukendt plan. Prøv igen.");
+      return;
+    }
+
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      alert("Du er ikke logget ind. Log ind og prøv igen.");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:80/api-update-my-membership", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ membership_fk: dbMembershipId }),
+      });
+      if (!res.ok) {
+        alert("Noget gik galt. Prøv igen.");
+        return;
+      }
+    } catch {
+      alert("Kunne ikke forbinde til serveren.");
+      return;
+    }
+
+    router.push(`/pages/profile/membership/change/${plan.id}/success`);
+  }
+
   return (
     <section className="membershipPlanDetails" aria-label={`Valgt plan ${plan.name}`}>
       <BackButton />
@@ -58,11 +99,9 @@ export default function MembershipPlanDetails({ onBack, plan }: MembershipPlanDe
       <SwipeToStart
         label="Skift medlemskab"
         completedLabel="Videresender..."
-        onComplete={() =>
-          router.push(
-            `/pages/profile/membership/change/${plan.id}/payment?name=${encodeURIComponent(plan.name)}`,
-          )
-        }
+        onComplete={() => {
+          void handleConfirmChange();
+        }}
       />
     </section>
   );

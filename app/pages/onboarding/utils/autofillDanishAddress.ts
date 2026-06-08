@@ -9,10 +9,9 @@ export async function autofillDanishAddress(query: string) {
     if (!response.ok) throw new Error('Failed to fetch address suggestions');
     const data = await response.json();
     if (!Array.isArray(data) || data.length === 0) return null;
-    // Return the best match (first result)
-    const best = data[0];
-    // Structure: { tekst, adresse: { vejnavn, husnr, etage, dør, postnr, postnrnavn, ... } }
-    return best.adresse;
+    return data
+      .map((item) => item?.adresse)
+      .filter(Boolean);
   } catch (error) {
     console.error('Address autofill error:', error);
     return null;
