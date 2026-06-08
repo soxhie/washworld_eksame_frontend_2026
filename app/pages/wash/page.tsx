@@ -91,18 +91,36 @@ function getBrowserPosition(): Promise<[number, number]> {
 export default function WashPage() {
   const router = useRouter();
   const [nearbyHalls, setNearbyHalls] = useState<NearbyHall[]>([]);
+  const [allHalls, setAllHalls] = useState<NearbyHall[]>([]);
   const [selectedHallId, setSelectedHallId] = useState<string | null>(null);
   const [isLoadingHalls, setIsLoadingHalls] = useState(true);
   const [hallError, setHallError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
 
   const { user, loading: authLoading } = useAuth();
 
+  // Fetch favorites on load
   useEffect(() => {
-    if (!authLoading && !user) {
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
+    fetch("http://localhost:80/api-favorites", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === "ok") setFavoriteIds(data.favorites ?? []);
+      })
+      .catch(() => {});
+  }, []);
+
+  const { user: user2, loading: authLoading2 } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading2 && !user2) {
       router.replace("/pages/login");
     }
-  }, [authLoading, user, router]);
+  }, [authLoading2, user2, router]);
 
   const membershipPackage = useMemo((): Package => {
     const name = user?.membership_name?.toLowerCase() ?? "";
@@ -160,15 +178,18 @@ export default function WashPage() {
               distance: formatDistance(distanceKm),
             };
           })
-          .sort((left, right) => left.distanceKm - right.distanceKm)
-          .slice(0, 3);
+          .sort((left, right) => left.distanceKm - right.distanceKm);
 
         if (!isActive) {
           return;
         }
 
-        setNearbyHalls(parsedHalls);
-        setSelectedHallId((current) => current ?? parsedHalls[0]?.id ?? null);
+        setAllHalls(parsedHalls);
+        setNearbyHalls(parsedHalls.slice(0, 3));
+        
+        // Select favorite if available, otherwise select first hall
+        const nearestFavorite = parsedHalls.find((hall) => favoriteIds.includes(hall.id));
+        setSelectedHallId((current) => (nearestFavorite?.id ?? current) ?? parsedHalls[0]?.id ?? null);
         setHallError(parsedHalls.length > 0 ? null : "Ingen vaskehaller blev fundet.");
       } catch (error) {
         if (!isActive) {
@@ -189,15 +210,15 @@ export default function WashPage() {
     return () => {
       isActive = false;
     };
-  }, [router]);
+  }, [router, favoriteIds]);
 
   const selectedHall = useMemo(() => {
-    if (nearbyHalls.length === 0) {
+    if (allHalls.length === 0) {
       return null;
     }
 
-    return nearbyHalls.find((hall) => hall.id === selectedHallId) ?? nearbyHalls[0];
-  }, [nearbyHalls, selectedHallId]);
+    return allHalls.find((hall) => hall.id === selectedHallId) ?? nearbyHalls[0];
+  }, [allHalls, selectedHallId, nearbyHalls]);
 
   return (
     <main style={{ minHeight: "100vh", paddingBottom: 100, background: "#000" }}>
