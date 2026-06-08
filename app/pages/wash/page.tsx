@@ -31,9 +31,9 @@ type NearbyHall = WashWorldLocation & {
 const DEFAULT_POSITION: [number, number] = [55.6761, 12.5683];
 
 const recentWashes = [
-  { id: "1", location: "Wash World Søborg", time: "I går, 18:42", plan: "Guld" },
-  { id: "2", location: "Wash World Søborg", time: "27 april 2026, 10:22", plan: "Guld" },
-  { id: "3", location: "Wash World Søborg", time: "29 april 2026, 16:29", plan: "Guld" },
+  { location: "Wash World Søborg", date: "I går", time: "18:42", label: "Guld" },
+  { location: "Wash World Søborg", date: "27 april 2026", time: "10:22", label: "Guld" },
+  { location: "Wash World Søborg", date: "29 april 2026", time: "16:29", label: "Guld" },
 ];
 
 function toRadians(value: number) {
@@ -98,6 +98,12 @@ export default function WashPage() {
 
   const { user, loading: authLoading } = useAuth();
 
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.replace("/pages/login");
+    }
+  }, [authLoading, user, router]);
+
   const membershipPackage = useMemo((): Package => {
     const name = user?.membership_name?.toLowerCase() ?? "";
     if (name.includes("brilliant")) return "brilliant";
@@ -110,7 +116,8 @@ export default function WashPage() {
     let isActive = true;
     const token = localStorage.getItem("access_token");
     if (!token) {
-      router.push("/pages/login");
+      localStorage.removeItem("authUser");
+      router.replace("/pages/login");
       return;
     }
 
@@ -123,9 +130,10 @@ export default function WashPage() {
           getBrowserPosition(),
         ]);
 
-        if (response.status === 401) {
+        if (response.status === 401 || response.status === 403) {
           localStorage.removeItem("access_token");
-          router.push("/pages/login");
+          localStorage.removeItem("authUser");
+          router.replace("/pages/login");
           return;
         }
 
@@ -227,7 +235,7 @@ export default function WashPage() {
             setSelectedHallId(id);
           }}
         />
-        <RecentWashes washes={recentWashes} />
+        <RecentWashes/>
       </div>
       <BottomNav activeTab="wash" variant="angled" />
     </main>

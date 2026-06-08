@@ -42,7 +42,7 @@ export default function PasswordRequirements({ password, setPassword, repeatPass
                         <input
                             style={{ position: 'absolute' }}
                             type={showPassword ? "text" : "password"}
-                            name="repeat_user_password"
+                            name="repeat_user_spassword"
                             required
                             value={repeatPassword}
                             onChange={e => setRepeatPassword(e.target.value)}

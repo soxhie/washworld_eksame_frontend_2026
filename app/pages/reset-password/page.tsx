@@ -59,9 +59,9 @@ export default function ResetPassword() {
                
                  <div className="inputContainer">
                             <label>Ny adgangskode</label>
-                            <div style={{ position: "relative", display: "flex", alignItems: "center", top: '20px', marginBottom: "10px" }}>
+                            <div style={{ position: "relative", display: "flex", alignItems: "center", marginBottom: "10px" }}>
                                 <input
-                                    style={{ position: 'absolute' }}
+                                    
                                     type={showPassword ? "text" : "password"}
                                     name="new_password"
                                     required
@@ -76,9 +76,9 @@ export default function ResetPassword() {
             </div>
             <div className="inputContainer">
                 <label>Bekræft ny adgangkode</label>
-                <div style={{ position: "relative", display: "flex", alignItems: "center", top: '20px', marginBottom: "30px" }}>
+                <div style={{ position: "relative", display: "flex", alignItems: "center", marginBottom: "30px" }}>
                     <input
-                        style={{ position: 'absolute' }}
+                        
                         type={showPassword ? "text" : "password"}
                         placeholder="confirm new password"
                         name="confirm-new-password"

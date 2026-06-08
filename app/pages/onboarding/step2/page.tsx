@@ -25,8 +25,8 @@ export default function OnboardingStep2() {
     }
     autofillDanishAddress(address).then((result) => {
       if (!active) return;
-      if (result) {
-        setSuggestions([result]);
+      if (result && result.length > 0) {
+        setSuggestions(result);
         setShowSuggestions(true);
       } else {
         setSuggestions([]);
@@ -62,14 +62,7 @@ export default function OnboardingStep2() {
           autoComplete="off"
         />
         {showSuggestions && suggestions.length > 0 && (
-          <ul style={{
-            
-            zIndex: 10,
-            border: "1px solid #ccc",
-            listStyle: "none",
-            margin: 0,
-            padding: 0
-          }}>
+          <ul className="adressSuggestions">
             {suggestions.map((s, idx) => (
               <li
                 key={idx}

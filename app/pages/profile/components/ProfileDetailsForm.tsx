@@ -7,9 +7,10 @@ import {
   LuMapPin,
   LuPhone,
 } from "react-icons/lu";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import BackButton from "../../../components/layout/BackButton";
-
+import SinglePassword from "../../onboarding/components/singlePassword";
 interface ProfileDetailsFormProps {
   detailsForm: {
     phone: string;
@@ -43,7 +44,7 @@ export default function ProfileDetailsForm({
   const [showPopup, setShowPopUp] = React.useState(false);
   const [methods, setMethods] = useState<PaymentMethod[]>([]);
   const [error, setError] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false);
   useEffect(() => {
     fetch("http://localhost:80/api-payment-gateways")
       .then((res) => res.json())
@@ -102,61 +103,6 @@ export default function ProfileDetailsForm({
             />
           </div>
         </label>
-
-        <label className="detailsField" htmlFor="details-password">
-          <span className="detailsFieldLabelWrap">
-            <LuLock className="detailsFieldIcon" aria-hidden="true" />
-            <span className="detailsFieldLabel">Adgangskode</span>
-          </span>
-          <div className="detailsFieldValueRow">
-            <input
-              id="details-password"
-              type="text"
-              className="detailsFieldInput"
-              value={detailsForm.password}
-              onChange={(e) => onChange("password", e.target.value)}
-              readOnly={!isEditing}
-            />
-          </div>
-        </label>
-
-
-
-
-
-
-
-        {/* <label className="detailsField" htmlFor="details-payment">
-          <span className="detailsFieldLabelWrap">
-            <LuCreditCard className="detailsFieldIcon" aria-hidden="true" />
-            <span className="detailsFieldLabel">Betalingsmetode</span>
-          </span>
-          <div className="detailsFieldValueRow">
-            <button
-              type="button"
-              id="details-payment"
-              className="detailsFieldInput"
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: isEditing ? "pointer" : "default" }}
-              onClick={() => isEditing && setShowPopUp(true)}
-            >
-              {(() => {
-                const selected = methods.find((m) => m.payment_gateway_id === detailsForm.paymentMethod);
-                if (selected) {
-                  return (
-                    <img src={`http://localhost:80/icons/${selected.payment_gateway_icon_path}`} alt={selected.payment_gateway_name} style={{ width: "28px", height: "28px", objectFit: "contain" }} />
-                  );
-                }
-                return <LuCreditCard aria-hidden="true" />;
-              })()}
-              <span>
-                {(() => {
-                  const selected = methods.find((m) => m.payment_gateway_id === detailsForm.paymentMethod);
-                  return selected ? selected.payment_gateway_name : "Vælg betalingsmetode";
-                })()}
-              </span>
-            </button>
-          </div>
-        </label> */}
 
 <label className="detailsField" htmlFor="details-payment">
   <span className="detailsFieldLabelWrap">
