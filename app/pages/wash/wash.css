@@ -15,7 +15,13 @@
 .h1{
   margin-bottom: 0px;
 }
-
+.recentWashesTitle {
+  font-size: var(--h3-size);
+  font-weight: 800;
+  margin: 30px 0 12px;
+  text-align: left;
+  padding-left: 2px;
+}
 .membershipCard {
   margin-top: 10px;
   border: 1px solid #07de88;
@@ -25,10 +31,10 @@
 
 .membershipTitle {
   margin: 0;
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 1.1;
-  text-align: left;
+  font-size: 30px !important;
+  font-weight: 800 !important;
+  line-height: 0.8 !important;
+  text-align: left !important;
 }
 
 .membershipSubtitle {
@@ -248,4 +254,7 @@
   margin-left: 1rem;
   align-self: flex-start;
 }
-
+.ProfilePage{
+  height: fit-content !important;
+  min-height: 0 !important;
+}

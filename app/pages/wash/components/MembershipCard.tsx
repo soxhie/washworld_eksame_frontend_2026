@@ -3,7 +3,7 @@ import { LuArrowUpRight } from "react-icons/lu";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import SwipeButton from "./SwipeButton";
 import SwipeToStart from "../../../components/SwipeToStart/SwipeToStart";
-import "../membershipcard.css"
+import "../wash.css";
 
 type Package = "guld" | "premium" | "brilliant";
 type Variant = "wash" | "dashboard";
@@ -62,11 +62,11 @@ function DashboardMembershipCard({ pkg, address, isFavorite, onFavoriteToggle, o
         padding: "16px 14px 14px",
         background: "linear-gradient(180deg, rgba(41, 42, 45, 0.9) 0%, rgba(35, 36, 39, 0.9) 100%)",
         border: "1px solid rgba(255, 255, 255, 0.08)",
-      }}>
-
+      }}
+    >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
-          <h1 style={{ margin: 0, fontSize: 30, fontWeight: 800, lineHeight: 0.8, textAlign: "left" }}>Medlemskab</h1>
+          <h1 className="membershipTitle">Medlemskab</h1>
           <p style={{ margin: "4px 0 10px", color: "#08e184", fontSize: 18, fontWeight: 700 }}>{packageLabelsDashboard[pkg]}</p>
           <p style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>Wash World</p>
           <p style={{ margin: "2px 0 0", color: "#14ef96", fontSize: 14, lineHeight: 1.2 }}>{address}</p>
@@ -108,9 +108,12 @@ function WashMembershipCard({
     <section style={{ marginTop: 10, border: "1px solid #07de88", background: "#015126", padding: "14px 12px 18px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
-          <h1 style={{ margin: 0, fontSize: 30, fontWeight: 800, lineHeight: 0.8, color: "#fff"}}>Medlemskab</h1>
+          <h1 className="membershipTitle">Medlemskab</h1>
           <p style={{ margin: "4px 0 0", color: "#08e184", fontSize: 18, fontWeight: 700 }}>{packageLabels[pkg]}</p>
         </div>
+        <button type="button" onClick={onFavoriteToggle} aria-label={isFavorite ? "Fjern fra favoritter" : "Tilføj til favoritter"} aria-pressed={isFavorite} style={favoriteButtonStyle}>
+          {isFavorite ? <IoHeart aria-hidden="true" /> : <IoHeartOutline aria-hidden="true" />}
+        </button>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 11, alignItems: "flex-start", marginTop: 8 }}>
         <div>

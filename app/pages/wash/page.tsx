@@ -10,8 +10,10 @@ import RecentWashes from "./components/RecentWashes";
 import BackButton from "../../components/layout/BackButton";
 import { useAuth } from "@/app/hooks/useAuth";
 
+
 type Package = "guld" | "premium" | "brilliant";
 
+// WashWorld location from api
 type WashWorldLocation = {
   id: string;
   name: string;
@@ -31,9 +33,9 @@ type NearbyHall = WashWorldLocation & {
 const DEFAULT_POSITION: [number, number] = [55.6761, 12.5683];
 
 const recentWashes = [
-  { id: "1", location: "Wash World Søborg", time: "I går, 18:42", plan: "Guld" },
-  { id: "2", location: "Wash World Søborg", time: "27 april 2026, 10:22", plan: "Guld" },
-  { id: "3", location: "Wash World Søborg", time: "29 april 2026, 16:29", plan: "Guld" },
+  { location: "Wash World Søborg", date: "I går", time: "18:42", label: "Guld" },
+  { location: "Wash World Søborg", date: "27 april 2026", time: "10:22", label: "Guld" },
+  { location: "Wash World Søborg", date: "29 april 2026", time: "16:29", label: "Guld" },
 ];
 
 function toRadians(value: number) {
@@ -91,19 +93,42 @@ function getBrowserPosition(): Promise<[number, number]> {
 export default function WashPage() {
   const router = useRouter();
   const [nearbyHalls, setNearbyHalls] = useState<NearbyHall[]>([]);
+  const [allHalls, setAllHalls] = useState<NearbyHall[]>([]);
   const [selectedHallId, setSelectedHallId] = useState<string | null>(null);
   const [isLoadingHalls, setIsLoadingHalls] = useState(true);
   const [hallError, setHallError] = useState<string | null>(null);
-  const [isFavorite, setIsFavorite] = useState(false);
+  // const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  const isFavorite = selectedHallId ? favoriteIds.includes(selectedHallId) : false;//added
 
+  // saves users information in onboarding loading state and in membershipcard, and redirects to login if not authenticated
+  // this is used to determine the membership package and ensure the user is logged in before fetching halls 
   const { user, loading: authLoading } = useAuth();
 
+  // Fetch favorites on load
   useEffect(() => {
-    if (!authLoading && !user) {
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
+    fetch("http://localhost:80/api-favorites", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === "ok") setFavoriteIds(data.favorites ?? []);
+      })
+      .catch(() => {});
+  }, []);
+
+  const { user: user2, loading: authLoading2 } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading2 && !user2) {
       router.replace("/pages/login");
     }
-  }, [authLoading, user, router]);
+  }, [authLoading2, user2, router]);
 
+  // useMemo function
+  // Determine memership package based on user's membership name, defaults to "premium" if no match found
   const membershipPackage = useMemo((): Package => {
     const name = user?.membership_name?.toLowerCase() ?? "";
     if (name.includes("brilliant")) return "brilliant";
@@ -112,6 +137,8 @@ export default function WashPage() {
     return "premium";
   }, [user]);
 
+  //useEffect function
+  // Fetch nearby halls on load, requires authentication, also gets user's current position to calculate distance to halls
   useEffect(() => {
     let isActive = true;
     const token = localStorage.getItem("access_token");
@@ -160,15 +187,18 @@ export default function WashPage() {
               distance: formatDistance(distanceKm),
             };
           })
-          .sort((left, right) => left.distanceKm - right.distanceKm)
-          .slice(0, 3);
+          .sort((left, right) => left.distanceKm - right.distanceKm);
 
         if (!isActive) {
           return;
         }
 
-        setNearbyHalls(parsedHalls);
-        setSelectedHallId((current) => current ?? parsedHalls[0]?.id ?? null);
+        setAllHalls(parsedHalls);
+        setNearbyHalls(parsedHalls.slice(0, 3));
+
+        // Select favorite if available, otherwise select first hall
+        const nearestFavorite = parsedHalls.find((hall) => favoriteIds.includes(hall.id));
+        setSelectedHallId((current) => nearestFavorite?.id ?? current ?? parsedHalls[0]?.id ?? null);
         setHallError(parsedHalls.length > 0 ? null : "Ingen vaskehaller blev fundet.");
       } catch (error) {
         if (!isActive) {
@@ -189,15 +219,37 @@ export default function WashPage() {
     return () => {
       isActive = false;
     };
-  }, [router]);
+  }, [router, favoriteIds]);
 
   const selectedHall = useMemo(() => {
-    if (nearbyHalls.length === 0) {
+    if (allHalls.length === 0) {
       return null;
     }
 
-    return nearbyHalls.find((hall) => hall.id === selectedHallId) ?? nearbyHalls[0];
-  }, [nearbyHalls, selectedHallId]);
+    return allHalls.find((hall) => hall.id === selectedHallId) ?? nearbyHalls[0];
+  }, [allHalls, selectedHallId, nearbyHalls]);
+
+  async function handleFavoriteToggle() {
+    const previousIds = favoriteIds;
+    const token = localStorage.getItem("access_token");
+    const method = isFavorite ? "DELETE" : "POST";
+    setFavoriteIds((prev) =>
+      isFavorite ? prev.filter((id) => id !== selectedHallId) : [...prev, selectedHallId ?? ""]
+    );
+    try {
+      const res = await fetch("http://localhost:80/api-favorites", {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ location_id: selectedHallId }),
+      });
+      if (!res.ok) throw new Error("Fejl");
+    } catch {
+      setFavoriteIds(previousIds);
+    }
+  }
 
   return (
     <main style={{ minHeight: "100vh", paddingBottom: 100, background: "#000" }}>
@@ -217,7 +269,8 @@ export default function WashPage() {
             queueStatus={selectedHall.status}
             waitTime={selectedHall.waitTime}
             isFavorite={isFavorite}
-            onFavoriteToggle={() => setIsFavorite((prev) => !prev)}
+            // onFavoriteToggle={() => setIsFavorite((prev) => !prev)}
+            onFavoriteToggle={handleFavoriteToggle}//added
             onStart={() => router.push("/pages/wash/activewash")}
             onSwitch={() => router.push("/pages/dashboard")}
           />
@@ -235,7 +288,7 @@ export default function WashPage() {
             setSelectedHallId(id);
           }}
         />
-        <RecentWashes washes={recentWashes} />
+        <RecentWashes />
       </div>
       <BottomNav activeTab="wash" variant="angled" />
     </main>

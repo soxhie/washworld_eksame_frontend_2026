@@ -1,41 +1,71 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import AppHeader from "../../../components/layout/AppHeader";
+import BottomNav from "../../../components/layout/BottomNav";
+import WashHistory from "../../profile/components/WashHistory";
+import "../wash.css";
+// TODO: Remove mockWashHistory import when wash table is ready in the database
 
-import Image from "next/image";
-import { LuCar } from "react-icons/lu";
+import "../../profile/profile.css";
 
-type Wash = {
-  id: string;
-  location: string;
-  time: string;
-  plan: string;
+type WashEntry = {
+  wash_id: string;
+  created_at: number;
+  membership_name: string | null;
 };
 
-type Props = {
-  washes: Wash[];
-};
+async function fetchWashHistory() {
+  const token = localStorage.getItem("access_token");
+  const res = await fetch("http://localhost:80/api-my-wash-history", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Kunne ikke hente vaskhistorik");
+  const data = await res.json();
+  return data.washes as WashEntry[];
+}
 
-export default function RecentWashes({ washes }: Props) {
+export default function RecentWashes() {
+  const router = useRouter();
+
+  const {
+    data: washes,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["washHistory"],
+    queryFn: fetchWashHistory,
+  });
+
+  if (isLoading) return <div style={{ color: "#fff", textAlign: "center", marginTop: "2rem" }}>Indlæser vaskhistorik...</div>;
+
+  // TODO: Remove mockWashHistory and this block when wash table is ready
+  // Replace with a proper empty state: <p>Ingen vaskehistorik endnu.</p>
+  if (isError || !washes || washes.length === 0)
+    return (
+      <main className="ProfilePage" style={{ minHeight: "0" }}>
+        <h3 className="recentWashesTitle">Seneste vaske</h3>
+        <p>Ingen vaskehistorik endnu.</p>
+        <BottomNav activeTab="profile" variant="angled" />
+      </main>
+    );
+
+  // Real data from backend — this runs when wash table exists and has data
+  const history = washes.map((w) => ({
+    location: "Wash World",
+    date: new Date(w.created_at * 1000).toLocaleDateString("da-DK"),
+    time: new Date(w.created_at * 1000).toLocaleTimeString("da-DK", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+    label: w.membership_name ?? "Vask",
+  }));
+
   return (
-    <section style={{ marginTop: 30 }}>
-      <h3 style={{ fontSize: "var(--h3-size)", fontWeight: 800, margin: "0 0 12px", paddingLeft: "2px" }}>Seneste vaske</h3>
-      <ul style={{ listStyle: "none", margin: 0, background: "rgba(74, 74, 74, 0.4)", padding: "6px" }}>
-        {washes.map((wash, i) => (
-          <li
-            key={wash.id}
-            style={{ display: "grid", gridTemplateColumns: "50px 1fr auto", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: i < washes.length - 1 ? "1px solid #08d17a" : "none" }}
-          >
-            <div style={{ width: 50, height: 50, display: "grid", placeItems: "center" }}>
-              {/* <Image src="/svg/bil_gron.svg" alt="Bil" width={35} height={35} style={{ height: "auto" }} />{" "} */}
-              <LuCar className="washHistoryIcon" aria-hidden="true" style={{ fontSize: 32, color: "var(--color-primary)" }}></LuCar>
-            </div>
-            <div>
-              <p style={{ margin: 0, fontSize: 14, fontWeight: 700 }}>{wash.location}</p>
-              <p style={{ margin: "3px 0 0", fontSize: 12, color: "#d8d8d8" }}>{wash.time}</p>
-            </div>
-            <span style={{ background: "#18de84", color: "#000", fontSize: 12, fontWeight: 700, padding: "3px 8px", margin: "0 8px" }}>{wash.plan}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <main className="ProfilePage">
+      <h3 className="recentWashesTitle">Seneste vaske</h3>
+      <WashHistory history={history} />
+      <BottomNav activeTab="profile" variant="angled" />
+    </main>
   );
 }
