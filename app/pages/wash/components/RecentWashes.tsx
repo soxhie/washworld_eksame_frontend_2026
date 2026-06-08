@@ -41,8 +41,8 @@ export default function RecentWashes() {
   // TODO: Remove mockWashHistory and this block when wash table is ready
   // Replace with a proper empty state: <p>Ingen vaskehistorik endnu.</p>
   if (isError || !washes || washes.length === 0) return (
-    <main className="ProfilePage">
-      <AppHeader variant="brand" />
+    <main className="ProfilePage" style={{minHeight:"0"}}>
+      <h1 style={{ fontSize: "var(--display-h1-size)", lineHeight: "var(--display-h1-line)", fontWeight: 800, margin: 0, textAlign: "center" }}>Seneste vaske</h1>
       <p>Ingen vaskehistorik endnu.</p>
       <BottomNav activeTab="profile" variant="angled" />
     </main>
