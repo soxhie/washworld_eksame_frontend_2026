@@ -6,6 +6,8 @@ import BottomNav from "../../../components/layout/BottomNav";
 import WashHistory from "../../profile/components/WashHistory";
 // TODO: Remove mockWashHistory import when wash table is ready in the database
 
+import "../../profile/profile.css"
+
 type WashEntry = {
   wash_id: string;
   created_at: number;
