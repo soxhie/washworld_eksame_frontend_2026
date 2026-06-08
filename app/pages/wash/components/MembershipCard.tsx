@@ -111,6 +111,9 @@ function WashMembershipCard({
           <h1 style={{ margin: 0, fontSize: 30, fontWeight: 800, lineHeight: 0.8, color: "#fff"}}>Medlemskab</h1>
           <p style={{ margin: "4px 0 0", color: "#08e184", fontSize: 18, fontWeight: 700 }}>{packageLabels[pkg]}</p>
         </div>
+        <button type="button" onClick={onFavoriteToggle} aria-label={isFavorite ? "Fjern fra favoritter" : "Tilføj til favoritter"} aria-pressed={isFavorite} style={favoriteButtonStyle}>
+          {isFavorite ?<IoHeartOutline aria-hidden="true" />: <IoHeart aria-hidden="true" /> }
+        </button>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 11, alignItems: "flex-start", marginTop: 8 }}>
         <div>
@@ -154,6 +157,7 @@ function WashMembershipCard({
         <span style={{ background: statusColors[queueStatus ?? ""] ?? "#ffbf24", color: "#0a0a0a", fontSize: 11, fontWeight: 700, padding: "2px 6px" }}>{queueStatus}</span>
         <span style={{ fontSize: 11 }}>{waitTime}</span>
       </div>
+      
       <div style={{ display: "flex", justifyContent: "center", width: "100%", marginTop: 16 }}>
         <SwipeButton variant="vask" onActivate={onStart} />
       </div>
