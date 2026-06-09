@@ -42,7 +42,7 @@ export default function ProfileHistoryPage() {
   // Replace with a proper empty state: <p>Ingen vaskehistorik endnu.</p>
   if (isError || !washes || washes.length === 0) return (
     <main className="ProfilePage">
-
+      <AppHeader variant="brand" />
       <p>Ingen vaskehistorik endnu.</p>
       <BottomNav activeTab="profile" variant="angled" />
     </main>
@@ -62,8 +62,7 @@ export default function ProfileHistoryPage() {
   return (
     <main className="ProfilePage">
       <AppHeader variant="brand" />
-      <h1 style={{ fontSize: "var(--display-h1-size)", lineHeight: "var(--display-h1-line)", fontWeight: 800, margin: 0, textAlign: "center" }}>Vaske historik</h1>
-
+       <h1 style={{ fontSize: "var(--display-h1-size)", lineHeight: "var(--display-h1-line)", fontWeight: 800, margin: 0, textAlign: "center" }}>Vaske historik</h1>
       <WashHistory
         history={history}
         onBack={() => router.push("/pages/profile")}

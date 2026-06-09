@@ -38,6 +38,7 @@ export default function WashHistory({ history, onBack, showBackButton = true, ti
         <BackButton />
       ) : null}
       
+       
       <ul className="washHistoryList">
         {history.map((item, idx) => (
           <li className="washHistoryItem" key={idx}>

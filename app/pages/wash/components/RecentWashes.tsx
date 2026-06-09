@@ -8,6 +8,9 @@ import "../wash.css";
 // TODO: Remove mockWashHistory import when wash table is ready in the database
 
 import "../../profile/profile.css";
+// TODO: Remove mockWashHistory import when wash table is ready in the database
+
+import "../../profile/profile.css"
 
 type WashEntry = {
   wash_id: string;
@@ -28,27 +31,26 @@ async function fetchWashHistory() {
 export default function RecentWashes() {
   const router = useRouter();
 
-  const {
-    data: washes,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data: washes, isLoading, isError } = useQuery({
     queryKey: ["washHistory"],
     queryFn: fetchWashHistory,
   });
 
-  if (isLoading) return <div style={{ color: "#fff", textAlign: "center", marginTop: "2rem" }}>Indlæser vaskhistorik...</div>;
+  if (isLoading) return (
+    <div style={{ color: "#fff", textAlign: "center", marginTop: "2rem" }}>
+      Indlæser vaskhistorik...
+    </div>
+  );
 
   // TODO: Remove mockWashHistory and this block when wash table is ready
   // Replace with a proper empty state: <p>Ingen vaskehistorik endnu.</p>
-  if (isError || !washes || washes.length === 0)
-    return (
-      <main className="ProfilePage" style={{ minHeight: "0" }}>
-        <h3 className="recentWashesTitle">Seneste vaske</h3>
-        <p>Ingen vaskehistorik endnu.</p>
-        <BottomNav activeTab="profile" variant="angled" />
-      </main>
-    );
+  if (isError || !washes || washes.length === 0) return (
+    <main className="ProfilePage" style={{minHeight:"0"}}>
+      <h1 style={{ fontSize: "var(--display-h1-size)", lineHeight: "var(--display-h1-line)", fontWeight: 800, margin: 0, textAlign: "center" }}>Seneste vaske</h1>
+      <p>Ingen vaskehistorik endnu.</p>
+      <BottomNav activeTab="profile" variant="angled" />
+    </main>
+  );
 
   // Real data from backend — this runs when wash table exists and has data
   const history = washes.map((w) => ({
@@ -63,8 +65,10 @@ export default function RecentWashes() {
 
   return (
     <main className="ProfilePage">
-      <h3 className="recentWashesTitle">Seneste vaske</h3>
-      <WashHistory history={history} />
+       <h1 style={{ fontSize: "var(--display-h1-size)", lineHeight: "var(--display-h1-line)", fontWeight: 800, margin: 0, textAlign: "center" }}>Seneste vaske</h1>
+      <WashHistory
+        history={history}
+      />
       <BottomNav activeTab="profile" variant="angled" />
     </main>
   );
