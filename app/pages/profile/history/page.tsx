@@ -61,7 +61,6 @@ export default function ProfileHistoryPage() {
 
   return (
     <main className="ProfilePage">
-      <AppHeader variant="brand" />
        <h1 style={{ fontSize: "var(--display-h1-size)", lineHeight: "var(--display-h1-line)", fontWeight: 800, margin: 0, textAlign: "center" }}>Vaske historik</h1>
       <WashHistory
         history={history}

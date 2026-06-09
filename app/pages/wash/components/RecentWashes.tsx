@@ -46,7 +46,7 @@ export default function RecentWashes() {
   // Replace with a proper empty state: <p>Ingen vaskehistorik endnu.</p>
   if (isError || !washes || washes.length === 0) return (
     <main className="ProfilePage" style={{minHeight:"0"}}>
-      <h1 style={{ fontSize: "var(--display-h1-size)", lineHeight: "var(--display-h1-line)", fontWeight: 800, margin: 0, textAlign: "center" }}>Seneste vaske</h1>
+<h3 className="recentWashesTitle">Seneste vaske</h3>
       <p>Ingen vaskehistorik endnu.</p>
       <BottomNav activeTab="profile" variant="angled" />
     </main>
@@ -65,7 +65,7 @@ export default function RecentWashes() {
 
   return (
     <main className="ProfilePage">
-       <h1 style={{ fontSize: "var(--display-h1-size)", lineHeight: "var(--display-h1-line)", fontWeight: 800, margin: 0, textAlign: "center" }}>Seneste vaske</h1>
+<h3 className="recentWashesTitle">Seneste vaske</h3>
       <WashHistory
         history={history}
       />
