@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { SubscriptionPlan } from "../pages/profile/data/membershipTypes";
-
+//useSubscriptions: Fetches all subscription plans via GET request and handels 
+// loading and error states so the user knows if the system is under maintanance, and uses isMounted logic to avoid memory leaks.
+// @app.get("/api-memberships line 252
 export function useSubscriptions() {
   const [subscriptions, setSubscriptions] = useState<SubscriptionPlan[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+//
   useEffect(() => {
     let isMounted = true;
     async function load() {

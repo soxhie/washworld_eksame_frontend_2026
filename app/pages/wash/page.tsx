@@ -32,16 +32,16 @@ type NearbyHall = WashWorldLocation & {
 
 const DEFAULT_POSITION: [number, number] = [55.6761, 12.5683];
 
-const recentWashes = [
-  { location: "Wash World Søborg", date: "I går", time: "18:42", label: "Guld" },
-  { location: "Wash World Søborg", date: "27 april 2026", time: "10:22", label: "Guld" },
-  { location: "Wash World Søborg", date: "29 april 2026", time: "16:29", label: "Guld" },
-];
+// const recentWashes = [
+//   { location: "Wash World Søborg", date: "I går", time: "18:42", label: "Guld" },
+//   { location: "Wash World Søborg", date: "27 april 2026", time: "10:22", label: "Guld" },
+//   { location: "Wash World Søborg", date: "29 april 2026", time: "16:29", label: "Guld" },
+// ];
 
 function toRadians(value: number) {
   return (value * Math.PI) / 180;
 }
-
+//using Haversine-formal in this getDistanceKm function to calculat the precise distance between the user and the wash halls.
 function getDistanceKm(from: [number, number], to: [number, number]) {
   const earthRadiusKm = 6371;
   const deltaLatitude = toRadians(to[0] - from[0]);
@@ -57,21 +57,21 @@ function getDistanceKm(from: [number, number], to: [number, number]) {
 function formatDistance(distanceKm: number) {
   return distanceKm < 1 ? `${Math.round(distanceKm * 1000)} m` : `${distanceKm.toFixed(1)} km`;
 }
-
+// these are mock statuses and wait time since we dont have the real data from the wash halls 
 const MOCK_STATUSES: NearbyHall["status"][] = ["Travlt", "Ledig", "Fyldt"];
 const MOCK_WAIT_TIMES: Record<NearbyHall["status"], string> = {
   Travlt: "Ca. 10 min ventetid",
   Ledig: "Klar nu",
   Fyldt: "Ca. 25 min ventetid",
 };
-
+// this function shows mock data for the queue status and wait time
 function getMockQueueData(location: WashWorldLocation): Pick<NearbyHall, "status" | "waitTime"> {
   // Derive a stable index from the location id so the same hall always shows the same mock status
   const seed = [...location.id].reduce((sum, char) => sum + char.charCodeAt(0), 0);
   const status = MOCK_STATUSES[seed % MOCK_STATUSES.length]!;
   return { status, waitTime: MOCK_WAIT_TIMES[status] };
 }
-
+// this function gets the users current position from the browser, if it fails it returns to default position
 function getBrowserPosition(): Promise<[number, number]> {
   if (typeof navigator === "undefined" || !("geolocation" in navigator)) {
     return Promise.resolve(DEFAULT_POSITION);
@@ -118,7 +118,7 @@ export default function WashPage() {
       })
       .catch(() => {});
   }, []);
-
+//
   const { user: user2, loading: authLoading2 } = useAuth();
 
   useEffect(() => {

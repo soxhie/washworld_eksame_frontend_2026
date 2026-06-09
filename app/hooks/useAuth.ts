@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+//useAuth: Handles your JWT security. It fetches user data from /api-my-info, (get request)
+// stores the token in localStorage and sends it in the Authorization header on every request.
+
+// makes sure the data is looking the right way and is typed correctly 
 type User = {
   user_id: string;
   user_name: string;
@@ -14,10 +18,10 @@ type User = {
   membership_description: string | null;
   membership_price: number | null;
 };
-
+//
 export function useAuth() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null); //precisly the user or null if not looged in
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 

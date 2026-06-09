@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+//useWashLocations: Fetches all wash locations via a GET request and handles loading and error states,
+// so the user knows if the system is under maintenance.
+
 type WashLocation = {
   id: string;
   name: string;
