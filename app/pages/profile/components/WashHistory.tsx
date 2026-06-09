@@ -38,7 +38,6 @@ export default function WashHistory({ history, onBack, showBackButton = true, ti
         <BackButton />
       ) : null}
       
-        <h1 style={{ fontSize: "var(--display-h1-size)", lineHeight: "var(--display-h1-line)", fontWeight: 800, margin: 0, textAlign: "center" }}>Vaske historik</h1>
       <ul className="washHistoryList">
         {history.map((item, idx) => (
           <li className="washHistoryItem" key={idx}>
